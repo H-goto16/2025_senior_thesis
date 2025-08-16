@@ -2,6 +2,19 @@ from ultralytics import YOLOWorld
 import json
 from pathlib import Path
 import os
+import logging
+from datetime import datetime
+
+# ログ設定
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.FileHandler('yolo_detector.log'),
+        logging.StreamHandler()
+    ]
+)
+logger = logging.getLogger(__name__)
 
 class YoloDetector:
     def __init__(self, model_path="./yolov8s-world.pt", vocab_file="custom_vocab.json"):
@@ -10,6 +23,7 @@ class YoloDetector:
         self.vocab_file = Path(vocab_file)
         self.current_classes = set()
         self._load_custom_vocab()
+        logger.info(f"YoloDetector initialized with model: {model_path}")
 
     def _load_custom_vocab(self):
         if self.vocab_file.exists():
@@ -18,40 +32,41 @@ class YoloDetector:
                     loaded_vocab = json.load(f)
                     if isinstance(loaded_vocab, list):
                         self.current_classes.update(loaded_vocab)
-                        print(f"Loaded custom vocabulary: {self.current_classes}")
+                        logger.info(f"Loaded custom vocabulary: {self.current_classes}")
                     else:
-                        print(f"Warning: Invalid format in {self.vocab_file}.")
+                        logger.warning(f"Invalid format in {self.vocab_file}.")
             except json.JSONDecodeError:
-                print(f"Warning: JSON decoding error in {self.vocab_file}. File might be corrupted.")
+                logger.warning(f"JSON decoding error in {self.vocab_file}. File might be corrupted.")
         self._update_model_classes()
 
     def _save_custom_vocab(self):
         with open(self.vocab_file, 'w', encoding='utf-8') as f:
             json.dump(list(self.current_classes), f, ensure_ascii=False, indent=4)
-        print(f"Custom vocabulary saved to {self.vocab_file}.")
+        logger.info(f"Custom vocabulary saved to {self.vocab_file}.")
 
     def _update_model_classes(self):
         if self.current_classes:
             self.model.set_classes(list(self.current_classes))
-            print(f"Model detection classes updated: {list(self.current_classes)}")
+            logger.info(f"Model detection classes updated: {list(self.current_classes)}")
         else:
-            print("No detection classes set.")
+            logger.warning("No detection classes set.")
 
     def add_classes(self, new_classes: list[str]):
         for cls in new_classes:
             self.current_classes.add(cls)
         self._update_model_classes()
         self._save_custom_vocab()
+        logger.info(f"Added new classes: {new_classes}")
 
     def get_current_classes(self) -> list[str]:
         return list(self.current_classes)
 
     def predict_image(self, image_path: str, conf_threshold: float = 0.25):
         if not self.current_classes:
-            print("Warning: No detection classes set. Please add classes using add_classes() first.")
+            logger.warning("No detection classes set. Please add classes using add_classes() first.")
             return None
 
-        print(f"Executing detection on {image_path} (Classes: {list(self.current_classes)})...")
+        logger.info(f"Executing detection on {image_path} (Classes: {list(self.current_classes)})...")
         results = self.model.predict(image_path, conf=conf_threshold, verbose=False)
         return results[0]
 
@@ -68,8 +83,8 @@ class YoloDetector:
             Training results
         """
         try:
-            print(f"Starting fine-tuning with config: {data_config_path}")
-            print(f"Training parameters: epochs={epochs}, imgsz={imgsz}")
+            logger.info(f"Starting fine-tuning with config: {data_config_path}")
+            logger.info(f"Training parameters: epochs={epochs}, imgsz={imgsz}")
 
             # Start training
             results = self.model.train(
@@ -83,11 +98,11 @@ class YoloDetector:
                 verbose=True
             )
 
-            print("Fine-tuning completed successfully!")
+            logger.info("Fine-tuning completed successfully!")
             return results
 
         except Exception as e:
-            print(f"Error during fine-tuning: {e}")
+            logger.error(f"Error during fine-tuning: {e}")
             raise e
 
     def load_trained_model(self, model_path: str):
@@ -98,7 +113,13 @@ class YoloDetector:
             model_path: Path to the trained model file
         """
         try:
-            print(f"Loading fine-tuned model from: {model_path}")
+            logger.info(f"Loading fine-tuned model from: {model_path}")
+
+            # モデル再読み込み前のログ
+            logger.info(f"Reloading model - Previous model path: {self.model_path}")
+            logger.info(f"New model path: {model_path}")
+
+            # モデルを再読み込み
             self.model = YOLOWorld(model_path)
             self.model_path = model_path
 
@@ -106,10 +127,40 @@ class YoloDetector:
             if self.current_classes:
                 self._update_model_classes()
 
-            print("Fine-tuned model loaded successfully!")
+            logger.info(f"Fine-tuned model loaded successfully from {model_path}")
+            logger.info(f"Model reload completed at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
 
         except Exception as e:
-            print(f"Error loading fine-tuned model: {e}")
+            logger.error(f"Error loading fine-tuned model: {e}")
+            raise e
+
+    def reload_model(self, model_path: str = None):
+        """
+        Reload the model (useful for model updates or changes)
+
+        Args:
+            model_path: Path to the model file. If None, reloads current model
+        """
+        try:
+            if model_path is None:
+                model_path = self.model_path
+
+            logger.info(f"Manual model reload requested for: {model_path}")
+            logger.info(f"Reloading model at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+
+            # モデルを再読み込み
+            self.model = YOLOWorld(model_path)
+            self.model_path = model_path
+
+            # クラスを再設定
+            if self.current_classes:
+                self._update_model_classes()
+
+            logger.info(f"Model reload completed successfully from {model_path}")
+            logger.info(f"Model reload timestamp: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+
+        except Exception as e:
+            logger.error(f"Error during model reload: {e}")
             raise e
 
     def get_model_info(self):
@@ -119,6 +170,7 @@ class YoloDetector:
         return {
             "model_path": self.model_path,
             "current_classes": list(self.current_classes),
-            "model_type": type(self.model).__name__
+            "model_type": type(self.model).__name__,
+            "last_reload": getattr(self, '_last_reload_time', 'Not reloaded yet')
         }
 

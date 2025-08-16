@@ -7,3 +7,6 @@ pytest-mock
 httpx
 PyYAML
 gunicorn
+watchdog
+Pillow
+pandas

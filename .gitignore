@@ -19,3 +19,5 @@ venv.bak/
 
 runs/
 training_data/
+
+*.log

@@ -1,6 +1,7 @@
 import { ThemedView } from "@/components/ThemedView";
 import { ModelClassManager } from "@/components/model/ModelClassManager";
 import { SafeAreaView, ScrollView } from "react-native";
+
 const ModelScreen = () => {
   return (
     <SafeAreaView className="flex-1">

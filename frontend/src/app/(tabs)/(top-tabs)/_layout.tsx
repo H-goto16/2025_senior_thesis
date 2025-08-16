@@ -41,12 +41,32 @@ const TabLayout = () => {
       }}
     >
       <MaterialTopTabs.Screen
-        name='class'
-        options={{ title: 'class manager' }}
+        name='index'
+        options={{ title: 'Home' }}
       />
       <MaterialTopTabs.Screen
-        name='fine-tuning'
-        options={{ title: 'training' }}
+        name='class'
+        options={{ title: 'Model Classes' }}
+      />
+      <MaterialTopTabs.Screen
+        name='training'
+        options={{ title: 'Training' }}
+      />
+      <MaterialTopTabs.Screen
+        name='status'
+        options={{ title: 'Training Status' }}
+      />
+      <MaterialTopTabs.Screen
+        name='results'
+        options={{ title: 'Training Results' }}
+      />
+      <MaterialTopTabs.Screen
+        name='labeling'
+        options={{ title: 'Labeling' }}
+      />
+      <MaterialTopTabs.Screen
+        name='model-management'
+        options={{ title: 'Model Management' }}
       />
     </MaterialTopTabs>
   );

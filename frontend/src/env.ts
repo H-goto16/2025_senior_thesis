@@ -25,4 +25,7 @@ const env =
         API_ENDPOINT: required('API_ENDPOINT'),
       };
 
+
+console.info(`LOADED ENV LISTS: ${env !== null ? Object.keys(env) : 'null'}`);
+
 export default env;

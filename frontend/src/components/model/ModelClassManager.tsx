@@ -10,8 +10,11 @@ import { StyledTextInput } from '../ui/StyledTextInput';
 interface ModelInfo {
   model_path: string;
   vocab_file: string;
-  current_classes: string[];
+  classes: string[];
   total_classes: number;
+  model_name?: string;
+  status?: string;
+  error?: string;
 }
 
 interface ClassesResponse {
@@ -34,13 +37,17 @@ export const ModelClassManager = () => {
       if (response.ok) {
         const data: ModelInfo = await response.json();
         setModelInfo(data);
-        setClasses(data.current_classes);
+        // Use classes field instead of current_classes, with safe fallback
+        const classesArray = Array.isArray(data.classes) ? data.classes : [];
+        setClasses(classesArray);
       } else {
         throw new Error('Failed to fetch model info');
       }
     } catch (error) {
       console.error('Error fetching model info:', error);
       PlatformAlert.error('Error', 'Failed to fetch model information');
+      // Set empty classes array on error
+      setClasses([]);
     } finally {
       setIsRefreshing(false);
     }
@@ -51,13 +58,16 @@ export const ModelClassManager = () => {
       const response = await fetch(`${env?.API_ENDPOINT}/model/classes`);
       if (response.ok) {
         const data: ClassesResponse = await response.json();
-        setClasses(data.classes);
+        const classesArray = Array.isArray(data.classes) ? data.classes : [];
+        setClasses(classesArray);
       } else {
         throw new Error('Failed to fetch classes');
       }
     } catch (error) {
       console.error('Error fetching classes:', error);
       PlatformAlert.error('Error', 'Failed to fetch classes');
+      // Set empty classes array on error
+      setClasses([]);
     }
   };
 
@@ -81,7 +91,8 @@ export const ModelClassManager = () => {
 
       if (response.ok) {
         const data: ClassesResponse = await response.json();
-        setClasses(data.classes);
+        const classesArray = Array.isArray(data.classes) ? data.classes : [];
+        setClasses(classesArray);
         setNewClass('');
         PlatformAlert.success('Success', data.message);
         // Update model info as well
@@ -154,7 +165,8 @@ export const ModelClassManager = () => {
 
             if (response.ok) {
               const data: ClassesResponse = await response.json();
-              setClasses(data.classes);
+              const classesArray = Array.isArray(data.classes) ? data.classes : [];
+              setClasses(classesArray);
             } else {
               throw new Error('Failed to restore classes');
             }
@@ -233,7 +245,7 @@ export const ModelClassManager = () => {
         <ThemedView className="mb-6">
           <ThemedView className="flex-row justify-between items-center mb-4">
             <ThemedText className="text-xl font-bold">
-              Detection Classes ({classes.length})
+              Detection Classes ({Array.isArray(classes) ? classes.length : 0})
             </ThemedText>
             <CameraButton
               variant="secondary"
@@ -246,7 +258,7 @@ export const ModelClassManager = () => {
             </CameraButton>
           </ThemedView>
 
-          {classes.length > 0 ? (
+          {Array.isArray(classes) && classes.length > 0 ? (
             <ThemedView className="mb-4">
               {classes.map((className, index) => (
                 <ThemedView
@@ -280,7 +292,7 @@ export const ModelClassManager = () => {
             </ThemedView>
           )}
 
-          {classes.length > 0 && (
+          {Array.isArray(classes) && classes.length > 0 && (
             <ThemedView className="items-center">
               <CameraButton
                 variant="danger"
