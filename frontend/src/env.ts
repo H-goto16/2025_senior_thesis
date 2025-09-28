@@ -7,6 +7,7 @@ const required = (key: string): string => {
   const value = extra[key];
   if (typeof value !== 'string' || value === '') {
     console.error(`Environment variable ${key} is not set!!`);
+    return 'http://localhost:8000';
   }
   return value;
 };
@@ -14,7 +15,7 @@ const required = (key: string): string => {
 const webEnv =
   Platform.OS === 'web'
     ? {
-        API_ENDPOINT: process.env.EXPO_PUBLIC_API_ENDPOINT,
+        API_ENDPOINT: process.env.EXPO_PUBLIC_API_ENDPOINT || 'http://localhost:8000',
       }
     : null;
 

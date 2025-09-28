@@ -1,9 +1,10 @@
-from fastapi import FastAPI, UploadFile, HTTPException, Form
+from fastapi import FastAPI, UploadFile, HTTPException, Form, BackgroundTasks
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, FileResponse
 from yolo.object_detection import YoloDetector
+from training.training_manager import TrainingManager
 from pydantic import BaseModel, Field
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Optional
 import tempfile
 import os
 from PIL import Image, ImageDraw, ImageFont
@@ -17,10 +18,20 @@ import yaml
 from datetime import datetime
 
 yolo = YoloDetector()
+training_manager = TrainingManager()
 
 # Training data directory
 TRAINING_DATA_DIR = Path("training_data")
 TRAINING_DATA_DIR.mkdir(exist_ok=True)
+
+# Global training status
+training_status = {
+    "is_training": False,
+    "current_epoch": 0,
+    "total_epochs": 0,
+    "status_message": "Ready",
+    "progress": 0.0
+}
 
 # Enhanced FastAPI app with better OpenAPI documentation
 app = FastAPI(
@@ -186,6 +197,61 @@ class LabelingResponse(BaseModel):
     total_labels: int = Field(
         ...,
         description="Total number of labels in the dataset"
+    )
+
+class TrainingStatusResponse(BaseModel):
+    """Training status response"""
+    is_training: bool = Field(
+        ...,
+        description="Whether training is currently in progress"
+    )
+    current_epoch: int = Field(
+        ...,
+        description="Current training epoch"
+    )
+    total_epochs: int = Field(
+        ...,
+        description="Total number of epochs"
+    )
+    status_message: str = Field(
+        ...,
+        description="Current status message"
+    )
+    progress: float = Field(
+        ...,
+        description="Training progress (0.0 to 1.0)"
+    )
+
+class TrainingHistoryResponse(BaseModel):
+    """Training history response"""
+    history: List[Dict[str, Any]] = Field(
+        ...,
+        description="List of training sessions"
+    )
+
+class TrainingMetricsResponse(BaseModel):
+    """Training metrics response"""
+    metrics: Optional[Dict[str, Any]] = Field(
+        ...,
+        description="Training metrics data"
+    )
+    plots: Dict[str, str] = Field(
+        ...,
+        description="Plotly JSON plots"
+    )
+
+class ModelListResponse(BaseModel):
+    """Available models response"""
+    models: List[Dict[str, Any]] = Field(
+        ...,
+        description="List of available models"
+    )
+
+class DatasetAnalysisResponse(BaseModel):
+    """Dataset analysis response"""
+    analysis: Dict[str, Any] = Field(
+        ...,
+        description="Dataset analysis results"
     )
 
 
@@ -1000,4 +1066,298 @@ async def get_training_data_stats():
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error getting training stats: {str(e)}")
+
+# New advanced training and visualization endpoints
+
+@app.get(
+    "/training/status",
+    tags=["training"],
+    summary="Get Training Status",
+    description="Get current training status and progress",
+    response_model=TrainingStatusResponse
+)
+async def get_training_status():
+    """Get current training status"""
+    return TrainingStatusResponse(**training_status)
+
+@app.get(
+    "/training/history",
+    tags=["visualization"],
+    summary="Get Training History",
+    description="Get history of all training sessions with metrics",
+    response_model=TrainingHistoryResponse
+)
+async def get_training_history():
+    """Get training history"""
+    try:
+        history = training_manager.get_training_history()
+        return TrainingHistoryResponse(history=history)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error getting training history: {str(e)}")
+
+@app.get(
+    "/training/metrics/{run_name}",
+    tags=["visualization"],
+    summary="Get Training Metrics",
+    description="Get detailed training metrics and plots for a specific run",
+    response_model=TrainingMetricsResponse
+)
+async def get_training_metrics(run_name: str):
+    """Get detailed training metrics for a specific run"""
+    try:
+        metrics = training_manager.get_training_metrics(run_name)
+        plots = training_manager.generate_training_plots(run_name)
+
+        return TrainingMetricsResponse(
+            metrics=metrics,
+            plots=plots
+        )
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error getting training metrics: {str(e)}")
+
+@app.get(
+    "/models/available",
+    tags=["models"],
+    summary="Get Available Models",
+    description="Get list of all available trained models",
+    response_model=ModelListResponse
+)
+async def get_available_models():
+    """Get list of available models"""
+    try:
+        models = yolo.get_available_models()
+        return ModelListResponse(models=models)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error getting available models: {str(e)}")
+
+@app.post(
+    "/models/load/{model_path:path}",
+    tags=["models"],
+    summary="Load Model",
+    description="Load a specific trained model",
+    response_model=MessageResponse
+)
+async def load_model(model_path: str):
+    """Load a specific model"""
+    try:
+        # Validate model path exists
+        if not Path(model_path).exists():
+            raise HTTPException(status_code=404, detail="Model file not found")
+
+        yolo.load_trained_model(model_path)
+
+        return MessageResponse(
+            message=f"Model loaded successfully from: {model_path}"
+        )
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error loading model: {str(e)}")
+
+@app.post(
+    "/models/backup",
+    tags=["models"],
+    summary="Backup Current Model",
+    description="Create a backup of the currently loaded model",
+    response_model=MessageResponse
+)
+async def backup_current_model():
+    """Backup the current model"""
+    try:
+        backup_path = yolo.backup_current_model()
+        return MessageResponse(
+            message=f"Model backed up successfully to: {backup_path}"
+        )
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error backing up model: {str(e)}")
+
+@app.get(
+    "/models/validate",
+    tags=["models"],
+    summary="Validate Model Performance",
+    description="Validate current model performance",
+    response_model=Dict[str, Any]
+)
+async def validate_model_performance(test_data_path: Optional[str] = None):
+    """Validate model performance"""
+    try:
+        results = yolo.validate_model_performance(test_data_path)
+        return results
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error validating model: {str(e)}")
+
+@app.get(
+    "/models/comparison",
+    tags=["visualization"],
+    summary="Compare Models",
+    description="Get comparison of all trained models",
+    response_model=Dict[str, Any]
+)
+async def get_model_comparison():
+    """Get model comparison data"""
+    try:
+        comparison = training_manager.get_model_comparison()
+        return comparison
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error getting model comparison: {str(e)}")
+
+@app.get(
+    "/data/analysis",
+    tags=["data"],
+    summary="Analyze Dataset",
+    description="Get comprehensive analysis of the training dataset",
+    response_model=DatasetAnalysisResponse
+)
+async def get_dataset_analysis():
+    """Get dataset analysis"""
+    try:
+        analysis = training_manager.get_dataset_analysis()
+        return DatasetAnalysisResponse(analysis=analysis)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error analyzing dataset: {str(e)}")
+
+@app.get(
+    "/data/export",
+    tags=["data"],
+    summary="Export Training Data",
+    description="Export all training data as a downloadable archive",
+    response_class=FileResponse
+)
+async def export_training_data(format: str = "zip"):
+    """Export training data"""
+    try:
+        if format not in ["zip"]:
+            raise HTTPException(status_code=400, detail="Unsupported export format")
+
+        export_path = training_manager.export_training_data(format)
+
+        if not Path(export_path).exists():
+            raise HTTPException(status_code=500, detail="Failed to create export file")
+
+        return FileResponse(
+            path=export_path,
+            filename=Path(export_path).name,
+            media_type='application/zip'
+        )
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error exporting data: {str(e)}")
+
+@app.delete(
+    "/training/cleanup",
+    tags=["training"],
+    summary="Cleanup Old Training Runs",
+    description="Clean up old training runs, keeping only the latest N",
+    response_model=MessageResponse
+)
+async def cleanup_training_runs(keep_latest: int = 5):
+    """Clean up old training runs"""
+    try:
+        if keep_latest < 1:
+            raise HTTPException(status_code=400, detail="keep_latest must be at least 1")
+
+        training_manager.cleanup_old_runs(keep_latest)
+
+        return MessageResponse(
+            message=f"Cleanup completed. Kept latest {keep_latest} training runs."
+        )
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error during cleanup: {str(e)}")
+
+def run_training_background(data_config_path: str, epochs: int):
+    """Background training function"""
+    global training_status
+
+    try:
+        training_status.update({
+            "is_training": True,
+            "current_epoch": 0,
+            "total_epochs": epochs,
+            "status_message": "Starting training...",
+            "progress": 0.0
+        })
+
+        # Start training
+        results = yolo.fine_tune_model(data_config_path, epochs=epochs)
+
+        # Load the best model after training
+        runs_dir = Path("runs/detect")
+        if runs_dir.exists():
+            train_dirs = [d for d in runs_dir.iterdir() if d.is_dir() and d.name.startswith('train')]
+            if train_dirs:
+                latest_run = max(train_dirs, key=lambda x: x.stat().st_mtime)
+                best_model_path = latest_run / "weights" / "best.pt"
+
+                if best_model_path.exists():
+                    yolo.load_trained_model(str(best_model_path))
+
+        training_status.update({
+            "is_training": False,
+            "current_epoch": epochs,
+            "total_epochs": epochs,
+            "status_message": "Training completed successfully!",
+            "progress": 1.0
+        })
+
+    except Exception as e:
+        training_status.update({
+            "is_training": False,
+            "status_message": f"Training failed: {str(e)}",
+            "progress": 0.0
+        })
+
+@app.post(
+    "/training/start-async",
+    tags=["training"],
+    summary="Start Asynchronous Training",
+    description="Start model training in the background",
+    response_model=MessageResponse
+)
+async def start_async_training(background_tasks: BackgroundTasks, epochs: int = 50):
+    """Start training in background"""
+    try:
+        if training_status["is_training"]:
+            raise HTTPException(status_code=400, detail="Training is already in progress")
+
+        # Validate training data
+        images_dir = TRAINING_DATA_DIR / "images"
+        labels_dir = TRAINING_DATA_DIR / "labels"
+
+        if not images_dir.exists() or not labels_dir.exists():
+            raise HTTPException(
+                status_code=400,
+                detail="No training data available. Please submit some labeled data first."
+            )
+
+        image_files = list(images_dir.glob("*.jpg")) + list(images_dir.glob("*.png"))
+        label_files = list(labels_dir.glob("*.txt"))
+
+        if len(image_files) == 0 or len(label_files) == 0:
+            raise HTTPException(
+                status_code=400,
+                detail="Insufficient training data. Please add more labeled images."
+            )
+
+        # Create training config
+        config_path = create_training_config()
+        if not config_path:
+            raise HTTPException(
+                status_code=400,
+                detail="Could not create training configuration."
+            )
+
+        # Start training in background
+        background_tasks.add_task(run_training_background, config_path, epochs)
+
+        return MessageResponse(
+            message=f"Training started in background with {epochs} epochs. Use /training/status to monitor progress."
+        )
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error starting training: {str(e)}")
 

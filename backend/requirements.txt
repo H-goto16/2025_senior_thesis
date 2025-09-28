@@ -7,3 +7,12 @@ pytest-mock
 httpx
 PyYAML
 gunicorn
+matplotlib
+seaborn
+pandas
+numpy
+pillow
+plotly
+kaleido
+tensorboard
+scikit-learn

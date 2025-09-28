@@ -147,50 +147,64 @@ const LabelingScreen = () => {
 
     try {
       // 画像の実際のサイズを取得
-      Image.getSize(imageUri, async (originalWidth, originalHeight) => {
-        const scaleX = originalWidth / imageLayout.width;
-        const scaleY = originalHeight / imageLayout.height;
+      if (!imageUri || imageUri === 'unknown') {
+        PlatformAlert.error("Error", "Invalid image URI");
+        setIsLoading(false);
+        return;
+      }
+      
+      Image.getSize(
+        imageUri, 
+        async (originalWidth, originalHeight) => {
+          const scaleX = originalWidth / imageLayout.width;
+          const scaleY = originalHeight / imageLayout.height;
 
-        // バウンディングボックスを元の画像サイズに変換
-        const normalizedBoxes = boundingBoxes.map(box => ({
-          label: box.label,
-          x1: Math.min(box.x1, box.x2) * scaleX,
-          y1: Math.min(box.y1, box.y2) * scaleY,
-          x2: Math.max(box.x1, box.x2) * scaleX,
-          y2: Math.max(box.y1, box.y2) * scaleY
-        }));
+          // バウンディングボックスを元の画像サイズに変換
+          const normalizedBoxes = boundingBoxes.map(box => ({
+            label: box.label,
+            x1: Math.min(box.x1, box.x2) * scaleX,
+            y1: Math.min(box.y1, box.y2) * scaleY,
+            x2: Math.max(box.x1, box.x2) * scaleX,
+            y2: Math.max(box.y1, box.y2) * scaleY
+          }));
 
-        // FormDataを作成
-        const formData = new FormData();
+          // FormDataを作成
+          const formData = new FormData();
 
-        // 画像ファイルを追加
-        const response = await fetch(imageUri);
-        const blob = await response.blob();
-        formData.append('image', blob, 'labeled_image.jpg');
+          // 画像ファイルを追加
+          const response = await fetch(imageUri);
+          const blob = await response.blob();
+          formData.append('image', blob, 'labeled_image.jpg');
 
-        // ラベリング情報を追加
-        formData.append('labeling_data', JSON.stringify({
-          boxes: normalizedBoxes,
-          image_width: originalWidth,
-          image_height: originalHeight
-        }));
+          // ラベリング情報を追加
+          formData.append('labeling_data', JSON.stringify({
+            boxes: normalizedBoxes,
+            image_width: originalWidth,
+            image_height: originalHeight
+          }));
 
-        // バックエンドに送信
-        const uploadResponse = await fetch(env?.API_ENDPOINT +"/labeling/submit", {
-          method: 'POST',
-          body: formData,
-        });
+          // バックエンドに送信
+          const uploadResponse = await fetch(env?.API_ENDPOINT +"/labeling/submit", {
+            method: 'POST',
+            body: formData,
+          });
 
-        if (!uploadResponse.ok) {
-          throw new Error(`Upload failed with status ${uploadResponse.status}`);
+          if (!uploadResponse.ok) {
+            throw new Error(`Upload failed with status ${uploadResponse.status}`);
+          }
+
+          const result = await uploadResponse.json();
+          console.log('Labeling submitted successfully:', result);
+
+          PlatformAlert.success("Success", "Labeling data submitted successfully! The model will be retrained.");
+          router.back();
+        },
+        (error) => {
+          console.error('Error getting image size for labeling:', error);
+          PlatformAlert.error("Error", "Failed to get image dimensions");
+          setIsLoading(false);
         }
-
-        const result = await uploadResponse.json();
-        console.log('Labeling submitted successfully:', result);
-
-        PlatformAlert.success("Success", "Labeling data submitted successfully! The model will be retrained.");
-        router.back();
-      });
+      );
     } catch (error) {
       console.error('Error submitting labeling:', error);
       PlatformAlert.error("Error", "Failed to submit labeling data");

@@ -11,24 +11,24 @@ setup:
 
 setup-parallel:
 	cd frontend && ${PNPM_COMMAND} install &
-	cd backend && ${PYTHON_COMMAND} -m venv .venv &
+	${PYTHON_COMMAND} -m venv .venv &
 	wait
 
 setup-venv:
-	cd backend && . .venv/bin/activate && ${PYTHON_COMMAND} -m pip install -r requirements.txt
+	. .venv/bin/activate && ${PYTHON_COMMAND} -m pip install -r backend/requirements.txt
 
 server:
-	cd backend/src && . ../.venv/bin/activate && uvicorn main:app --reload --host 0.0.0.0 --port 8000
+	cd backend/src && . ../../.venv/bin/activate && uvicorn main:app --reload --host 0.0.0.0 --port 8000
 
 deploy-server:
-	cd backend/src && . ../.venv/bin/activate && gunicorn main:app -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:8000
+	cd backend/src && . ../../.venv/bin/activate && gunicorn main:app -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:8000
 
 deploy-server-public:
-	cd backend/src && . ../.venv/bin/activate && gunicorn main:app -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:8000 &
+	cd backend/src && . ../../.venv/bin/activate && gunicorn main:app -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:8000 &
 	cd frontend && bash -c 'pnpm exec localtunnel --port 8000 --subdomain dish-detection-api'
 
 deploy-server-cloudflare:
-	cd backend/src && . ../.venv/bin/activate && gunicorn main:app -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:8000 &
+	cd backend/src && . ../../.venv/bin/activate && gunicorn main:app -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:8000 &
 	cloudflared tunnel --url http://localhost:8000
 
 frontend:
@@ -49,7 +49,7 @@ test:
 	make test-backend & make test-frontend
 
 test-backend:
-	cd backend && . .venv/bin/activate && pytest
+	cd backend && . ../.venv/bin/activate && pytest
 
 test-frontend:
 	cd frontend && ${PNPM_COMMAND} test
@@ -71,7 +71,7 @@ clean-training-data:
 	@echo "Training data cleared."
 
 venv-clean:
-	rm -rf backend/.venv
+	rm -rf .venv
 
 stop:
 	pkill -f "uvicorn main:app --reload --host 0.0.0.0 --port 8000"

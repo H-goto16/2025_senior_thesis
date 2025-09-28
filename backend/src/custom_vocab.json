@@ -1,9 +1,13 @@
 [
-    "Door",
-    "Road",
     "person",
-    "hand",
+    "handbag",
+    "dog",
     "backpack",
+    "cat",
+    "bicycle",
+    "car",
     "backpak",
-    "handbag"
+    "Road",
+    "Door",
+    "hand"
 ]
