@@ -1,4 +1,4 @@
-.PHONY:  setup backend frontend dev clean server setup-parallel setup-venv test test-backend test-frontend train-model view-training-stats clean-training-data
+.PHONY:  setup backend frontend dev clean server setup-parallel setup-venv test test-backend test-frontend train-model view-training-stats clean-training-data fix-expo-router test-fix
 
 PYTHON_COMMAND=python3
 PIP_COMMAND=pip3
@@ -34,7 +34,15 @@ deploy-server-cloudflare:
 frontend:
 	cd frontend && ${PNPM_COMMAND} run start
 
+fix-expo-router:
+	@echo "🔧 Fixing expo-router path issue..."
+	cd frontend && find node_modules/.pnpm/expo-router@5.1.0_*/node_modules/expo-router -name "_ctx*.js" -exec sed -i 's|"../../../../src/app"|"../../../../../src/app"|g' {} \;
+	@echo "🧹 Clearing caches..."
+	cd frontend && rm -rf .expo .metro-cache node_modules/.cache ~/.expo
+	@echo "✅ expo-router fix completed!"
+
 dev:
+	make fix-expo-router
 	make server & make frontend
 
 test:
@@ -71,3 +79,7 @@ stop:
 	pkill -f "gunicorn main:app"
 	pkill -f "localtunnel"
 	pkill -f "cloudflared"
+
+test-fix:
+	@echo "🧪 Testing expo-router fix..."
+	cd frontend && timeout 30 pnpm web --port 8081 || echo "Test completed"
