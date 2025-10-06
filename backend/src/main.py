@@ -1,4 +1,4 @@
-from fastapi import FastAPI, UploadFile, HTTPException, Form, BackgroundTasks
+from fastapi import FastAPI, UploadFile, HTTPException, Form, BackgroundTasks, Query
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, FileResponse
 from yolo.object_detection import YoloDetector
@@ -259,7 +259,7 @@ class DatasetAnalysisResponse(BaseModel):
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
-    allow_credentials=True,
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -656,7 +656,7 @@ async def detect_object(
 )
 async def detect_object_with_confidence(
     image: UploadFile,
-    confidence: float = Form(0.25)
+    confidence: float = Query(0.25)
 ):
     """Detect objects in uploaded image with custom confidence threshold"""
     try:

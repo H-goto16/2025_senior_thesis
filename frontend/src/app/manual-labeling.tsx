@@ -4,6 +4,7 @@ import { CameraButton } from '@/components/ui/CameraButton';
 import { PlatformAlert } from '@/components/ui/PlatformAlert';
 import { StyledTextInput } from '@/components/ui/StyledTextInput';
 import env from '@/env';
+import { useLabeling } from '@/lib/store';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useRef, useState } from 'react';
 import {
@@ -34,7 +35,8 @@ interface BoundingBox {
 const LabelingScreen = () => {
   const params = useLocalSearchParams();
   const router = useRouter();
-  const imageUri = (params.imageUri as string) || '';
+  const { currentImage } = useLabeling();
+  const imageUri = (params.imageUri as string) || currentImage || '';
   const existingClassesParam = (params.existingClasses as string) || '';
   const existingClasses = existingClassesParam ? JSON.parse(existingClassesParam) : [];
   const colorScheme = useColorScheme();
@@ -94,7 +96,6 @@ const LabelingScreen = () => {
 
     onPanResponderRelease: () => {
       if (currentBox && isDrawing) {
-        // バウンディングボックスのサイズが小さすぎる場合は無効とする
         const width = Math.abs(currentBox.x2 - currentBox.x1);
         const height = Math.abs(currentBox.y2 - currentBox.y1);
 
@@ -146,7 +147,6 @@ const LabelingScreen = () => {
     setIsLoading(true);
 
     try {
-      // 画像の実際のサイズを取得
       if (!imageUri || imageUri === 'unknown') {
         PlatformAlert.error("Error", "Invalid image URI");
         setIsLoading(false);
@@ -159,7 +159,6 @@ const LabelingScreen = () => {
           const scaleX = originalWidth / imageLayout.width;
           const scaleY = originalHeight / imageLayout.height;
 
-          // バウンディングボックスを元の画像サイズに変換
           const normalizedBoxes = boundingBoxes.map(box => ({
             label: box.label,
             x1: Math.min(box.x1, box.x2) * scaleX,
@@ -168,23 +167,17 @@ const LabelingScreen = () => {
             y2: Math.max(box.y1, box.y2) * scaleY
           }));
 
-          // FormDataを作成
           const formData = new FormData();
-
-          // 画像ファイルを追加
           const response = await fetch(imageUri);
           const blob = await response.blob();
           formData.append('image', blob, 'labeled_image.jpg');
-
-          // ラベリング情報を追加
           formData.append('labeling_data', JSON.stringify({
             boxes: normalizedBoxes,
             image_width: originalWidth,
             image_height: originalHeight
           }));
 
-          // バックエンドに送信
-          const uploadResponse = await fetch(env?.API_ENDPOINT +"/labeling/submit", {
+          const uploadResponse = await fetch(env?.API_ENDPOINT + "/labeling/submit", {
             method: 'POST',
             body: formData,
           });
@@ -193,20 +186,16 @@ const LabelingScreen = () => {
             throw new Error(`Upload failed with status ${uploadResponse.status}`);
           }
 
-          const result = await uploadResponse.json();
-          console.log('Labeling submitted successfully:', result);
-
+          await uploadResponse.json();
           PlatformAlert.success("Success", "Labeling data submitted successfully! The model will be retrained.");
           router.back();
         },
-        (error) => {
-          console.error('Error getting image size for labeling:', error);
+        () => {
           PlatformAlert.error("Error", "Failed to get image dimensions");
           setIsLoading(false);
         }
       );
     } catch (error) {
-      console.error('Error submitting labeling:', error);
       PlatformAlert.error("Error", "Failed to submit labeling data");
     } finally {
       setIsLoading(false);
@@ -237,7 +226,6 @@ const LabelingScreen = () => {
               }}
             />
 
-            {/* 描画中のバウンディングボックス */}
             {currentBox && (
               <View
                 style={[
@@ -253,7 +241,6 @@ const LabelingScreen = () => {
               />
             )}
 
-            {/* 確定したバウンディングボックス */}
             {boundingBoxes.map((box) => (
               <View key={box.id}>
                 <View
@@ -299,7 +286,6 @@ const LabelingScreen = () => {
           </View>
         </View>
 
-        {/* ラベル入力セクション */}
         <ThemedView style={styles.labelingSection}>
           <ThemedText style={styles.sectionTitle}>Add Label</ThemedText>
 
@@ -564,3 +550,5 @@ const styles = StyleSheet.create({
 });
 
 export default LabelingScreen;
+
+

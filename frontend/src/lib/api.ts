@@ -191,9 +191,8 @@ class ApiClient {
   }
 
   async startAsyncTraining(epochs: number = 50) {
-    return this.request<{ message: string }>('/training/start-async', {
+    return this.request<{ message: string }>(`/training/start-async?epochs=${epochs}`, {
       method: 'POST',
-      body: JSON.stringify({ epochs }),
     });
   }
 
@@ -263,44 +262,7 @@ class ApiClient {
     return response.blob();
   }
 
-  // Model management
-  async getAvailableModels() {
-    return this.request('/models/available');
-  }
-
-  async loadModel(modelPath: string) {
-    return this.request(`/models/load/${encodeURIComponent(modelPath)}`, {
-      method: 'POST',
-    });
-  }
-
-  async backupModel() {
-    return this.request('/models/backup', {
-      method: 'POST',
-    });
-  }
-
-  async validateModel(testDataPath?: string) {
-    const params = testDataPath ? `?test_data_path=${encodeURIComponent(testDataPath)}` : '';
-    return this.request(`/models/validate${params}`);
-  }
-
-  async getModelComparison() {
-    return this.request('/models/comparison');
-  }
-
-  // Advanced training
-  async startAsyncTraining(epochs: number = 50) {
-    return this.request(`/training/start-async?epochs=${epochs}`, {
-      method: 'POST',
-    });
-  }
-
-  async cleanupTrainingRuns(keepLatest: number = 5) {
-    return this.request(`/training/cleanup?keep_latest=${keepLatest}`, {
-      method: 'DELETE',
-    });
-  }
+  // Remove duplicated model management and advanced training methods (deduplicated)
 
   // Health check
   async healthCheck() {

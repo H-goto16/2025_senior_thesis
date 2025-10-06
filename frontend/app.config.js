@@ -59,7 +59,7 @@ export default {
       eas: {
         projectId: 'your-project-id-here',
       },
-      apiUrl: process.env.EXPO_PUBLIC_API_URL || 'http://localhost:8001',
+      apiUrl: process.env.EXPO_PUBLIC_API_URL || 'http://localhost:8000',
     },
   },
 };

@@ -5,6 +5,7 @@ import os
 import shutil
 from datetime import datetime
 import yaml
+import torch
 
 class YoloDetector:
     def __init__(self, model_path="./yolov8s-world.pt", vocab_file="custom_vocab.json"):
@@ -12,7 +13,36 @@ class YoloDetector:
         self.model_path = model_path
         self.vocab_file = Path(vocab_file)
         self.current_classes = set()
+        self.device = self._resolve_device()
         self._load_custom_vocab()
+
+    def _resolve_device(self) -> str:
+        """Select a safe device. Prefer CPU unless CUDA is both available and usable.
+
+        Older GPUs (e.g., sm_52) are often incompatible with the installed PyTorch builds.
+        To avoid runtime 500s, default to CPU and only opt into CUDA when explicitly
+        requested via env and capability is sufficient.
+        """
+        requested = os.getenv("YOLO_DEVICE") or os.getenv("YW_DEVICE")
+        if requested:
+            if requested.startswith("cuda"):
+                if self._is_cuda_usable():
+                    return requested
+                print("CUDA requested but not usable; falling back to CPU.")
+                return "cpu"
+            return requested
+
+        return "cuda:0" if self._is_cuda_usable() else "cpu"
+
+    def _is_cuda_usable(self) -> bool:
+        if not torch.cuda.is_available():
+            return False
+        try:
+            major, minor = torch.cuda.get_device_capability(0)
+            # Conservative gate aligned with typical PyTorch prebuilt minimum (>= 7.0)
+            return (major * 10 + minor) >= 70
+        except Exception:
+            return False
 
     def _load_custom_vocab(self):
         if self.vocab_file.exists():
@@ -55,8 +85,18 @@ class YoloDetector:
             return None
 
         print(f"Executing detection on {image_path} (Classes: {list(self.current_classes)})...")
-        results = self.model.predict(image_path, conf=conf_threshold, verbose=False)
-        return results[0]
+        try:
+            results = self.model.predict(image_path, conf=conf_threshold, device=self.device, verbose=False)
+            return results[0]
+        except Exception as e:
+            # Retry on CPU if a CUDA/device error occurs
+            if self.device != "cpu":
+                print(f"Device '{self.device}' failed with error: {e}. Retrying on CPU...")
+                results = self.model.predict(image_path, conf=conf_threshold, device="cpu", verbose=False)
+                # Stick to CPU after a fallback
+                self.device = "cpu"
+                return results[0]
+            raise
 
     def fine_tune_model(self, data_config_path: str, epochs: int = 50, imgsz: int = 640):
         """

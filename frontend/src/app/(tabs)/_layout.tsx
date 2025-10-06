@@ -40,15 +40,7 @@ export default function TabLayout() {
           ),
         }}
       />
-      <Tabs.Screen
-        name="labeling"
-        options={{
-          title: 'Labeling',
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="create" size={size || 24} color={color} />
-          ),
-        }}
-      />
+      {/** Labeling tab removed per request */}
       <Tabs.Screen
         name="training"
         options={{

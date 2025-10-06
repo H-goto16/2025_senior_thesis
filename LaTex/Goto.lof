@@ -1,0 +1,45 @@
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {3.1}{\ignorespaces 提案UIの反復ループ（1/4）：撮影→初回検出→語彙確認/追加}}{6}{figure.3.1}%
+\contentsline {subfigure}{\numberline {(a)}{\ignorespaces {撮影/選択（Detection）}}}{6}{figure.3.1}%
+\contentsline {subfigure}{\numberline {(b)}{\ignorespaces {初回検出（未学習）}}}{6}{figure.3.1}%
+\contentsline {subfigure}{\numberline {(c)}{\ignorespaces {クラス追加後の検出（既存クラス）}}}{6}{figure.3.1}%
+\contentsline {subfigure}{\numberline {(d)}{\ignorespaces {スマートフォンクラスの追加（Models）}}}{6}{figure.3.1}%
+\contentsline {figure}{\numberline {3.2}{\ignorespaces 提案UIの反復ループ（2/4）：再検出→ラベリング→学習起動}}{7}{figure.3.2}%
+\contentsline {subfigure}{\numberline {(a)}{\ignorespaces {smartphoneクラスで検出成功}}}{7}{figure.3.2}%
+\contentsline {subfigure}{\numberline {(b)}{\ignorespaces {マニュアルラベリング}}}{7}{figure.3.2}%
+\contentsline {subfigure}{\numberline {(c)}{\ignorespaces {ファインチューニング開始}}}{7}{figure.3.2}%
+\contentsline {subfigure}{\numberline {(d)}{\ignorespaces {学習の起動（Training）}}}{7}{figure.3.2}%
+\contentsline {figure}{\numberline {3.3}{\ignorespaces 提案UIの反復ループ（3/4）：語彙・履歴・モデル管理}}{8}{figure.3.3}%
+\contentsline {subfigure}{\numberline {(a)}{\ignorespaces {語彙・クラス一覧（Models）}}}{8}{figure.3.3}%
+\contentsline {subfigure}{\numberline {(b)}{\ignorespaces {学習履歴・指標の確認（Analytics）}}}{8}{figure.3.3}%
+\contentsline {subfigure}{\numberline {(c)}{\ignorespaces {モデルの切替・管理}}}{8}{figure.3.3}%
+\contentsline {subfigure}{\numberline {(d)}{\ignorespaces {モデル概要の確認}}}{8}{figure.3.3}%
+\contentsline {figure}{\numberline {3.4}{\ignorespaces 提案UIの反復ループ（4/4）：データ・性能の確認と再反復}}{9}{figure.3.4}%
+\contentsline {subfigure}{\numberline {(a)}{\ignorespaces {データセット確認}}}{9}{figure.3.4}%
+\contentsline {subfigure}{\numberline {(b)}{\ignorespaces {性能比較・推移の確認}}}{9}{figure.3.4}%
+\contentsline {subfigure}{\numberline {(c)}{\ignorespaces {}}}{9}{figure.3.4}%
+\contentsline {subfigure}{\numberline {(d)}{\ignorespaces {}}}{9}{figure.3.4}%
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {5.1}{\ignorespaces 意味的領域分割タスク用のラベル}}{13}{figure.5.1}%
+\contentsline {figure}{\numberline {5.2}{\ignorespaces 物体検出タスク用のラベル}}{13}{figure.5.2}%
+\contentsline {figure}{\numberline {5.3}{\ignorespaces 領域の分割の概要}}{14}{figure.5.3}%
+\contentsline {figure}{\numberline {5.4}{\ignorespaces P(r)}}{14}{figure.5.4}%
+\contentsline {figure}{\numberline {5.5}{\ignorespaces \ac {Seg}のバブルグラフ(ユニオンモデル)}}{15}{figure.5.5}%
+\contentsline {figure}{\numberline {5.6}{\ignorespaces \ac {Obj}のバブルグラフ(ユニオンモデル)}}{15}{figure.5.6}%
+\contentsline {figure}{\numberline {5.7}{\ignorespaces \ac {Seg}のバブルグラフ(ユニオンモデル2)}}{16}{figure.5.7}%
+\contentsline {figure}{\numberline {5.8}{\ignorespaces \ac {Obj}のバブルグラフ(ユニオンモデル2)}}{16}{figure.5.8}%
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {6.1}{\ignorespaces 画像とその数値[\%]}}{18}{figure.6.1}%
+\contentsline {figure}{\numberline {6.2}{\ignorespaces 球冠ベース(ご飯)のバブルグラフ}}{19}{figure.6.2}%
+\contentsline {figure}{\numberline {6.3}{\ignorespaces 球冠ベース(みそ汁)のバブルグラフ}}{19}{figure.6.3}%
+\contentsline {figure}{\numberline {6.4}{\ignorespaces 関数ベース(ご飯)のバブルグラフ}}{19}{figure.6.4}%
+\contentsline {figure}{\numberline {6.5}{\ignorespaces 関数ベース(みそ汁)のバブルグラフ}}{19}{figure.6.5}%
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {A.1}{\ignorespaces 球冠ベースの結果画像(ユニオンモデル)}}{25}{figure.A.1}%
+\contentsline {figure}{\numberline {A.2}{\ignorespaces 関数ベースの結果画像(ユニオンモデル)}}{25}{figure.A.2}%
+\contentsline {figure}{\numberline {A.3}{\ignorespaces 球冠ベースの結果画像(ユニオンモデル2)}}{26}{figure.A.3}%
+\contentsline {figure}{\numberline {A.4}{\ignorespaces 関数ベースの結果画像(ユニオンモデル2)}}{26}{figure.A.4}%

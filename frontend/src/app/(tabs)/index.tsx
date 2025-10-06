@@ -5,6 +5,7 @@ import { DetectionCard } from "@/components/ui/DetectionCard";
 import { PlatformAlert } from "@/components/ui/PlatformAlert";
 import { StyledTextInput } from "@/components/ui/StyledTextInput";
 import env from "@/env";
+import { useLabeling } from "@/lib/store";
 import { type CameraType, CameraView, useCameraPermissions } from "expo-camera";
 import * as FileSystem from "expo-file-system";
 import * as ImagePicker from "expo-image-picker";
@@ -36,6 +37,7 @@ const HomeScreen = () => {
   const colorScheme = useColorScheme();
   const isDark = colorScheme === 'dark';
   const router = useRouter();
+  const { setCurrentImage } = useLabeling();
 
   const fetchCurrentClasses = async () => {
     try {
@@ -213,10 +215,12 @@ const HomeScreen = () => {
 
     const classes = await fetchCurrentClasses();
 
+    // Store the current image in global store to avoid huge data URLs in query params
+    setCurrentImage(capturedImage);
+
     router.push({
-      pathname: '/labeling',
+      pathname: '/manual-labeling',
       params: {
-        imageUri: capturedImage,
         existingClasses: JSON.stringify(classes)
       }
     });

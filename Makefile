@@ -1,4 +1,4 @@
-.PHONY:  setup backend frontend dev clean server setup-parallel setup-venv test test-backend test-frontend train-model view-training-stats clean-training-data fix-expo-router test-fix
+.PHONY:  setup backend frontend dev clean server setup-parallel setup-venv test test-backend test-frontend train-model view-training-stats clean-training-data fix-expo-router test-fix latex latex-bib latex-clean latex-docker
 
 PYTHON_COMMAND=python3
 PIP_COMMAND=pip3
@@ -33,6 +33,13 @@ deploy-server-cloudflare:
 
 frontend:
 	cd frontend && ${PNPM_COMMAND} run start
+
+frontend-web:
+	cd frontend && ${PNPM_COMMAND} run web -- --port 8081
+
+capture-screens:
+	# Requires frontend web to be running on http://localhost:8081
+	cd frontend && APP_BASE_URL=http://localhost:8081 ${PNPM_COMMAND} run capture-screens
 
 fix-expo-router:
 	@echo "🔧 Fixing expo-router path issue..."
@@ -83,3 +90,19 @@ stop:
 test-fix:
 	@echo "🧪 Testing expo-router fix..."
 	cd frontend && timeout 30 pnpm web --port 8081 || echo "Test completed"
+
+# --- LaTeX build ---
+LATEX_DIR=LaTex
+LATEX_MAIN=Goto.tex
+
+latex:
+	cd $(LATEX_DIR) && uplatex -interaction=nonstopmode $(LATEX_MAIN) && uplatex -interaction=nonstopmode $(LATEX_MAIN) && dvipdfmx Goto.dvi
+
+latex-bib:
+	cd $(LATEX_DIR) && uplatex -interaction=nonstopmode $(LATEX_MAIN) && upbibtex Goto && uplatex -interaction=nonstopmode $(LATEX_MAIN) && uplatex -interaction=nonstopmode $(LATEX_MAIN) && dvipdfmx Goto.dvi
+
+latex-clean:
+	cd $(LATEX_DIR) && rm -f *.aux *.log *.toc *.lof *.lot *.out *.bbl *.blg *.dvi *.synctex.gz *.fls *.fdb_latexmk
+
+latex-docker:
+	docker run --rm -v $(PWD)/$(LATEX_DIR):/work -w /work danteev/texlive sh -lc 'uplatex -interaction=nonstopmode $(LATEX_MAIN) && upbibtex Goto || true && uplatex -interaction=nonstopmode $(LATEX_MAIN) && uplatex -interaction=nonstopmode $(LATEX_MAIN) && dvipdfmx Goto.dvi'

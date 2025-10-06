@@ -34,6 +34,7 @@ function RootLayoutNav() {
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="labeling" options={{ headerShown: false }} />
+        <Stack.Screen name="manual-labeling" options={{ headerShown: false }} />
         <Stack.Screen name="+not-found" />
       </Stack>
       <StatusBar style={isDarkMode ? 'light' : 'dark'} />

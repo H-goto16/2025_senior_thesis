@@ -1,0 +1,975 @@
+\documentclass[senior,final,11pt,dvipdfmx]{iscs-thesis}
+%\documentclass[master,final,11pt]{iscs-thesis}
+\usepackage{indentfirst}
+\usepackage{amsmath}
+\usepackage[dvipdfmx]{graphicx}
+\usepackage[dvipdfmx]{color}
+\usepackage{subfigure}
+\usepackage{longtable}
+\usepackage{url} % URL
+\usepackage{multirow} %表
+\usepackage{booktabs} %表線の太さ
+\usepackage{makecell} %表内改行
+\usepackage{float}
+\usepackage{acronym}
+\usepackage{amssymb}
+\usepackage{algpseudocode}
+\usepackage{algorithm}
+\renewcommand{\algorithmicrequire}{\textbf{Input}}
+\renewcommand{\algorithmicensure}{\textbf{Output}}
+\usepackage[numbers,sort&compress]{natbib}
+\usepackage{pdfpages}
+\usepackage[dvipdfmx]{hyperref}
+
+% 略語定義
+\newacro{Obj}[物体検出]{Object Detection}
+\newacro{Cla}[物体認識]{Classification}
+\newacro{Seg}[領域分割]{Semantic Segmentation}
+\newacro{Ins}[実例的領域分割]{Instance Segmetation}
+\newacro{Sem}[意味的領域分割]{Semantic Segmentation}
+\newacro{Pan}[包括的領域分割]{Panoptic Segmentaion}
+\newacro{CNN}[CNN]{畳み込みニューラルネットワーク}
+\newacro{DSConv}[Depthwise Separable Conv]{Depthwise Separable Convolution}
+\newacro{DConv}[Depthwise Conv]{Depthwise Convolution}
+\newacro{PConv}[Pointwise Conv]{Pointwise Convolution}
+\newacro{SE-Module}[SE-Module]{Squeeze-and-Excitation-Module}
+\newacro{HS}[HS]{HardSwish}
+\newacro{NAS}[NAS]{Neural Architecture Search}
+\newacro{MBConv}[MBConv]{Mobile Inverted Residual Block}
+\newacro{FLOPs}[FLOPs]{FLoating-point Operations}
+\newacro{UpConv}[転置畳み込み]{Transposed Convolution}
+\newacro{ASPP}[ASPP]{Atrous Spatial Pyramid Pooling}
+\newacro{PPM}[PPM]{Pyramid Pooling Module}
+\newacro{SimOTA}[SimOTA]{Simplified Optimal Transport Assignment}
+\newacro{BCE}[BCE]{Binary Cross Entropy}
+\newacro{IoU}[IoU]{Intersection over Union}
+\newacro{AP}[AP]{Average Precision}
+\newacro{NMS}[NMS]{Non-Maximum Suppression}
+%
+% 論文の種類とフォントサイズをオプションに
+\usepackage[top=3.0cm, bottom=3.0cm, left=3.0cm, right=3.0cm]{geometry}
+%-------------------
+% 既存の表紙をスキップ
+% \renewcommand{\maketitle}{}
+
+% \etitle{}
+% \jtitle{意味的領域分割と物体検出を用いた残量測定の応用}
+% %
+% \eauthor{Haruhiro TAKAHASHI}
+% \jauthor{高橋 遥大}
+% \esupervisor{Lin MENG}
+% \jsupervisor{孟 林}
+% \supervisortitle{Professor} % Professor, etc.
+% \date{\today}
+%-------------------
+\pagenumbering{roman}
+\begin{document}
+% 内製の表紙（外部PDFに依存しない）
+\begin{titlepage}
+  \centering
+  {\Large ２０２５年度\par}
+  \vspace{8mm}
+  {\LARGE 学 \quad 士 \quad 論 \quad 文\par}
+  \vspace{16mm}
+  {\Large 論題\par}
+  \vspace{6mm}
+  {\Large \textbf{スマートフォン主導の開放語彙物体検出に基づく\\自作モデル運用基盤の設計と実装}\par}
+  \vspace{20mm}
+  {\large 指導教員 \quad 孟 \; 林 \; 教授\par}
+  \vspace{8mm}
+  {\large 立命館大学 \; 理工学部 \; 電子情報工学科\par}
+  \vspace{4mm}
+  {\large 学籍番号 \; 2290220041-3\par}
+  {\large 氏名 \; 後藤 \; 晴貴\par}
+\end{titlepage}
+
+\chapter*{\centering 論文要旨}
+AIが広く普及した現代において、対話型AIは一般ユーザに浸透している一方、画像認識は依然として専門知識を要し、エンジニア主体の領域に留まっている。本研究は一般ユーザを主対象とし、データ収集からアノテーション、学習、評価、利用までを一貫して支援し、個々の利用状況に特化した画像認識モデルの調整・ファインチューニングを可能にするアプリケーションを開発した。実装はプロトタイプとして公開し、フロントエンドにReact Native＋Expoを採用してAndroid/iOS/Webで統一的に動作するUIを提供、直感的なドラッグ\&ドロップのラベリング、リアルタイム推論、学習進捗の可視化、モデル管理などの機能を統合した。バックエンドはFastAPIを用い、Ultralytics YOLOを中核とする検出・学習エンジン、学習履歴・メトリクス取得、データセット分析APIを実装し、非同期学習やモデルの保存・読み込みを含むワークフローを提供する。開発運用面ではMakefileによるセットアップ／起動／テストの自動化、pnpmを用いたクロスプラットフォーム開発、OpenAPIによるエンドポイント記述を整備し、再現性と保守性を高めた。本システムにより、プログラミング経験が乏しいユーザでも少量の自前データから用途特化モデルを反復的に改善でき、画像認識活用の敷居を下げる。ケースとして料理画像検出を対象に、UI内でのデータ収集・ラベリングから学習、精度の可視化までを一連の操作で完結できることを示し、一般ユーザによるモデルカスタマイズの実用可能性を示唆する。
+\\
+
+\frontmatter %% 前付け
+\tableofcontents % 目次
+\listoffigures % 図目次
+\listoftables % 表目次
+%\lstlistoflistings % ソースコード目次
+%-------------------
+\mainmatter %% 本文
+%-------1章--------------------------------------------------------
+\chapter{はじめに}
+対話型AIの普及により、一般ユーザが自然言語によって高度な情報処理を日常的に活用する時代が到来した。一方で、画像認識をはじめとするコンピュータビジョン（CV）は、データ収集、アノテーション、学習・評価、運用を含む一連の工程が分断されやすく、専門的な知識・ツール群を横断的に扱う必要があることから、依然として一般ユーザにとって参入障壁が高い。特に、用途特化のモデルを自分で調整（チューニング／ファインチューニング）し、反復的に改善していくためには、学習用データの拡充、失敗の可視化、改善仮説の検証といった実務的ワークフローが不可欠である。
+
+本研究では、こうしたギャップを解消し、一般ユーザが「自分の目的に合った画像認識モデル」を自力で構築・調整できる環境を提供することを目的として、エンドツーエンドのモデル管理アプリケーション「Dish Detection」を開発した。本システムは、スマートフォン／PCのいずれからでも利用可能なクロスプラットフォームUI（React Native + Expo）と、高性能なWeb API（FastAPI）を組み合わせ、データ収集・ラベリング・学習・推論・評価・モデル運用までを一貫して支援する。具体的には、カメラやギャラリーからの画像取得、ドラッグ\&ドロップによる直感的なアノテーション、Ultralytics YOLOを用いたリアルタイム物体検出、学習の非同期実行と進捗監視、履歴の可視化、データセット分析、モデルの保存・切替といった機能を統合し、一般ユーザでも試行錯誤を通じてモデルを改善できる実用的なワークフローを実現した。
+
+運用面では、限られた計算資源でも現実的に扱えるよう、学習をバックグラウンドで非同期実行し、UIをブロックしない設計とした。さらに、再現性と保守性を高めるため、Makefileによるセットアップ・起動・テストの自動化、パッケージマネージャ（pnpm）による依存関係管理、OpenAPIによるエンドポイント定義の明示化を行っている。これにより、ユーザは最小限の初期設定で環境を整え、反復的なモデル改善に集中できる。
+
+適用領域としては、料理画像を例題に据え、器や料理種別に応じた検出のしやすさ、データの集め方、モデルの差し替えやクラス管理など、実務的な観点からの検討を行った。用途特化の小規模データから出発し、UI上でのアノテーションと学習、可視化により改善ポイントを特定しながら、ユーザ自身の目的に合わせたモデルを段階的に洗練させることが可能である。これにより、画像認識活用の敷居を下げ、一般ユーザ主導の"現場適合"モデルの創出を後押しする。
+
+本稿の主な貢献を以下に示す。
+\begin{itemize}
+    \item データ収集から学習・評価・運用までを統合した一般ユーザ向けCVモデル管理アプリケーションの設計・実装
+    \item クロスプラットフォームUI上での直感的ラベリングとリアルタイム物体検出の統合による反復改善の促進
+    \item 学習の非同期実行、進捗・履歴・メトリクスの可視化、モデル管理機能の一体化による実用的ワークフローの提供
+    \item Makefile, pnpm, OpenAPI等を用いた再現性の高い開発運用体制の整備
+\end{itemize}
+
+本論文では2章で背景および関連研究について述べ、3章で提案システムの設計方針と機能構成を示す。4章では実装の詳細（フロントエンド、バックエンド、学習基盤、データ管理、可視化）を述べ、5章でケーススタディと評価（ユーザ操作性、学習・推論特性、改善サイクルの有効性）を示す。6章ではまとめと今後の課題（軽量化・最適化、拡張可能性、運用上の安全性・信頼性など）について議論する。
+\\
+%-------2章--------------------------------------------------------
+\chapter{関連研究}
+
+\section{物体検出モデル}
+従来の物体検出はCOCOなどの固定語彙（close-set）を前提としており、学習時に定義したカテゴリのみに限定されるという制約がある。一方、実環境では「未学習カテゴリ」を含む開放語彙（open-vocabulary）への拡張が重要である。YOLO系列はBackbone・Neck・Headからなる一段（one-stage）検出器として高い効率を示してきたが、語彙の固定という制約が実用展開のボトルネックとなってきた。
+
+\subsection{YOLO-World}
+YOLO-Worldは、従来YOLOの効率性を維持しつつ、視覚−言語モデリングによって開放語彙検出を実現した検出器である\cite{yoloworld}。その中核は、（1）テキスト埋め込みと画像特徴を結合するための再パラメータ化可能なVision-Language PAN（RepVL-PAN）、（2）検出データ・グラウンディング・画像テキストの各データを統一的に扱う領域−テキスト対（region–text）に基づく大規模事前学習、（3）推論時の効率を高める「prompt-then-detect（事前語彙化）パラダイム」にある。
+
+まず、学習時はCLIP系テキストエンコーダで得たテキスト埋め込みをRepVL-PANに導入し、画像特徴と語彙表現を相互作用させる。推論時にはテキストエンコーダを除去し、オフラインで事前計算したテキスト埋め込みをNeckに再パラメータ化して埋め込むため、実行時コストを抑えつつ開放語彙に対応できる。RepVL-PANのT-CSPLayer再パラメータ化の一例は次式で与えられ、1×1畳み込みの重みとしてテキスト埋め込みを吸収することで、言語条件付けを含む計算を単純化する（付録記述に基づく）:
+\begin{equation}
+X' \;=\; X \odot \mathrm{Sigmoid}\!\left(\max\!\bigl(\mathrm{Conv}(X, W), \mathrm{dim}=1\bigr)\right),
+\end{equation}
+ここで $X$ は画像特徴，$W$ はテキスト埋め込み由来の畳み込み重み，$\odot$ は要素ごとの積を表す。
+
+学習スキームとしては，領域−テキスト対に基づくコントラスト学習を大規模データで行う。実データ（Objects365等）に加え，CC3Mなどの画像テキストデータから，名詞抽出→擬似ボックス生成（GLIP等）→CLIPによる再スコアリングとNMS/閾値フィルタリングという自動ラベリングパイプラインで領域−テキスト対を構築し，開放語彙能力を強化する。小型モデル（YOLO-World-S）に対しては，高品質アノテーションや適量の擬似ラベルを組み合わせることでゼロショット性能が向上することが示されている。
+
+性能面では，LVISにおいて35.4 APかつV100上で52 FPSを達成し（TensorRTなし），同規模の既存手法に対して精度・速度のバランスで優位性を示す。また，学習後は「事前語彙化（offline vocabulary）」によりカテゴリ埋め込みをモデル重みに取り込み，エッジ展開時のテキストエンコーダ依存を排除する。さらに，COCOのような固定語彙タスクへ移行する際は，RepVL-PANの言語関連層を取り除き，従来YOLOと同等の運用効率で微調整可能である。総じて，YOLO-Worldは固定語彙検出と開放語彙検出の橋渡しを行い，汎用実応用（ゼロショット検出，参照物体検出，オープン語彙インスタンスセグメンテーション等）に適した現実的なデプロイ手段を与える。
+
+
+%-------3章--------------------------------------------------------
+%-------3章--------------------------------------------------------
+\chapter{提案手法}
+本研究の目的は、\textbf{スマートフォンを含む汎用端末のみで}データ収集からラベリング、学習、評価、運用までを\textbf{一気通貫に反復}できる実用システムを構築し、非専門家でも短時間で自作の用途特化モデルを育てられることを示す点にある。中核には開放語彙検出器であるYOLO-World\cite{yoloworld}を据え、\textbf{事前語彙化（prompt-then-detect）}によって実行時の言語エンコーダ依存を排除し、軽量・高速な推論を維持する。
+
+\section{設計方針と構成}
+フロントエンドはReact Native + ExpoによりAndroid/iOS/Webを単一コードベースで提供し、タブ（Detection / Labeling / Training / Models / Analytics）に機能を整理する。バックエンドはFastAPIで統一し、検出・語彙管理・学習・履歴・可視化・データ分析のAPIを備える。ユーザは\textbf{語彙を自ら定義・追加}し、必要データを小刻みに収集・注釈付けして学習をトリガし、結果を見ながら再収集・再学習を繰り返す。
+
+\section{YOLO-Worldの運用}
+YOLO-Worldは視覚−言語モデリングにより、\textbf{ユーザ定義語彙}での開放語彙検出を実現する。\texttt{POST /model/classes}で登録した語彙は\texttt{custom\_vocab.json}に永続化され、モデルのクラス埋め込みへ反映される。推論は\texttt{/detect}で実行し、バウンディングボックス・クラス・スコアと描画済み画像を返す。\textbf{事前語彙化}により、推論時はオフラインで固定した語彙埋め込みを用い、モバイルでも実用的なレイテンシを確保する。
+
+\section{データ収集・ラベリング・学習}
+Labelingタブで作成したアノテーションはYOLO形式で保存し（\texttt{training\_data/} 配下）、\texttt{/training/start}または\texttt{/training/start-async}で微調整を起動する。\textbf{既定はCPU実行}だが、\textbf{CUDA対応マシンでは設定によりGPU（device=`cuda'）で学習・推論が可能}である。完了時には\texttt{best.pt}を自動ロードし、\texttt{/training/status}で進捗を可視化する。\texttt{/models/*}群でモデル一覧・切替・バックアップ・検証が可能で、\texttt{/training/history}と\texttt{/training/metrics/\{run\_name\}}から学習履歴・時系列メトリクスを取得しUIでPlotly描画する。
+
+\section{UIフロー（スマホ中心）と操作例}
+本節では、スマートフォン想定の\textbf{最短反復ループ}（撮影→検出→語彙追加→再検出→ラベリング→学習→評価）を画面遷移で示す。各ページに4枚ずつ配置する。
+
+\begin{figure}[p]
+\centering
+\subfigure[撮影/選択（Detection）]{\includegraphics[width=0.48\linewidth]{Image_Goto/01_take_photo.png}}
+\subfigure[初回検出（未学習）]{\includegraphics[width=0.48\linewidth]{Image_Goto/02_0_no_detect.png}}
+
+\subfigure[クラス追加後の検出（既存クラス）]{\includegraphics[width=0.48\linewidth]{Image_Goto/02_1_detect.png}}
+\subfigure[スマートフォンクラスの追加（Models）]{\includegraphics[width=0.48\linewidth]{Image_Goto/02_2_add_c;lass.png}}
+\caption{提案UIの反復ループ（1/4）：撮影→初回検出→語彙確認/追加}
+\label{fig:flow_page1}
+\end{figure}
+
+\begin{figure}[p]
+\centering
+\subfigure[smartphoneクラスで検出成功]{\includegraphics[width=0.48\linewidth]{Image_Goto/02_3_detect_smartphone.png}}
+\subfigure[マニュアルラベリング]{\includegraphics[width=0.48\linewidth]{Image_Goto/02_4_manual.png}}
+
+\subfigure[ファインチューニング開始]{\includegraphics[width=0.48\linewidth]{Image_Goto/02_5_fine_tuning.png}}
+\subfigure[学習の起動（Training）]{\includegraphics[width=0.48\linewidth]{Image_Goto/03_fine-tuning.png}}
+\caption{提案UIの反復ループ（2/4）：再検出→ラベリング→学習起動}
+\label{fig:flow_page2}
+\end{figure}
+
+\begin{figure}[p]
+\centering
+\subfigure[語彙・クラス一覧（Models）]{\includegraphics[width=0.48\linewidth]{Image_Goto/04_classes.png}}
+\subfigure[学習履歴・指標の確認（Analytics）]{\includegraphics[width=0.48\linewidth]{Image_Goto/05_analytics.png}}
+
+\subfigure[モデルの切替・管理]{\includegraphics[width=0.48\linewidth]{Image_Goto/06_model.png}}
+\subfigure[モデル概要の確認]{\includegraphics[width=0.48\linewidth]{Image_Goto/07_nmodel_overview.png}}
+\caption{提案UIの反復ループ（3/4）：語彙・履歴・モデル管理}
+\label{fig:flow_page3}
+\end{figure}
+
+\begin{figure}[p]
+\centering
+\subfigure[データセット確認]{\includegraphics[width=0.48\linewidth]{Image_Goto/08_model_dateset.png}}
+\subfigure[性能比較・推移の確認]{\includegraphics[width=0.48\linewidth]{Image_Goto/09_model_performance.png}}
+
+\subfigure[]{\includegraphics[width=0.48\linewidth]{Image_Goto/02_1_detect.png}} % 補助枠（統一のため再掲）
+\subfigure[]{\includegraphics[width=0.48\linewidth]{Image_Goto/02_4_manual.png}} % 補助枠（統一のため再掲）
+\caption{提案UIの反復ループ（4/4）：データ・性能の確認と再反復}
+\label{fig:flow_page4}
+\end{figure}
+\clearpage
+
+\section{スマホ最適化と制約}
+\begin{itemize}
+  \item \textbf{推論効率}: 事前語彙化によりテキストエンコーダを実行時から排除し、端末上のレイテンシを低減。
+  \item \textbf{操作負荷の低減}: 撮影→検出→語彙追加→学習の\textbf{短サイクル}をUIで誘導し、少量データでも改善可能に。
+\item \textbf{制約}: 既定はCPU学習であり大規模学習は長時間を要する。\textbf{一方でCUDA対応マシンでは設定によりGPU学習・推論へ切替可能}であり、反復時間を短縮できる。現状は学習/検証分割を簡便化しており、厳密評価は今後の拡張で対応する。
+\end{itemize}
+
+以上より、\textbf{ユーザ主導の反復改善}（語彙設定→収集/ラベリング→学習→推論/評価→運用）を一つのUIに束ね、スマートフォンを中心とした現場適用に耐える\textbf{軽量な開放語彙検出運用}を実現する。
+
+
+\chapter{スマートフォンを用いたユーザ主導実験設計}
+\section{目的とモチベーション}
+本研究の実験は、スマートフォンのみで画像取得から語彙設定・ラベリング・学習・推論までを完結できるかを検証する。一般ユーザが自作モデルを短時間で構築・改善できることを主たるモチベーションとし、操作の単純さと反復速度を重視する。
+
+\section{対象ユーザと使用環境}
+対象は機械学習の専門知識を持たない一般ユーザとし、端末はAndroid/iOSの実機を想定する。通信はWi-Fi環境を基本とし、バックエンドAPIはローカル同一LANまたはトンネリングを用いて接続する。UIはExpoアプリ（タブ: Detection / Labeling / Training / Models / Analytics）を使用する。
+
+\section{タスク定義}
+\begin{itemize}
+  \item T1: スマホで対象物（例: 食器/料理）の写真を撮影またはギャラリーから選択する。
+  \item T2: Labelingタブでバウンディングボックスとラベルを付与し送信する（\texttt{/labeling/submit}）。
+  \item T3: 語彙（検出クラス）を\texttt{/model/classes}で登録・更新する（必要なら追加）。
+  \item T4: Trainingタブから学習を起動（同期または非同期）。完了後にモデル自動ロードを確認する。
+  \item T5: Detectionタブで推論し、語彙が正しく反映され検出が成立するか確認する。
+\end{itemize}
+
+\section{プロトコル（手順）}
+\begin{enumerate}
+  \item 初期語彙を空または最小集合で開始し、Detectionタブで現状の検出挙動を確認する。
+  \item 必要語彙を追加（\texttt{POST /model/classes}）し、Labelingタブで10〜30枚程度を目安にアノテーションを実施する。
+  \item \texttt{/training/start-async}で学習を開始し、\texttt{/training/status}で進捗を監視する。完了後、自動ロードされたモデルで推論を再確認する。
+  \item 検出が不十分な語彙があればデータを追加収集・再ラベリングし、学習・評価を反復する（最大3サイクル程度）。
+\end{enumerate}
+
+\section{評価指標}
+\subsection{機能的指標}
+\begin{itemize}
+  \item 検出成立率: 目標語彙に対し、正しくバウンディングされクラスが一致した割合。
+  \item 語彙反映時間: 語彙登録から推論結果への反映までの所要時間。
+  \item 推論レイテンシ: 端末での1画像あたりの表示までの体感時間（秒）。
+\end{itemize}
+\subsection{運用指標}
+\begin{itemize}
+  \item 設定完了時間: 初回起動から「最初の正しい検出」達成までの時間。
+  \item 反復コスト: 1サイクル（収集→ラベル→学習→検証）に要する平均時間。
+\end{itemize}
+\subsection{主観評価}
+\begin{itemize}
+  \item 使いやすさ（SUSの簡易版）: 操作の迷い、手順の明確さ、成功感などを5件法で評価。
+  \item 負荷（簡易NASA-TLX）: 心理的・時間的負荷を簡易的に記録。
+\end{itemize}
+
+\section{ログ・記録}
+APIリクエストとレスポンス、学習\texttt{results.csv}/\texttt{args.yaml}、モデル切替履歴、クラッシュログを収集する。個人特定情報は収集しない。
+
+\section{倫理配慮とプライバシ}
+個人が特定される顔・氏名・住所などを含む画像を避け、社内・家庭内の共有ルールに従う。第三者が写り込む場合は事前同意を得る。
+
+\section{成功基準と終了条件}
+\begin{itemize}
+  \item 主要語彙（例: 食器/料理）で検出成立率が所定の閾値（例: 80%）以上に到達。
+  \item 反復2〜3サイクル内に改善が頭打ちとなった場合は終了し、改善点を考察に残す。
+\end{itemize}
+
+\section{想定リスクと緩和}
+\begin{itemize}
+  \item データ偏り: 撮影条件（明るさ/角度）を変化させる指示を追加。
+  \item 語彙曖昧性: 類義語や重複概念は語彙定義を明確化。
+  \item 計算資源: 学習は非同期・小規模から開始し、必要時のみ拡張。
+\end{itemize}
+
+\section{結果の反映計画}
+成立率・反復時間・主観評価は表に集計し、改善サイクルの有効性を定性的に記述する。図は後に\texttt{Image\_Goto/}へ出力・差し戻しを行う。
+
+
+%-------4章--------------------------------------------------------
+\chapter{領域検出精度に関する実験}
+\section{目的}
+本実験の目的は二つある。一つは、\ac{Sem}モデルでの残量領域の検出精度を確認することである。
+もう一つは、\ac{Obj}モデルでの食器の検出精度を確認することである。
+実験結果の各種評価指から、それぞれのモデルの比較を行い、その是非を考察する。
+
+\section{データセット}
+本実験で用いるデータセットは、食事中の写真を撮影し,ラベルを付けて作成した。
+このデータセットの画像サイズは456(または455)×608、608×456(または455)であり、モデルの入力画像は224×224にリサイズしており、全部で241枚で構成されている。
+その241枚の内、約85\%(206枚)が学習のトレーニングに使用され、約15\%(35枚)が学習のテストに使用される。
+\ac{Seg}タスクは、「ご飯」と「みそ汁」という二つのラベルを付けている(図\ref{fig:seg_data})。
+\ac{Obj}タスクは、「食器」というラベルを付けている(図\ref{fig:od_data})。
+
+
+\begin{figure}[htbp]
+\centering
+\begin{minipage}{0.45\linewidth}
+    \centering
+    % \includegraphics[width=0.95\linewidth]{Image_takahashi/seg_data.png}
+    \caption{意味的領域分割タスク用のラベル}
+    \label{fig:seg_data}
+\end{minipage}
+\begin{minipage}{0.47\linewidth}
+    \centering
+    % \includegraphics[width=0.965\linewidth]{Image_takahashi/od_data.png}
+    \caption{物体検出タスク用のラベル}
+    \label{fig:od_data}
+\end{minipage}
+\end{figure}
+
+\section{実験条件}
+本実験では、以下の条件で学習、推論を行う(表\ref{tab:conditions})。
+各損失関数・評価関数の説明は節\ref{sec:eval_index}で示している。
+
+\begin{table}[htbp]
+\centering
+\scriptsize
+\caption{学習・推論条件および実験環境}
+\begin{tabular}{c|c|c|c}
+\hline
+& \textbf{項目} & \textbf{\ac{Seg}} & \textbf{\ac{Obj}} \\ \hline
+\multirow{6}{*}{\text{学習条件}} & \text{学習エポック} & \multicolumn{2}{c}{100} \\
+& \text{バッチサイズ} & \multicolumn{2}{c}{4} \\
+& \text{学習率} & $1 \times 10^{-3}$ & $3 \times 10^{-3}$ \\
+& \text{Optimaizer} & \multicolumn{2}{c}{\text{Adam}} \\
+& \text{Scheduler} & \multicolumn{2}{c}{\text{Cosine annealing}} \\
+& \text{損失関数} & Tversky\:Loss & YOLOX\:Loss\\ \hline
+\multirow{1}{*}{\text{推論条件}} & \text{評価関数} & \text{mIoU}&\text{mIoU},\text{mAP} \\ \hline
+\multirow{3}{*}{\text{実験環境}} & OS & \multicolumn{2}{c}{\text{Ubuntu 20.04 LTS}} \\
+& \text{CPU} & \multicolumn{2}{c}{\text{Dual Intel(R) Xeon(R) Gold 6342 CPU}} \\
+& \text{GPU} & \multicolumn{2}{c}{\text{Single NVIDIA RTX A6000 GPU}} \\ \hline
+\end{tabular}
+\label{tab:conditions}
+\end{table}
+
+\section{評価指標}
+\label{sec:eval_index}
+図\ref{fig:FN_TP_FP}は、画像の分類対象に対してTP・FP・FN・TNの四領域に分割したものである。
+TP(True\:Positive)は、正解と予測して、実際に正解である領域。
+FP(False\:Positive)は、正解と予測して、実際は不正解である領域。
+FN(False\:Negative)は、不正解と予測して、実際は正解である領域。
+TN(True\:Positive)は、不正解と予測して、実際に不正解である領域。
+
+\begin{figure}[htbp]
+    \centering
+    % \includegraphics[width=0.45\linewidth]{Image_takahashi/FN_TP_FP.png}
+    \caption{領域の分割の概要}
+    \label{fig:FN_TP_FP}
+\end{figure}
+
+\subsection{Tversky\:loss}
+Tversky\:lossは、式\eqref{eq:Tversky}で定義されている。
+FNとFPの割合($\alpha$,$\beta$)を調整することで、重視したい要素に対して推測精度を向上させる狙いがある。
+本稿では、$\alpha$=0.7$,\beta$=0.3としている。
+
+\begin{equation}
+\label{eq:Tversky}
+\begin{split}
+    Tversky\_index(pred,gt) &= \frac{TP}{TP + \alpha FN+ \beta FP}\\
+    Tversky\_Loss(pred,gt) &=1-Tversky\_index(pred,gt)
+\end{split}
+\end{equation}
+
+\subsection{IoU}
+\ac{IoU}は、式\eqref{eq:IoU}で定義されている。
+\ac{IoU}は\ac{Seg}モデルや\ac{Obj}モデルの精度評価の時によく使われる。
+mIoUは、各クラスの\ac{IoU}の平均を取っている。
+
+\begin{equation}
+\label{eq:IoU}
+\begin{split}
+    IoU(pred,gt) &= \frac{TP}{TP + FN + FP}\\
+    IoU\_Loss(pred,gt)&= 1-IoU(pred,gt)
+\end{split}
+\end{equation}
+
+\subsection{mAP}
+\ac{AP}を求める式は式\eqref{eq:mAP}で定義されている。
+Precisionは、正解と予測したものの内、実際に正解だった割合である。
+Recallは、実際の正解の内、正解と予測した割合である。
+図\ref{fig:pr}は、$p(r)$をグラフにしたものの例である。
+図中の青色の線がPrecisionとRecallからプロットしたものであり、橙色はの線が積分を行うために変換したものである。
+変換先は、各Recallより右にあるデータの内Precisionが最大な値となっている。
+そして、\ac{AP}は、橙色のp(r)の離散積分で求める。
+例での\ac{AP}の計算は式\eqref{eq:AP_ex}で示されている。
+mAPは、各クラスごとの\ac{AP}の平均を取っている。
+$AP_{num}$となっている場合は、その数値のIoUを閾値として、それ以上での\ac{AP}を算出している。
+\begin{figure}[htbp]
+    \centering
+    \begin{minipage}{0.45\linewidth}
+        \begin{equation}
+        \label{eq:mAP}
+        \begin{split}
+        Precision=&\frac{TP}{TP+FP}\\
+        Recall=&\frac{TP}{TP+FN}\\
+        AP=&\int_{0}^{1}p(r)dr\\
+        \end{split}
+        \end{equation}
+    \end{minipage}
+    \begin{minipage}{0.45\linewidth}
+        \centering
+        % \includegraphics[width=0.85\linewidth]{Image_takahashi/pr.png}
+        \caption{P(r)}
+        \label{fig:pr}
+    \end{minipage}
+\end{figure}
+
+\begin{equation}
+\begin{split}
+    AP&=\frac{1}{11}(p(0)+p(0.1)+\cdots +p(1.0))\\
+    &=\frac{1}{11}(1\times5+0.6\times4+0.55\times2)=0.773
+\end{split}
+\label{eq:AP_ex}
+\end{equation}
+
+
+\subsection{YOLOX\:loss}
+YOLOX\:Lossは式\eqref{eq:yolox_loss}で定義されている。
+Box\:Lossは、正解ボックスと予測ボックスからIoU\:Lossを算出する。
+Objectness\:Lossは、物体の有無を予測したグリッドと実際のグリッドの物体の有無からBCE\:With\:Logits\:Lossを算出する。
+BCE\:With\:Logits\:Lossは、式\eqref{eq:BCE}で定義されている。
+式中の$\sigma$はシグモイド関数を示している。
+Classfication\:Lossは、それぞれのグリッドの予測クラスと正解クラスからBCE\:With\:Logits\:Lossから算出する。
+
+\begin{equation}
+\label{eq:BCE}
+\begin{split}
+    \sigma(x) &= \frac{1}{1+e^{-x}}\\
+    BCE\:With\:Logits\:Loss(pred,gt) &= gt\cdot \log \sigma (pred)+(1-gt)\cdot \log (1- \sigma (pred))
+\end{split}
+\end{equation}
+
+\begin{equation}
+    \label{eq:yolox_loss}
+    \begin{split}
+    Box\:Loss&=\sum_{i} IoU(Box_{gt_i},Box_{pred_i})\\
+    Objectness\:Loss&=\sum_{i} BCE\:With\:Logits\:Loss(Obj_{pred_i},Obj_{gt_i})\\
+    Classfication\:Loss&=\sum_{i\in pred } BCE\:With\:Logits\:Loss(Cls_{pred_i},Cls_{gt_i})\\
+    YOLOX\:Loss&=5.0\times Box\:Loss+Objectness\:Loss+Classfication\:Loss\\
+    \end{split}
+\end{equation}
+
+\section{実験結果}
+表\ref{tab:fix_data_pick}はエンコーダ(バックボーン)の重みを固定したユニオンモデルでの実験結果の抜粋であり、図\ref{fig:seg_fix}、\ref{fig:det_fix}はそれぞれ\ac{Seg}に対するバブルグラフと\ac{Obj}に対するバブルグラフである。
+表\ref{tab:seg_data_pick}は学習時のみエンコーダ(バックボーン)の重みを更新したユニオンモデル2の実験結果の抜粋であり、図\ref{fig:seg_seg}、\ref{fig:det_seg}はそれぞれ\ac{Seg}に対するバブルグラフと\ac{Obj}に対するバブルグラフである。
+バブルグラフの横軸はLatency、縦軸はそれぞれ\ac{Seg}のmIoU・\ac{Obj}のmIoU、バブルの大きさはパラメータ量、バブルの色はバックボーン、バブルに紐づいている文字列は\ac{Seg}モデルを示している。
+mIoUは、モデルの精度であり、その数字が大きいほど(図中ではグラフの上になるほど)精度が高いモデルといえる。
+\ac{FLOPs}は、浮動小数点演算の総量を示しており、その数字が小さいほど処理速度が速いモデルといえる。
+パラメータ量は、モデルの大きさであり、その数字が小さいほど(図中ではバブルが小さいほど)小さいモデルといえる。
+Latencyは、一枚の画像がモデルに入力されてから出力されるまでの時間の平均であり、その数字が小さいほど(図中ではグラフの右になるほど)推論速度が速いモデルといえる。
+
+\begin{table}[htbp]
+\scriptsize
+\centering
+\begin{tabular}{c|c|c|c|c|c|c|c|c}
+\toprule
+\multirow{2}{*}{\textbf{Backbone}}&\multicolumn{2}{c|}{\textbf{Method}}&\textbf{Seg}&\multicolumn{2}{c|}{\textbf{Det}}&\textbf{FLOPs}&\textbf{Params}&\textbf{Latency}\\
+&\textbf{Seg}&\textbf{Det}&\textbf{mIoU[\%]}&\textbf{mAP[\%]}&\textbf{mIoU[\%]}&\textbf{[G]}&\textbf{[M]}&\textbf{[ms]}\\
+\midrule
+\multirow{3}{*}{MB\_v3\_s}&U-Net&\multirow{3}{*}{YOLOX}&88.11&\multirow{3}{*}{100.00}&\multirow{3}{*}{93.80}&\textcolor{red}{\textbf{0.84}}&\textcolor{red}{\textbf{3.67}}&8.38\\
+&DL3+&&89.44&&&4.88&8.97&8.27\\
+&DL3&&75.97&&&0.85&8.27&8.23\\
+\midrule
+\multirow{3}{*}{EF\_b0}&U-Net&\multirow{3}{*}{YOLOX}&90.12&\multirow{3}{*}{100.00}&\multirow{3}{*}{95.02}&2.40&11.06&10.10\\
+&DL3+&&\textcolor{red}{\textbf{91.13}}&&&6.58&21.14&10.03\\
+&DL3&&77.01&&&2.55&20.44&9.99\\
+\midrule
+\multirow{3}{*}{R\_18}&U-Net&\multirow{3}{*}{YOLOX}&90.02&\multirow{3}{*}{100.00}&\multirow{3}{*}{94.40}&4.36&13.70&8.05\\
+&DL3+&&88.94&&&8.25&18.24&6.68\\
+&DL3&&72.85&&&4.21&17.54&\textcolor{red}{\textbf{6.58}}\\
+\midrule
+\multirow{3}{*}{R\_152}&U-Net&\multirow{3}{*}{YOLOX}&89.00&\multirow{3}{*}{100.00}&\multirow{3}{*}{\textcolor{red}{\textbf{95.83}}}&16.30&69.51&16.06\\
+&DL3+&&90.53&&&20.08&83.51&15.88\\
+&DL3&&74.87&&&16.02&82.79&15.43\\
+\bottomrule
+\end{tabular}
+\caption{学習結果の抜粋(ユニオンモデル)}
+\label{tab:fix_data_pick}
+\end{table}
+
+\begin{table}[htbp]
+\scriptsize
+\centering
+\begin{tabular}{c|c|c|c|c|c|c|c|c}
+\toprule
+\multirow{2}{*}{\textbf{Backbone}}&\multicolumn{2}{c|}{\textbf{Method}}&\textbf{Seg}&\multicolumn{2}{c|}{\textbf{Det}}&\textbf{FLOPs}&\textbf{Params}&\textbf{Latency}\\
+&\textbf{Seg}&\textbf{Det}&\textbf{mIoU[\%]}&\textbf{mAP[\%]}&\textbf{mIoU[\%]}&\textbf{[G]}&\textbf{[M]}&\textbf{[ms]}\\
+\midrule
+\multirow{3}{*}{MB\_v3\_s}&U-Net&\multirow{3}{*}{YOLOX}&90&99.57&91.05&\textcolor{red}{\textbf{0.84}}&\textcolor{red}{\textbf{3.67}}&8.38\\
+&DL3+&&90.5&99.3&93.15&4.88&8.97&8.27\\
+&DL3&&83.35&100&92.67&0.85&8.27&8.23\\
+\midrule
+\multirow{3}{*}{EF\_b0}&U-Net&\multirow{3}{*}{YOLOX}&90.82&99.3&93.82&2.40&11.06&10.10\\
+&DL3+&&91.2&100&94.45&6.58&21.14&10.03\\
+&DL3&&85.05&99.29&94.71&2.55&20.44&9.99\\
+\midrule
+\multirow{3}{*}{EF\_b4}&U-Net&\multirow{3}{*}{YOLOX}&91.03&100&95.04&7.18&39.41&15.05\\
+&DL3+&&\textcolor{red}{\textbf{91.33}}&100&94.84&11.46&52.95&14.99\\
+&DL3&&84.1&100&\textcolor{red}{\textbf{95.67}}&7.43&52.25&14.90\\
+\midrule
+\multirow{3}{*}{R\_18}&U-Net&\multirow{3}{*}{YOLOX}&90.42&100&94.5&4.36&13.70&8.05\\
+&DL3+&&91.08&100&95.52&8.25&18.24&6.68\\
+&DL3&&84.13&100&95.57&4.21&17.54&\textcolor{red}{\textbf{6.58}}\\
+\bottomrule
+\end{tabular}
+\caption{学習結果の抜粋(ユニオンモデル2)}
+\label{tab:seg_data_pick}
+\end{table}
+
+\begin{figure}[htbp]
+\centering
+\begin{minipage}{0.49\linewidth}
+\centering
+% \includegraphics[width=\linewidth]{Image_takahashi/bubble_chart_with_Seg_fix.png}
+\caption{\ac{Seg}のバブルグラフ(ユニオンモデル)}
+\label{fig:seg_fix}
+\end{minipage}
+\begin{minipage}{0.49\linewidth}
+\centering
+% \includegraphics[width=\linewidth]{Image_takahashi/bubble_chart_with_Det_fix.png}
+\caption{\ac{Obj}のバブルグラフ(ユニオンモデル)}
+\label{fig:det_fix}
+\end{minipage}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\begin{minipage}{0.49\linewidth}
+\centering
+% \includegraphics[width=\linewidth]{Image_takahashi/bubble_chart_with_Seg_Seg.png}
+\caption{\ac{Seg}のバブルグラフ(ユニオンモデル2)}
+\label{fig:seg_seg}
+\end{minipage}
+\begin{minipage}{0.49\linewidth}
+\centering
+% \includegraphics[width=\linewidth]{Image_takahashi/bubble_chart_with_Det_Seg.png}
+\caption{\ac{Obj}のバブルグラフ(ユニオンモデル2)}
+\label{fig:det_seg}
+\end{minipage}
+\end{figure}
+
+\newpage
+
+\section{考察}
+表・バブルグラフから読み取れる点として、バックボーンが同じ場合、Latencyについては大きな差は無く、FLOPsについてはDeeplabv3+が大きくU-NetとDeeplabv3には大きな差は無く、パラメータ量についてはU-Netが小さくDeeplabv3とDeepLabv3＋には大きな差は無い。
+\ac{Seg}の学習時のみバックボーンを学習する場合とバックボーンの重みを更新しない場合の\ac{Seg}精度を比較すると、U-NetとDeepLabv3＋では精度低下は小さいが、Deeplabv3では精度低下が大きくなっている。
+これは、バックボーンの重みを更新しないことによる重み更新可能な層が少ない点が原因だと考えられる。
+また、バックボーンの重みを更新しない場合、ラベル数の少ない本稿のタスクでは、Deeplabv3+とU-Netはバックボーンを変更しても\ac{Seg}精度・\ac{Obj}精度は大きな差は無く、FLOPs・パラメータ量・Lantencyの実行環境での使用可能な計算資源を加味して選択するのが望ましい。
+本稿のタスクでは、\ac{Seg}モデルの学習の時のみバックボーンの重みを更新しても\ac{Obj}モデルの精度に大きな影響を与えていないが、\ac{Obj}タスクが難しくなると\ac{Seg}に向けて学習されたバックボーンを使用すると精度低下は免れないと推測できる。
+そのため、より難しいタスクを行う場合は、バックボーンの重みを更新しないユニオンモデルの方が望ましいと考えられる。
+以上のことから、計算資源が制限された環境でユニオンモデルを構築する場合、バックボーンとしてMobiletNet\:v3\:small・\ac{Seg}モデルとしてU-Net・\ac{Obj}モデルとしてYOLOXのtinyを選択したモデルが精度が高く、必要計算資源が小さいため適しているといえる。
+しかし、ただ必要計算資源の小さいモデルを選択するのが最適とは言えなく、使いたい環境での使用可能な計算資源に対して適しているモデルを選択するのが良いと考えられる。
+一方、計算資源が制限されていない環境でユニオンモデルを構築する場合、バックボーンとしてEfficientnet\:b0・\ac{Seg}モデルとしてDeeplabv3+・\ac{Obj}モデルとしてYOLOXのtinyを選択したモデルが精度が高く適していると言える。
+
+本稿では、判別するクラスを絞っているため、判別するクラスを増加したモデルの構築と、更なる精度向上のためにより良いモデルの探索やより良い学習率・エポック数などの学習条件の探索は今後の課題である。
+
+
+%-------5章--------------------------------------------------------
+\chapter{残量測定に関する実験}
+\section{目的}
+本実験の目的はの残量推定精度を確認することである。
+実験結果からそれぞれの推定手法の比較を行い、その是非を考察する。
+
+\section{実験条件}
+\subsection{推定用データセット}
+本実験で用いるデータセットは、食事中の写真を撮影し,それぞれの数値を測定した(図\ref{fig:suitei_data})。
+数値は食事前の画像を100\%としている。
+このデータセットの画像サイズは1477×1109であり、全部で34枚で構成されている。
+
+\begin{figure}[htbp]
+    \centering
+    % \includegraphics[width=\linewidth]{Image_takahashi/suitei_data.png}
+    \caption{画像とその数値[\%]}
+    \label{fig:suitei_data}
+\end{figure}
+
+\subsection{評価指標}
+評価指標は実測値[\%]と推定値[\%]の平均二乗誤差(MSE)の平方根(RMSE)を用いている(式\eqref{eq:mse})。
+
+\begin{equation}
+\begin{split}
+    MSE(pred,gt) &= \frac{1}{n}\sum_{i=1}^n (pred_i-gt_i)^2\\
+    RMSE &=\sqrt{MSE}\\
+\end{split}
+    \label{eq:mse}
+\end{equation}
+
+\section{実験結果}
+表\ref{tab:sokutei_pick}はエンコーダ(バックボーン)の重みを固定したユニオンモデルでの測定結果の抜粋であり、図\ref{fig:suitei_rice},\ref{fig:suitei_soup},\ref{fig:suitei_rice_nf},\ref{fig:suitei_soup_nf}は前者は球冠ベース・後者は関数ベースでの測定結果のRMSEのバブルグラフである。
+バブルグラフの横軸は\ac{Seg}のmIoU、縦軸は\ac{Obj}のmIoU、バブルの大きさはRMSEの大きさ、バブルの色はバックボーン、バブルに紐づいている文字列は\ac{Seg}モデルを示している。
+\ac{Seg}のmIoUは、モデルの\ac{Seg}精度であり、その数字が大きいほど(図中ではグラフの左になるほど)精度が高いモデルといえる。
+\ac{Obj}のmIoUは、モデルの\ac{Obj}精度であり、その数字が大きいほど(図中ではグラフの上になるほど)精度が高いモデルといえる。
+RMSEは、推定の精度を示し、その数字が小さいほど(図中ではバブルが小さいほど)推定精度のよいものといえる。
+
+\begin{table}[htbp]
+\scriptsize
+\centering
+\begin{tabular}{c|c|c|c|c|c|c|c|c}
+\toprule
+\multirow{2}{*}{\textbf{Backbone}}&\multicolumn{2}{c|}{\textbf{Method}}&\textbf{Seg}&\textbf{Det}&\multicolumn{2}{c|}{\textbf{球冠ベース}}&\multicolumn{2}{c}{\textbf{関数ベース}}\\
+&\textbf{Seg}&\textbf{Det}&\textbf{mIoU[\%]}&\textbf{mIoU[\%]}&\textbf{ご飯[\%]}&\textbf{みそ汁[\%]}&\textbf{ご飯[\%]}&\textbf{みそ汁[\%]}\\
+\midrule
+MB\_v3\_s & Unet & YOLOX & 88.11 & 93.80 & 9.10 & 29.62 & 9.90 & 25.30 \\
+EF\_b0 & DLv3+ & YOLOX & \textcolor{red}{\textbf{91.13}} & 95.02 & 12.21 & 31.78 & 12.64 & 23.56 \\
+EF\_b6 & Unet & YOLOX & 89.64 & \textcolor{red}{\textbf{95.79}} & 14.03 & \textcolor{red}{\textbf{18.70}} & 14.57 & \textcolor{red}{\textbf{12.78}} \\
+R\_18 & Unet & YOLOX & 90.02 & 94.40 & \textcolor{red}{\textbf{7.56}} & 20.82 & \textcolor{red}{\textbf{8.44}} &17.01 \\
+\bottomrule
+\end{tabular}
+\caption{測定結果の抜粋(ユニオンモデル)}
+\label{tab:sokutei_pick}
+\end{table}
+
+\begin{figure}[htbp]
+\centering
+\begin{minipage}{0.49\linewidth}
+\centering
+% \includegraphics[width=\linewidth]{Image_takahashi/bubble_chart_with_normal_fix_rice.png}
+\caption{球冠ベース(ご飯)のバブルグラフ}
+\label{fig:suitei_rice}
+\end{minipage}
+\begin{minipage}{0.49\linewidth}
+\centering
+% \includegraphics[width=\linewidth]{Image_takahashi/bubble_chart_with_normal_fix_soup.png}
+\caption{球冠ベース(みそ汁)のバブルグラフ}
+\label{fig:suitei_soup}
+\end{minipage}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\begin{minipage}{0.49\linewidth}
+\centering
+% \includegraphics[width=\linewidth]{Image_takahashi/bubble_chart_with_nf_fix_rice.png}
+\caption{関数ベース(ご飯)のバブルグラフ}
+\label{fig:suitei_rice_nf}
+\end{minipage}
+\begin{minipage}{0.49\linewidth}
+\centering
+% \includegraphics[width=\linewidth]{Image_takahashi/bubble_chart_with_nf_fix_soup.png}
+\caption{関数ベース(みそ汁)のバブルグラフ}
+\label{fig:suitei_soup_nf}
+\end{minipage}
+\end{figure}
+
+\section{考察}
+表・バブルグラフから読み取れる点として、どちらの手法(球冠ベース・関数ベース)でも、\ac{Seg}精度・\ac{Obj}の精度が悪いと、その結果から推定するためRMSEが大きくなる。
+また、どちらの手法でもご飯の方がみそ汁よりもRMSEが小さくなっている。
+これはみそ汁の淵が透明であり、その結果みそ汁に対する\ac{Seg}精度が低下したためと考えられる。
+加えて、モデルの精度が低い場合、空になった食器に残る液体をみそ汁と検出していることがRMSEが大きくなった原因として考えられる。
+ご飯に対する精度はご飯の盛り上がり具合に依存しており、どちらの手法も盛り上がりを考慮していないため、盛り上がりが大きいほどRMSEが大きくなると考えられる。
+本実験の球冠ベースと関数ベースを比較すると、ご飯に対しては球冠ベース・みそ汁に対しては関数ベースの手法の方が推定精度が高い。
+この結果から、対象の食器に対して測定手法を変更することが良いと考えられる。
+
+今実験では、mIoUの精度が高いが出力画像の精度が高くない場合があった。
+これは、学習の画像と評価用の画像での画像サイズの違いや画像の輝度の違いが理由として考えられる。
+また、学習データセットの枚数が241枚と少なく、過学習となり汎化性能が落ちた可能性も考えられる。
+
+本稿では、先述したとおり、ご飯の盛り上がりやへこみを考慮しておらず、食器の近似にも限界があるため、\ac{Seg}モデルの特徴マップから残量推定を行う仕組みの構築による推定精度向上が今後の課題である。
+
+
+
+
+\chapter{まとめ}
+本稿では、画像認識AIを用いて食事の画像から残量測定を行った。
+\ac{Sem}モデルと\ac{Obj}モデルを用いてそれを実現し、複数のモデルを使うことによる必要リソースの増加を抑えるためにユニオンモデルを提案した。
+そのユニオンモデルのうち、\ac{Seg}のmIoUは最も高いもので91.13\%・\ac{Obj}のmIoUは最も高いもので95.83\%を達成した。
+本実験のデータセットは枚数が241枚と少ないため、測定用のデータセットでは精度が低く、汎化性能が落ちている。
+よって、汎化性能の向上のためにデータセットの増強の実施や対応クラスの増加を行うことが今後の課題である。
+加えて、推定手法として食器を球の一部に近似する球冠ベースとn次関数に近似する関数ベースの手法を提案した。
+結果として、推定精度の最も高いものは球冠ベースであり、ご飯のRMSEは7.6\%を達成した。
+しかし、RMSEはまだまだ大きく、推定精度が良いとは言えない。
+その推定精度は\ac{Seg}精度・\ac{Obj}精度・推定手法に依存している。
+本実験の推定手法は凹凸の考慮が出来ず、食器の近似にも限界がある。
+よって、推定精度向上を達成するために推定手法の探索を行うことが今後の研究課題である。
+
+\begin{acknowledge}
+本研究に使用した画像はドリギー株式会社様から提供いただきました。
+本研究を進めるにあたり、終始熱心なご指導を頂いた孟林教授に深く感謝いたします。また、本研究において手助けをしていただいた石橋さんや研究室の皆様に感謝の念が絶えません。本当にありがとうございました。
+\end{acknowledge}
+%
+\chapter*{研究業績}
+\paragraph{査読付き国際学会}
+\begin{enumerate}
+    \item{\textbf{Haruhiro Takahashi}, Ryuto Ishibashi, Hayata Kaneko, and Lin Meng, ``Leftover Food Measurement using Deep Learning Based Semantic Segmentation," The 6th International Symposium on Advanced Technologies and Applications in the Internet of Things (ATAIT 2024), Aug. 2024. (in Kusatsu, Japan)}
+    \item{Ishibashi, Ryuto, \textbf{Haruhiro Takahashi}, and Lin Meng. "ViT-Based Hybrid Segmentation for Leftover Food Detection." The 6th International Conference on Industrial Artificial Intelligence (IAI2024). Aug. 2024. (in Shenyang, China)}
+\end{enumerate}
+
+\paragraph{シンポジウム}
+\begin{enumerate}
+    \item{\textbf{Haruhhiro Takhashi}, ``Leftover Food Measurement using Segmentation and Detection", The 21th English Presentation Competition in Ritsumeikan University（EPCR2024）,Nov. 2024 (in Kusatsu, Japan)}
+\end{enumerate}
+
+
+% 参考文献（内包）
+\begin{thebibliography}{9}
+\bibitem{yoloworld}
+K. Cheng, Z. Xu, X. Wang, J. Dai, Y. Qiao, M. Tang, and H. Bai,
+``YOLO-World: Real-Time Open-Vocabulary Object Detection,''
+arXiv:2401.17270, 2024.
+\url{https://arxiv.org/abs/2401.17270}
+\end{thebibliography}
+%
+\appendix
+\chapter{実験結果}
+\section{領域検出精度の実験結果一覧}
+表\ref{tab:fix_data}、\ref{tab:seg_data}は、領域検出精度に関する実験の結果一覧であり、前者はユニオンモデルでの結果、後者はユニオンモデル2での結果である。
+
+\begin{table}[htbp]
+\scriptsize
+\centering
+\begin{tabular}{c|c|c|c|c|c|c|c|c}
+\toprule
+\multirow{2}{*}{\textbf{Backbone}}&\multicolumn{2}{c|}{\textbf{Method}}&\textbf{Seg}&\multicolumn{2}{c|}{\textbf{Det}}&\textbf{FLOPs}&\textbf{Params}&\textbf{Latency}\\
+&\textbf{Seg}&\textbf{Det}&\textbf{mIoU[\%]}&\textbf{mAP[\%]}&\textbf{mIoU[\%]}&\textbf{[G]}&\textbf{[M]}&\textbf{[ms]}\\
+\midrule
+MB\_v3\_s&U-Net&YOLOX&88.11&100&93.8&0.84&3.67&8.38\\
+MB\_v3\_s&DL3+&YOLOX&89.44&100&93.8&4.88&8.97&8.27\\
+MB\_v3\_s&DL3&YOLOX&75.97&100&93.8&0.85&8.27&8.23\\
+MB\_v3\_l&U-Net&YOLOX&90.36&100&95.17&1.62&8.44&9.03\\
+MB\_v3\_l&DL3+&YOLOX&90.59&100&95.17&5.72&16.30&9.09\\
+MB\_v3\_l&DL3&YOLOX&78.35&100&95.17&1.69&15.60&8.76\\
+EF\_b0&U-Net&YOLOX&90.12&100&95.02&2.40&11.06&10.10\\
+EF\_b0&DL3+&YOLOX&91.13&100&95.02&6.58&21.14&10.03\\
+EF\_b0&DL3&YOLOX&77.01&100&95.02&2.55&20.44&9.99\\
+EF\_b1&U-Net&YOLOX&90.4&100&94.43&3.18&16.08&12.19\\
+EF\_b1&DL3+&YOLOX&88.89&100&94.43&7.36&26.15&12.05\\
+EF\_b1&DL3&YOLOX&75.15&100&94.43&3.33&25.45&11.89\\
+EF\_b2&U-Net&YOLOX&90.31&99.68&95.06&3.57&18.73&11.90\\
+EF\_b2&DL3+&YOLOX&90.82&99.68&95.06&7.78&29.67&12.35\\
+EF\_b2&DL3&YOLOX&74.84&99.68&95.06&3.75&28.97&11.98\\
+EF\_b3&U-Net&YOLOX&90.46&100&95.63&4.88&25.03&13.12\\
+EF\_b3&DL3+&YOLOX&89.23&100&95.63&9.11&36.84&12.89\\
+EF\_b3&DL3&YOLOX&75.49&100&95.63&5.08&36.14&13.05\\
+EF\_b4&U-Net&YOLOX&90.65&100&95.47&7.18&39.41&15.05\\
+EF\_b4&DL3+&YOLOX&90.99&100&95.47&11.46&52.95&14.99\\
+EF\_b4&DL3&YOLOX&75.6&100&95.47&7.43&52.25&14.90\\
+EF\_b5&U-Net&YOLOX&90.29&100&95.68&10.77&61.71&16.99\\
+EF\_b5&DL3+&YOLOX&88.63&100&95.68&15.11&77.00&16.97\\
+EF\_b5&DL3&YOLOX&72.83&100&95.68&11.08&76.30&16.47\\
+EF\_b6&U-Net&YOLOX&89.64&100&95.79&14.97&87.32&18.80\\
+EF\_b6&DL3+&YOLOX&88.88&100&95.79&19.36&104.34&18.58\\
+EF\_b6&DL3&YOLOX&71.31&100&95.79&15.33&103.64&19.01\\
+EF\_b7&U-Net&YOLOX&90.78&100&95.8&22.47&134.32&21.89\\
+EF\_b7&DL3+&YOLOX&90.31&100&95.8&26.91&153.08&21.49\\
+EF\_b7&DL3&YOLOX&73.87&100&95.8&22.88&152.37&21.16\\
+R\_18&U-Net&YOLOX&90.02&100&94.4&4.36&13.70&8.05\\
+R\_18&DL3+&YOLOX&88.94&100&94.4&8.25&18.24&6.68\\
+R\_18&DL3&YOLOX&72.85&100&94.4&4.21&17.54&6.58\\
+R\_34&U-Net&YOLOX&88.35&99.92&95.32&6.91&23.89&7.71\\
+R\_34&DL3+&YOLOX&89.29&99.92&95.32&10.80&28.43&7.75\\
+R\_34&DL3&YOLOX&73.32&99.92&95.32&6.77&27.72&7.61\\
+R\_50&U-Net&YOLOX&90.5&99.3&95.81&8.83&34.87&8.97\\
+R\_50&DL3+&YOLOX&90.64&99.3&95.81&12.61&48.87&8.84\\
+R\_50&DL3&YOLOX&76.41&99.3&95.81&8.55&48.16&8.55\\
+R\_101&U-Net&YOLOX&90.38&100&95.5&12.57&53.86&12.49\\
+R\_101&DL3+&YOLOX&90.75&100&95.5&16.35&67.86&12.21\\
+R\_101&DL3&YOLOX&75.72&100&95.5&12.28&67.15&12.24\\
+R\_152&U-Net&YOLOX&89&100&95.83&16.30&69.51&16.06\\
+R\_152&DL3+&YOLOX&90.53&100&95.83&20.08&83.51&15.88\\
+R\_152&DL3&YOLOX&74.87&100&95.83&16.02&82.79&15.43\\
+\bottomrule
+\end{tabular}
+\caption{学習結果(ユニオンモデル)}
+\label{tab:fix_data}
+\end{table}
+
+\begin{table}[htbp]
+\scriptsize
+\centering
+\begin{tabular}{c|c|c|c|c|c|c|c|c}
+\toprule
+\multirow{2}{*}{\textbf{Backbone}}&\multicolumn{2}{c|}{\textbf{Method}}&\textbf{Seg}&\multicolumn{2}{c|}{\textbf{Det}}&\textbf{FLOPs}&\textbf{Params}&\textbf{Latency}\\
+&\textbf{Seg}&\textbf{Det}&\textbf{mIoU[\%]}&\textbf{mAP[\%]}&\textbf{mIoU[\%]}&\textbf{[G]}&\textbf{[M]}&\textbf{[ms]}\\
+\midrule
+MB\_v3\_s&U-Net&YOLOX&90&99.57&91.05&0.84&3.67&8.38\\
+MB\_v3\_s&DL3+&YOLOX&90.5&99.3&93.15&4.88&8.97&8.27\\
+MB\_v3\_s&DL3&YOLOX&83.35&100&92.67&0.85&8.27&8.23\\
+MB\_v3\_l&U-Net&YOLOX&90.42&99.96&93.06&1.62&8.44&9.03\\
+MB\_v3\_l&DL3+&YOLOX&90.91&100&94.61&5.72&16.30&9.09\\
+MB\_v3\_l&DL3&YOLOX&84.6&100&95.08&1.69&15.60&8.76\\
+EF\_b0&U-Net&YOLOX&90.82&99.3&93.82&2.40&11.06&10.10\\
+EF\_b0&DL3+&YOLOX&91.2&100&94.45&6.58&21.14&10.03\\
+EF\_b0&DL3&YOLOX&85.05&99.29&94.71&2.55&20.44&9.99\\
+EF\_b1&U-Net&YOLOX&90.9&99.3&93.65&3.18&16.08&12.19\\
+EF\_b1&DL3+&YOLOX&91.17&99.3&95.14&7.36&26.15&12.05\\
+EF\_b1&DL3&YOLOX&80.26&100&94.51&3.33&25.45&11.89\\
+EF\_b2&U-Net&YOLOX&91.03&100&93.32&3.57&18.73&11.90\\
+EF\_b2&DL3+&YOLOX&91.33&100&94.88&7.78&29.67&12.35\\
+EF\_b2&DL3&YOLOX&83.87&100&94.54&3.75&28.97&11.98\\
+EF\_b3&U-Net&YOLOX&91.21&100&93.03&4.88&25.03&13.12\\
+EF\_b3&DL3+&YOLOX&91.29&100&94.29&9.11&36.84&12.89\\
+EF\_b3&DL3&YOLOX&84.73&100&94.98&5.08&36.14&13.05\\
+EF\_b4&U-Net&YOLOX&91.03&100&95.04&7.18&39.41&15.05\\
+EF\_b4&DL3+&YOLOX&91.33&100&94.84&11.46&52.95&14.99\\
+EF\_b4&DL3&YOLOX&84.1&100&95.67&7.43&52.25&14.90\\
+EF\_b5&U-Net&YOLOX&91.18&100&94.01&10.77&61.71&16.99\\
+EF\_b5&DL3+&YOLOX&83.63&100&95.53&15.11&77.00&16.97\\
+EF\_b5&DL3&YOLOX&48.4&99.99&94.16&11.08&76.30&16.47\\
+EF\_b6&U-Net&YOLOX&91.32&100&94.62&14.97&87.32&18.80\\
+EF\_b6&DL3+&YOLOX&91.27&100&95.33&19.36&104.34&18.58\\
+EF\_b6&DL3&YOLOX&82.89&100&94.68&15.33&103.64&19.01\\
+EF\_b7&U-Net&YOLOX&91.24&100&94.62&22.47&134.32&21.89\\
+EF\_b7&DL3+&YOLOX&91.27&99.3&95.59&26.91&153.08&21.49\\
+EF\_b7&DL3&YOLOX&84.47&100&95.54&22.88&152.37&21.16\\
+R\_18&U-Net&YOLOX&90.42&100&94.5&4.36&13.70&8.05\\
+R\_18&DL3+&YOLOX&91.08&100&95.52&8.25&18.24&6.68\\
+R\_18&DL3&YOLOX&84.13&100&95.57&4.21&17.54&6.58\\
+R\_34&U-Net&YOLOX&90.28&97.79&93.47&6.91&23.89&7.71\\
+R\_34&DL3+&YOLOX&91.01&100&94&10.80&28.43&7.75\\
+R\_34&DL3&YOLOX&84.31&100&95.37&6.77&27.72&7.61\\
+R\_50&U-Net&YOLOX&90.62&99.3&94.17&8.83&34.87&8.97\\
+R\_50&DL3+&YOLOX&91.03&99.98&94.61&12.61&48.87&8.84\\
+R\_50&DL3&YOLOX&83.83&99.3&95.61&8.55&48.16&8.55\\
+R\_101&U-Net&YOLOX&90.28&99.29&94.01&12.57&53.86&12.49\\
+R\_101&DL3+&YOLOX&91.18&99.99&94.97&16.35&67.86&12.21\\
+R\_101&DL3&YOLOX&66.37&100&95.59&12.28&67.15&12.24\\
+R\_152&U-Net&YOLOX&90.31&100&94.66&16.30&69.51&16.06\\
+R\_152&DL3+&YOLOX&91.01&99.96&92.84&20.08&83.51&15.88\\
+R\_152&DL3&YOLOX&44.14&99.3&95.12&16.02&82.79&15.43\\
+\bottomrule
+\end{tabular}
+\caption{学習結果(ユニオンモデル2)}
+\label{tab:seg_data}
+\end{table}
+
+\section{測定の実験結果一覧}
+表\ref{tab:sokutei}、\ref{tab:sokutei_seg}は、測定に関する実験の結果一覧であり、前者はユニオンモデルでの結果、後者はユニオンモデル2での結果である。
+表中には球冠ベースと関数ベースでの推定手法のご飯・みそ汁に対するRMSEを掲載している。
+
+図\ref{fig:fix_normal_result},\ref{fig:fix_nf_result}はユニオンモデルでの測定の結果画像から抜粋したものであり、前者は球冠ベース・後者は関数ベースでの結果である。
+図\ref{fig:seg_normal_result},\ref{fig:seg_nf_result}はユニオンモデル2での測定の結果画像から抜粋したものであり、前者は球冠ベース・後者は関数ベースでの結果である。
+一番上の数字は実測値であり、画像の左横にある文字は使用したモデル、画像の下にある数字はそのモデルでの推定値である。
+
+\begin{table}[htbp]
+\scriptsize
+\centering
+\begin{tabular}{c|c|c|c|c|c|c|c|c}
+\toprule
+\multirow{2}{*}{\textbf{Backbone}}&\multicolumn{2}{c|}{\textbf{Method}}&\textbf{Seg}&\textbf{Det}&\multicolumn{2}{c|}{\textbf{球冠ベース}}&\multicolumn{2}{c}{\textbf{関数ベース}}\\
+&\textbf{Seg}&\textbf{Det}&\textbf{mIoU[\%]}&\textbf{mIoU[\%]}&\textbf{ご飯[\%]}&\textbf{みそ汁[\%]}&\textbf{ご飯[\%]}&\textbf{みそ汁[\%]}\\
+\midrule
+MB\_v3\_s & Unet & YOLOX & 88.11 & 93.8 & 9.10 & 29.62 & 9.90 & 25.30 \\
+MB\_v3\_s & DLv3+ & YOLOX & 89.44 & 93.8 & 10.68 & 31.99 & 10.99 & 28.90 \\
+MB\_v3\_s & DLv3 & YOLOX & 75.97 & 93.8 & 13.86 & 29.01 & 14.28 & 29.24 \\
+MB\_v3\_l & Unet & YOLOX & 90.36 & 95.17 & 11.64 & 22.76 & 12.23 & 15.72 \\
+MB\_v3\_l & DLv3+ & YOLOX & 90.59 & 95.17 & 12.25 & 25.43 & 12.86 & 19.50 \\
+MB\_v3\_l & DLv3 & YOLOX & 78.35 & 95.17 & 15.91 & 34.29 & 16.54 & 31.85 \\
+EF\_b0 & Unet & YOLOX & 90.12 & 95.02 & 15.49 & 26.73 & 16.01 & 23.31 \\
+EF\_b0 & DLv3+ & YOLOX & 91.13 & 95.02 & 12.21 & 31.78 & 12.64 & 23.56 \\
+EF\_b0 & DLv3 & YOLOX & 77.01 & 95.02 & 17.13 & 36.70 & 17.22 & 33.37 \\
+EF\_b1 & Unet & YOLOX & 90.4 & 94.43 & 12.13 & 21.03 & 12.78 & 14.16 \\
+EF\_b1 & DLv3+ & YOLOX & 88.89 & 94.43 & 9.27 & 24.33 & 9.88 & 17.41 \\
+EF\_b1 & DLv3 & YOLOX & 75.15 & 94.43 & 17.77 & 25.15 & 17.22 & 25.74 \\
+EF\_b2 & Unet & YOLOX & 90.31 & 95.06 & 10.90 & 30.35 & 11.69 & 26.04 \\
+EF\_b2 & DLv3+ & YOLOX & 90.82 & 95.06 & 11.41 & 24.65 & 12.14 & 21.05 \\
+EF\_b2 & DLv3 & YOLOX & 74.84 & 95.06 & 17.03 & 31.27 & 17.31 & 34.93 \\
+EF\_b3 & Unet & YOLOX & 90.46 & 95.63 & 15.30 & 29.15 & 15.72 & 20.81 \\
+EF\_b3 & DLv3+ & YOLOX & 89.23 & 95.63 & 18.48 & 33.50 & 18.80 & 27.92 \\
+EF\_b3 & DLv3 & YOLOX & 75.49 & 95.63 & 21.46 & 39.17 & 21.75 & 39.27 \\
+EF\_b4 & Unet & YOLOX & 90.65 & 95.47 & 12.66 & 24.18 & 13.16 & 16.97 \\
+EF\_b4 & DLv3+ & YOLOX & 90.99 & 95.47 & 16.61 & 33.09 & 17.04 & 26.58 \\
+EF\_b4 & DLv3 & YOLOX & 75.60 & 95.47 & 15.70 & 35.10 & 16.49 & 32.87 \\
+EF\_b5 & Unet & YOLOX & 90.29 & 95.68 & 11.45 & 20.84 & 12.26 & 15.12 \\
+EF\_b5 & DLv3+ & YOLOX & 88.63 & 95.68 & 14.67 & 27.32 & 15.61 & 20.21 \\
+EF\_b5 & DLv3 & YOLOX & 72.83 & 95.68 & 24.84 & 36.96 & 25.99 & 35.17 \\
+EF\_b6 & Unet & YOLOX & 89.64 & 95.79 & 14.03 & 18.70 & 14.57 & 12.78 \\
+EF\_b6 & DLv3+ & YOLOX & 88.88 & 95.79 & 15.52 & 34.16 & 16.00 & 29.81 \\
+EF\_b6 & DLv3 & YOLOX & 71.31 & 95.79 & 23.32 & 40.29 & 24.04 & 37.70 \\
+EF\_b7 & Unet & YOLOX & 90.78 & 95.8 & 12.25 & 21.49 & 12.84 & 14.94 \\
+EF\_b7 & DLv3+ & YOLOX & 90.31 & 95.8 & 13.20 & 24.73 & 14.10 & 19.22 \\
+EF\_b7 & DLv3 & YOLOX & 73.87 & 95.8 & 22.18 & 29.01 & 22.46 & 29.41 \\
+R\_18 & Unet & YOLOX & 90.02 & 94.4 & 7.56 & 20.82 & 8.44 & 17.01 \\
+R\_18 & DLv3+ & YOLOX & 88.94 & 94.4 & 10.08 & 20.98 & 10.61 & 19.84 \\
+R\_18 & DLv3 & YOLOX & 72.85 & 94.4 & 19.46 & 31.71 & 19.47 & 32.32 \\
+R\_34 & Unet & YOLOX & 88.35 & 95.32 & 14.08 & 20.84 & 14.85 & 21.84 \\
+R\_34 & DLv3+ & YOLOX & 89.29 & 95.32 & 13.56 & 19.05 & 14.09 & 15.33 \\
+R\_34 & DLv3 & YOLOX & 73.32 & 95.32 & 14.53 & 28.19 & 14.82 & 31.61 \\
+R\_50 & Unet & YOLOX & 90.5 & 95.81 & 11.70 & 23.93 & 12.31 & 19.46 \\
+R\_50 & DLv3+ & YOLOX & 90.64 & 95.81 & 15.67 & 31.81 & 16.04 & 27.88 \\
+R\_50 & DLv3 & YOLOX & 76.41 & 95.81 & 17.29 & 43.98 & 17.21 & 44.58 \\
+R\_101 & Unet & YOLOX & 90.38 & 95.5 & 14.20 & 24.99 & 14.69 & 17.76 \\
+R\_101 & DLv3+ & YOLOX & 90.75 & 95.5 & 13.05 & 38.83 & 13.63 & 33.50 \\
+R\_101 & DLv3 & YOLOX & 75.72 & 95.5 & 28.97 & 35.67 & 28.65 & 31.85 \\
+R\_152 & Unet & YOLOX & 89.0 & 95.83 & 10.99 & 26.55 & 11.66 & 20.49 \\
+R\_152 & DLv3+ & YOLOX & 90.53 & 95.83 & 14.15 & 30.17 & 14.68 & 26.74 \\
+R\_152 & DLv3 & YOLOX & 74.87 & 95.83 & 18.07 & 40.91 & 17.64 & 38.12 \\
+\bottomrule
+\end{tabular}
+\caption{測定結果(ユニオンモデル)}
+\label{tab:sokutei}
+\end{table}
+
+\begin{table}[htbp]
+\scriptsize
+\centering
+\begin{tabular}{c|c|c|c|c|c|c|c|c}
+\toprule
+\multirow{2}{*}{\textbf{Backbone}}&\multicolumn{2}{c|}{\textbf{Method}}&\textbf{Seg}&\textbf{Det}&\multicolumn{2}{c|}{\textbf{球冠ベース}}&\multicolumn{2}{c}{\textbf{関数ベース}}\\
+&\textbf{Seg}&\textbf{Det}&\textbf{mIoU[\%]}&\textbf{mIoU[\%]}&\textbf{ご飯[\%]}&\textbf{みそ汁[\%]}&\textbf{ご飯[\%]}&\textbf{みそ汁[\%]}\\
+\midrule
+MB\_v3\_s & Unet & YOLOX & 90 & 91.05 & 10.81 & 27.08 & 11.36 & 20.92 \\
+MB\_v3\_s & DLv3+ & YOLOX & 90.5 & 93.15 & 11.25 & 26.80 & 11.73 & 19.86 \\
+MB\_v3\_s & DLv3 & YOLOX & 83.35 & 92.67 & 9.47 & 29.20 & 10.03 & 23.41 \\
+MB\_v3\_l & Unet & YOLOX & 90.42 & 93.06 & 10.74 & 22.99 & 11.43 & 21.45 \\
+MB\_v3\_l & DLv3+ & YOLOX & 90.91 & 94.61 & 12.46 & 25.62 & 13.03 & 21.18 \\
+MB\_v3\_l & DLv3 & YOLOX & 84.6 & 95.08 & 10.71 & 24.49 & 11.54 & 20.10 \\
+EF\_b0 & Unet & YOLOX & 90.82 & 93.82 & 12.34 & 21.76 & 12.94 & 14.87 \\
+EF\_b0 & DLv3+ & YOLOX & 91.2 & 94.45 & 11.69 & 26.85 & 12.24 & 20.49 \\
+EF\_b0 & DLv3 & YOLOX & 85.05 & 94.71 & 12.22 & 21.81 & 12.88 & 19.55 \\
+EF\_b1 & Unet & YOLOX & 90.9 & 93.65 & 13.24 & 15.31 & 13.72 & 8.54 \\
+EF\_b1 & DLv3+ & YOLOX & 91.17 & 95.14 & 14.59 & 30.15 & 14.93 & 27.28 \\
+EF\_b1 & DLv3 & YOLOX & 80.26 & 94.51 & 9.89 & 31.78 & 10.20 & 31.04 \\
+EF\_b2 & Unet & YOLOX & 91.03 & 93.32 & 13.11 & 18.60 & 13.45 & 13.36 \\
+EF\_b2 & DLv3+ & YOLOX & 91.33 & 94.88 & 11.06 & 21.02 & 11.66 & 16.69 \\
+EF\_b2 & DLv3 & YOLOX & 83.87 & 94.54 & 9.48 & 26.36 & 10.50 & 20.11 \\
+EF\_b3 & Unet & YOLOX & 91.21 & 94.62 & 13.83 & 27.33 & 14.20 & 23.50 \\
+EF\_b3 & DLv3+ & YOLOX & 91.29 & 95.59 & 13.46 & 33.36 & 14.10 & 30.63 \\
+EF\_b3 & DLv3 & YOLOX & 84.73 & 95.54 & 11.50 & 21.67 & 12.37 & 16.30 \\
+EF\_b4 & Unet & YOLOX & 91.03 & 95.04 & 11.82 & 16.34 & 12.42 & 10.09 \\
+EF\_b4 & DLv3+ & YOLOX & 91.33 & 94.84 & 11.93 & 26.62 & 12.49 & 21.19 \\
+EF\_b4 & DLv3 & YOLOX & 84.1 & 95.67 & 9.92 & 23.36 & 10.81 & 17.09 \\
+EF\_b5 & Unet & YOLOX & 91.18 & 94.01 & 12.17 & 30.94 & 12.71 & 29.03 \\
+EF\_b5 & DLv3+ & YOLOX & 83.63 & 95.53 & 37.16 & 29.61 & 37.34 & 26.00 \\
+EF\_b5 & DLv3 & YOLOX & 48.4 & 94.16 & 51.73 & 30.36 & 51.73 & 24.36 \\
+EF\_b6 & Unet & YOLOX & 91.32 & 94.62 & 11.87 & 26.23 & 12.30 & 21.53 \\
+EF\_b6 & DLv3+ & YOLOX & 91.27 & 95.33 & 13.87 & 18.94 & 14.49 & 12.76 \\
+EF\_b6 & DLv3 & YOLOX & 82.89 & 94.68 & 11.33 & 19.14 & 12.18 & 13.36 \\
+EF\_b7 & Unet & YOLOX & 91.24 & 94.62 & 13.83 & 27.33 & 14.20 & 23.50 \\
+EF\_b7 & DLv3+ & YOLOX & 91.27 & 95.59 & 13.46 & 33.36 & 14.10 & 30.63 \\
+EF\_b7 & DLv3 & YOLOX & 84.47 & 95.54 & 11.50 & 21.67 & 12.37 & 16.30 \\
+R\_18 & Unet & YOLOX & 90.42 & 94.5 & 8.32 & 15.64 & 9.20 & 9.30 \\
+R\_18 & DLv3+ & YOLOX & 91.08 & 95.52 & 13.25 & 35.07 & 13.77 & 34.58 \\
+R\_18 & DLv3 & YOLOX & 84.13 & 95.57 & 6.24 & 25.81 & 7.06 & 19.73 \\
+R\_34 & Unet & YOLOX & 90.28 & 93.47 & 11.27 & 31.01 & 12.01 & 29.26 \\
+R\_34 & DLv3+ & YOLOX & 91.01 & 94 & 11.41 & 31.95 & 12.18 & 29.50 \\
+R\_34 & DLv3 & YOLOX & 84.31 & 95.37 & 8.07 & 29.01 & 8.71 & 24.48 \\
+R\_50 & Unet & YOLOX & 90.62 & 94.17 & 10.27 & 19.11 & 11.08 & 12.90 \\
+R\_50 & DLv3+ & YOLOX & 91.03 & 94.61 & 13.88 & 14.95 & 14.47 & 9.79 \\
+R\_50 & DLv3 & YOLOX & 83.83 & 95.61 & 11.31 & 34.77 & 11.98 & 32.03 \\
+R\_101 & Unet & YOLOX & 90.28 & 94.01 & 11.36 & 27.72 & 11.92 & 24.35 \\
+R\_101 & DLv3+ & YOLOX & 91.18 & 94.97 & 13.00 & 31.78 & 13.53 & 29.60 \\
+R\_101 & DLv3 & YOLOX & 66.37 & 95.59 & 18.68 & 34.50 & 19.45 & 32.05 \\
+R\_152 & Unet & YOLOX & 90.31 & 94.66 & 11.38 & 31.54 & 12.05 & 29.57 \\
+R\_152 & DLv3+ & YOLOX & 91.01 & 92.84 & 13.85 & 38.86 & 14.18 & 36.40 \\
+R\_152 & DLv3 & YOLOX & 44.14 & 95.12 & 51.73 & 45.33 & 51.73 & 45.15 \\
+\bottomrule
+\end{tabular}
+\caption{測定結果(ユニオンモデル2)}
+\label{tab:sokutei_seg}
+\end{table}
+
+\newpage
+\begin{figure}[htbp]
+    \centering
+    % \includegraphics[width=0.85\linewidth]{Image_takahashi/fix_normal.png}
+    \caption{球冠ベースの結果画像(ユニオンモデル)}
+    \label{fig:fix_normal_result}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    % \includegraphics[width=0.85\linewidth]{Image_takahashi/fix_nf.png}
+    \caption{関数ベースの結果画像(ユニオンモデル)}
+    \label{fig:fix_nf_result}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    % \includegraphics[width=0.85\linewidth]{Image_takahashi/seg_normal.png}
+    \caption{球冠ベースの結果画像(ユニオンモデル2)}
+    \label{fig:seg_normal_result}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    % \includegraphics[width=0.85\linewidth]{Image_takahashi/seg_nf.png}
+    \caption{関数ベースの結果画像(ユニオンモデル2)}
+    \label{fig:seg_nf_result}
+\end{figure}
+
+\end{document}

@@ -1,26 +1,26 @@
 import { Ionicons } from '@expo/vector-icons';
-import * as ImagePicker from 'expo-image-picker';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import React, { useRef, useState } from 'react';
+import { Image as ExpoImage } from 'expo-image';
+import * as ImagePicker from 'expo-image-picker';
+import { useRouter } from 'expo-router';
+import React, { useState } from 'react';
 import {
-  Alert,
-  Dimensions,
-  PanGestureHandler,
-  RefreshControl,
-  ScrollView,
-  Text,
-  TouchableOpacity,
-  View,
+    Alert,
+    Dimensions,
+    PanGestureHandler,
+    RefreshControl, Image as RNImage, ScrollView,
+    Text,
+    TouchableOpacity,
+    View
 } from 'react-native';
 import { PanGestureHandlerGestureEvent } from 'react-native-gesture-handler';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import Animated, {
-  runOnJS,
-  useAnimatedGestureHandler,
-  useAnimatedStyle,
-  useSharedValue,
+    runOnJS,
+    useAnimatedGestureHandler,
+    useAnimatedStyle,
+    useSharedValue,
 } from 'react-native-reanimated';
-import { Image } from 'expo-image';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import apiClient from '../../lib/api';
 import { useLabeling, useTheme } from '../../lib/store';
 import { cn } from '../../lib/utils';
@@ -44,6 +44,7 @@ const LABEL_COLORS = [
 ];
 
 export default function LabelingScreen() {
+  const router = useRouter();
   const { isDarkMode } = useTheme();
   const { labels, setLabels, addLabel, removeLabel } = useLabeling();
   const [currentImage, setCurrentImage] = useState<string | null>(null);
@@ -52,9 +53,9 @@ export default function LabelingScreen() {
   const [currentLabel, setCurrentLabel] = useState('');
   const [availableLabels, setAvailableLabels] = useState<string[]>([]);
   const [refreshing, setRefreshing] = useState(false);
-  
+
   const queryClient = useQueryClient();
-  
+
   // Drawing state
   const startX = useSharedValue(0);
   const startY = useSharedValue(0);
@@ -101,7 +102,7 @@ export default function LabelingScreen() {
 
   const pickImage = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    
+
     if (status !== 'granted') {
       Alert.alert('Permission Required', 'Please grant camera roll permissions to use this feature.');
       return;
@@ -117,10 +118,10 @@ export default function LabelingScreen() {
       const imageUri = result.assets[0].uri;
       setCurrentImage(imageUri);
       setLabels([]);
-      
+
       // Get image dimensions with error handling
-      Image.getSize(
-        imageUri, 
+      RNImage.getSize(
+        imageUri,
         (width, height) => {
           setImageSize({ width, height });
         },
@@ -134,7 +135,7 @@ export default function LabelingScreen() {
 
   const takePhoto = async () => {
     const { status } = await ImagePicker.requestCameraPermissionsAsync();
-    
+
     if (status !== 'granted') {
       Alert.alert('Permission Required', 'Please grant camera permissions to use this feature.');
       return;
@@ -149,10 +150,10 @@ export default function LabelingScreen() {
       const imageUri = result.assets[0].uri;
       setCurrentImage(imageUri);
       setLabels([]);
-      
+
       // Get image dimensions with error handling
-      Image.getSize(
-        imageUri, 
+      RNImage.getSize(
+        imageUri,
         (width, height) => {
           setImageSize({ width, height });
         },
@@ -198,7 +199,7 @@ export default function LabelingScreen() {
       const y = Math.min(startY.value, currentY.value);
       const width = Math.abs(currentX.value - startX.value);
       const height = Math.abs(currentY.value - startY.value);
-      
+
       runOnJS(addBoundingBox)(x, y, width, height);
       runOnJS(setIsDrawing)(false);
       isActive.value = false;
@@ -207,7 +208,7 @@ export default function LabelingScreen() {
 
   const drawingBoxStyle = useAnimatedStyle(() => {
     if (!isActive.value) return { display: 'none' };
-    
+
     const x = Math.min(startX.value, currentX.value);
     const y = Math.min(startY.value, currentY.value);
     const width = Math.abs(currentX.value - startX.value);
@@ -282,6 +283,21 @@ export default function LabelingScreen() {
         >
           <Ionicons name="camera" size={16} color="white" style={{ marginRight: 8 }} />
           <Text className="text-white font-medium">Camera</Text>
+        </TouchableOpacity>
+      </View>
+      <View className="mt-3">
+        <TouchableOpacity
+          onPress={() => {
+            if (!currentImage) {
+              Alert.alert('No Image', 'Please select or capture an image first.');
+              return;
+            }
+            router.push('/manual-labeling');
+          }}
+          className="py-3 rounded-lg bg-purple-500 dark:bg-purple-600 flex-row items-center justify-center"
+        >
+          <Ionicons name="create" size={16} color="white" style={{ marginRight: 8 }} />
+          <Text className="text-white font-medium">Open Manual Labeling</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -368,12 +384,12 @@ export default function LabelingScreen() {
         <View style={{ width: displayWidth, height: displayHeight }}>
           <PanGestureHandler onGestureEvent={gestureHandler}>
             <Animated.View style={{ width: '100%', height: '100%' }}>
-              <Image
+              <ExpoImage
                 source={{ uri: currentImage }}
                 style={{ width: '100%', height: '100%' }}
                 contentFit="contain"
               />
-              
+
               {/* Existing bounding boxes */}
               {labels.map((label, index) => (
                 <View
@@ -404,7 +420,7 @@ export default function LabelingScreen() {
                       {label.label}
                     </Text>
                   </View>
-                  
+
                   <TouchableOpacity
                     onPress={() => removeLabel(index)}
                     style={{
@@ -423,7 +439,7 @@ export default function LabelingScreen() {
                   </TouchableOpacity>
                 </View>
               ))}
-              
+
               {/* Drawing box */}
               <Animated.View style={drawingBoxStyle} />
             </Animated.View>
