@@ -8,41 +8,24 @@
 \contentsline {section}{\numberline {3.3}データ収集・ラベリング・学習}{5}{section.3.3}%
 \contentsline {section}{\numberline {3.4}UIフロー（スマホ中心）と操作例}{5}{section.3.4}%
 \contentsline {section}{\numberline {3.5}スマホ最適化と制約}{10}{section.3.5}%
-\contentsline {chapter}{\numberline {4}スマートフォンを用いたユーザ主導実験設計}{11}{chapter.4}%
-\contentsline {section}{\numberline {4.1}目的とモチベーション}{11}{section.4.1}%
-\contentsline {section}{\numberline {4.2}対象ユーザと使用環境}{11}{section.4.2}%
-\contentsline {section}{\numberline {4.3}タスク定義}{11}{section.4.3}%
-\contentsline {section}{\numberline {4.4}プロトコル（手順）}{11}{section.4.4}%
-\contentsline {section}{\numberline {4.5}評価指標}{12}{section.4.5}%
-\contentsline {subsection}{\numberline {4.5.1}機能的指標}{12}{subsection.4.5.1}%
-\contentsline {subsection}{\numberline {4.5.2}運用指標}{12}{subsection.4.5.2}%
-\contentsline {subsection}{\numberline {4.5.3}主観評価}{12}{subsection.4.5.3}%
-\contentsline {section}{\numberline {4.6}ログ・記録}{12}{section.4.6}%
-\contentsline {section}{\numberline {4.7}倫理配慮とプライバシ}{12}{section.4.7}%
-\contentsline {section}{\numberline {4.8}成功基準と終了条件}{12}{section.4.8}%
-\contentsline {section}{\numberline {4.9}想定リスクと緩和}{12}{section.4.9}%
-\contentsline {section}{\numberline {4.10}結果の反映計画}{12}{section.4.10}%
-\contentsline {chapter}{\numberline {5}領域検出精度に関する実験}{13}{chapter.5}%
+\contentsline {chapter}{\numberline {4}語彙登録のみでの検出成立性の検証}{11}{chapter.4}%
+\contentsline {section}{\numberline {4.1}目的}{11}{section.4.1}%
+\contentsline {section}{\numberline {4.2}操作フローと条件}{11}{section.4.2}%
+\contentsline {section}{\numberline {4.3}評価項目}{11}{section.4.3}%
+\contentsline {section}{\numberline {4.4}ケーススタディ（\texttt {smartphone}）}{11}{section.4.4}%
+\contentsline {section}{\numberline {4.5}考察と制約}{12}{section.4.5}%
+\contentsline {chapter}{\numberline {5}手動ラベリングとファインチューニングによる検出成立性の検証}{13}{chapter.5}%
 \contentsline {section}{\numberline {5.1}目的}{13}{section.5.1}%
-\contentsline {section}{\numberline {5.2}データセット}{13}{section.5.2}%
-\contentsline {section}{\numberline {5.3}実験条件}{13}{section.5.3}%
-\contentsline {section}{\numberline {5.4}評価指標}{14}{section.5.4}%
-\contentsline {subsection}{\numberline {5.4.1}Tversky\:loss}{14}{subsection.5.4.1}%
-\contentsline {subsection}{\numberline {5.4.2}IoU}{14}{subsection.5.4.2}%
-\contentsline {subsection}{\numberline {5.4.3}mAP}{14}{subsection.5.4.3}%
-\contentsline {subsection}{\numberline {5.4.4}YOLOX\:loss}{15}{subsection.5.4.4}%
-\contentsline {section}{\numberline {5.5}実験結果}{15}{section.5.5}%
-\contentsline {section}{\numberline {5.6}考察}{16}{section.5.6}%
-\contentsline {chapter}{\numberline {6}残量測定に関する実験}{18}{chapter.6}%
-\contentsline {section}{\numberline {6.1}目的}{18}{section.6.1}%
-\contentsline {section}{\numberline {6.2}実験条件}{18}{section.6.2}%
-\contentsline {subsection}{\numberline {6.2.1}推定用データセット}{18}{subsection.6.2.1}%
-\contentsline {subsection}{\numberline {6.2.2}評価指標}{18}{subsection.6.2.2}%
-\contentsline {section}{\numberline {6.3}実験結果}{18}{section.6.3}%
-\contentsline {section}{\numberline {6.4}考察}{19}{section.6.4}%
-\contentsline {chapter}{\numberline {7}まとめ}{20}{chapter.7}%
-\contentsline {paragraph}{査読付き国際学会}{22}{section*.12}%
-\contentsline {paragraph}{シンポジウム}{22}{section*.13}%
-\contentsline {chapter}{\numberline {A}実験結果}{24}{appendix.A}%
-\contentsline {section}{\numberline {A.1}領域検出精度の実験結果一覧}{24}{section.A.1}%
-\contentsline {section}{\numberline {A.2}測定の実験結果一覧}{24}{section.A.2}%
+\contentsline {section}{\numberline {5.2}前提と環境}{13}{section.5.2}%
+\contentsline {section}{\numberline {5.3}手順}{13}{section.5.3}%
+\contentsline {section}{\numberline {5.4}評価設計}{13}{section.5.4}%
+\contentsline {section}{\numberline {5.5}実装上の要点}{14}{section.5.5}%
+\contentsline {section}{\numberline {5.6}実験結果}{14}{section.5.6}%
+\contentsline {section}{\numberline {5.7}期待と限界}{14}{section.5.7}%
+\contentsline {section}{\numberline {5.8}今後の改善}{14}{section.5.8}%
+\contentsline {chapter}{\numberline {6}まとめ}{15}{chapter.6}%
+\contentsline {paragraph}{査読付き国際学会}{17}{section*.9}%
+\contentsline {paragraph}{シンポジウム}{17}{section*.10}%
+\contentsline {chapter}{\numberline {A}実験結果}{19}{appendix.A}%
+\contentsline {section}{\numberline {A.1}領域検出精度の実験結果一覧}{19}{section.A.1}%
+\contentsline {section}{\numberline {A.2}測定の実験結果一覧}{19}{section.A.2}%

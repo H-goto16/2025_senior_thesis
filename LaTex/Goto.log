@@ -1,4 +1,4 @@
-This is e-upTeX, Version 3.141592653-p4.1.2-u2.00-250202-2.6 (utf8.uptex) (TeX Live 2025) (preloaded format=uplatex 2025.4.27)  6 OCT 2025 14:13
+This is e-upTeX, Version 3.141592653-p4.1.2-u2.00-250202-2.6 (utf8.uptex) (TeX Live 2025) (preloaded format=uplatex 2025.4.27)  22 OCT 2025 13:40
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -616,29 +616,22 @@ File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 LaTeX Font Info:    Trying to load font information for U+msb on input line 3.
 (/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
-)
-
-[3
-
-
-])
+))
 \tf@toc=\write4
 \openout4 = `Goto.toc'.
 
 
 
-[4] (./Goto.lof
-Package acronym Info: Label `acro:Seg' newly defined as it shall be overridden
-although it is yet undefined on input line 30.
-Package acronym Info: Label `acro:Obj' newly defined as it shall be overridden
-although it is yet undefined on input line 31.
-)
+[3
+
+
+] (./Goto.lof)
 \tf@lof=\write5
 \openout5 = `Goto.lof'.
 
 
 
-[5
+[4
 
 ] (./Goto.lot)
 \tf@lot=\write6
@@ -646,7 +639,7 @@ although it is yet undefined on input line 31.
 
 
 
-[6
+[5
 
 ]
  1.
@@ -746,13 +739,8 @@ LaTeX Warning: Float too large for page by 1.37953pt on input line 196.
 
 ]
  4.
-
-Overfull \hbox (32.6141pt too wide) in paragraph at lines 219--220
-[]\OT1/cmr/m/n/10.95 T2: La-bel-ing \JY2/mc/m/n/10.95 タブでバウンデ ィ
-ングボ ックスとラベルを付与し送信する （\OT1/cmtt/m/n/10.95 
-/labeling/submit\JY2/mc/m/n/10.95 ） 。 
- []
-
+LaTeX Font Info:    Font shape `OT1/cmtt/bx/n' in size <12> not available
+(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 228.
 
 
 [11
@@ -761,102 +749,69 @@ Overfull \hbox (32.6141pt too wide) in paragraph at lines 219--220
 
 [12]
  5.
-Package acronym Info: Label `acro:Sem' newly defined as it shall be overridden
-although it is yet undefined on input line 277.
-LaTeX Font Info:    Font shape `JT2/mc/m/n' will be
-(Font)              scaled to size 7.69775pt on input line 311.
-LaTeX Font Info:    Font shape `JY2/mc/m/n' will be
-(Font)              scaled to size 7.69775pt on input line 311.
-LaTeX Font Info:    Font shape `JT2/mc/bx/n' in size <8> not available
-(Font)              Font shape `JT2/gt/m/n' tried instead on input line 315.
-LaTeX Font Info:    Font shape `JT2/gt/m/n' will be
-(Font)              scaled to size 7.69775pt on input line 315.
-LaTeX Font Info:    Font shape `JY2/mc/bx/n' in size <8> not available
-(Font)              Font shape `JY2/gt/m/n' tried instead on input line 315.
-LaTeX Font Info:    Font shape `JY2/gt/m/n' will be
-(Font)              scaled to size 7.69775pt on input line 315.
+
+Overfull \hbox (33.46349pt too wide) in paragraph at lines 241--242
+\JY2/mc/m/n/10.95 が 、 環境設定により \OT1/cmr/m/n/10.95 GPU \JY2/mc/
+m/n/10.95 へ切替可能 。 収集した画像と \OT1/cmr/m/n/10.95 YOLO \JY
+2/mc/m/n/10.95 形式ラベルは \OT1/cmtt/m/n/10.95 training[]data/images \JY
+2/mc/m/n/10.95 ・
+ []
+
 
 
 [13
 
 ]
 
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `\leavevmode@ifvmode' on input line 345.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                \kern 2.43307pt
-(hyperref)                removed on input line 345.
-
-LaTeX Font Info:    Font shape `JT2/mc/m/n' will be
-(Font)              scaled to size 5.77332pt on input line 355.
-LaTeX Font Info:    Font shape `JY2/mc/m/n' will be
-(Font)              scaled to size 5.77332pt on input line 355.
-Package acronym Info: Label `acro:IoU' newly defined as it shall be overridden
-although it is yet undefined on input line 359.
-Package acronym Info: Label `acro:AP' newly defined as it shall be overridden
-although it is yet undefined on input line 372.
-
-
 [14]
-
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `\leavevmode@ifvmode' on input line 411.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                \kern 2.43307pt
-(hyperref)                removed on input line 411.
-
-Package acronym Info: Label `acro:FLOPs' newly defined as it shall be overridde
-n
-although it is yet undefined on input line 442.
+ 6.
+Package acronym Info: Label `acro:Sem' newly defined as it shall be overridden
+although it is yet undefined on input line 283.
+Package acronym Info: Label `acro:Obj' newly defined as it shall be overridden
+although it is yet undefined on input line 283.
+Package acronym Info: Label `acro:Seg' newly defined as it shall be overridden
+although it is yet undefined on input line 284.
 
 
-[15]
+[15
+
+]
 
 [16]
 
-[17]
- 6.
+[17
 
+]
 
 [18
 
 ]
+付録 A.
+LaTeX Font Info:    Font shape `JT2/mc/m/n' will be
+(Font)              scaled to size 7.69775pt on input line 327.
+LaTeX Font Info:    Font shape `JY2/mc/m/n' will be
+(Font)              scaled to size 7.69775pt on input line 327.
+LaTeX Font Info:    Font shape `JT2/mc/bx/n' in size <8> not available
+(Font)              Font shape `JT2/gt/m/n' tried instead on input line 331.
+LaTeX Font Info:    Font shape `JT2/gt/m/n' will be
+(Font)              scaled to size 7.69775pt on input line 331.
+LaTeX Font Info:    Font shape `JY2/mc/bx/n' in size <8> not available
+(Font)              Font shape `JY2/gt/m/n' tried instead on input line 331.
+LaTeX Font Info:    Font shape `JY2/gt/m/n' will be
+(Font)              scaled to size 7.69775pt on input line 331.
 
-[19]
- 7.
 
-
-[20
+[19
 
 ]
+
+[20]
 
 [21]
 
-[22
+[22]
 
-]
-
-[23
-
-]
-付録 A.
-
-
-[24
-
-]
-
-[25]
-
-[26]
-
-[27]
-
-[28] (./Goto.aux)
+[23] (./Goto.aux)
  ***********
 pLaTeX2e <2023-02-14u04>+1, based on
 LaTeX2e <2024-11-01> patch level 2
@@ -867,15 +822,15 @@ L3 programming layer <2025-03-26>
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
 Package rerunfilecheck Info: File `Goto.out' has not changed.
-(rerunfilecheck)             Checksum: 4EF8A2F609746485B90A4C84295E52D3;4939.
+(rerunfilecheck)             Checksum: 0CE087E4AE4D79A00F6BA9F3BD4A00EA;3287.
  ) 
 Here is how much of TeX's memory you used:
- 13369 strings out of 470271
- 204875 string characters out of 5486374
- 725842 words of memory out of 5000000
- 39973 multiletter control sequences out of 15000+600000
- 640870 words of font info for 110 fonts, out of 8000000 for 9000
+ 13322 strings out of 470271
+ 204172 string characters out of 5486374
+ 722957 words of memory out of 5000000
+ 39925 multiletter control sequences out of 15000+600000
+ 640752 words of font info for 109 fonts, out of 8000000 for 9000
  929 hyphenation exceptions out of 8191
- 72i,20n,79p,1877b,612s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 72i,10n,79p,1877b,594s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on Goto.dvi (34 pages, 181372 bytes).
+Output written on Goto.dvi (28 pages, 125952 bytes).

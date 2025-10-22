@@ -112,7 +112,7 @@ AIが広く普及した現代において、対話型AIは一般ユーザに浸�
     \item Makefile, pnpm, OpenAPI等を用いた再現性の高い開発運用体制の整備
 \end{itemize}
 
-本論文では2章で背景および関連研究について述べ、3章で提案システムの設計方針と機能構成を示す。4章では実装の詳細（フロントエンド、バックエンド、学習基盤、データ管理、可視化）を述べ、5章でケーススタディと評価（ユーザ操作性、学習・推論特性、改善サイクルの有効性）を示す。6章ではまとめと今後の課題（軽量化・最適化、拡張可能性、運用上の安全性・信頼性など）について議論する。
+本論文では2章で背景および関連研究について述べ、3章で提案システムの設計方針と機能構成を示す。4章では語彙登録のみでの検出成立性をスマートフォンから検証し、5章では手動ラベリングとファインチューニングによる検出成立性の検証計画（結果は未掲載）を示す。6章ではまとめと今後の課題（軽量化・最適化、拡張可能性、運用上の安全性・信頼性など）について議論する。
 \\
 %-------2章--------------------------------------------------------
 \chapter{関連研究}
@@ -206,452 +206,76 @@ Labelingタブで作成したアノテーションはYOLO形式で保存し（\t
 以上より、\textbf{ユーザ主導の反復改善}（語彙設定→収集/ラベリング→学習→推論/評価→運用）を一つのUIに束ね、スマートフォンを中心とした現場適用に耐える\textbf{軽量な開放語彙検出運用}を実現する。
 
 
-\chapter{スマートフォンを用いたユーザ主導実験設計}
-\section{目的とモチベーション}
-本研究の実験は、スマートフォンのみで画像取得から語彙設定・ラベリング・学習・推論までを完結できるかを検証する。一般ユーザが自作モデルを短時間で構築・改善できることを主たるモチベーションとし、操作の単純さと反復速度を重視する。
+\chapter{語彙登録のみでの検出成立性の検証}
+\section{目的}
+本章では、\textbf{語彙登録（Add New Detection Class）のみ}で未検出の対象が\textbf{検出可能になるか}をスマートフォンから検証する。モデルはYOLO-Worldの\textbf{事前語彙化}運用であり、UI上の語彙追加が\texttt{POST /model/classes}に対応、検出は\texttt{POST /detect}に対応する。対象例として\texttt{smartphone}クラスを用い、\textbf{Home → Capture Image → Add New Detection Class → Detect}の最短ループで成立性を確認する（図\ref{fig:flow_page1}, 図\ref{fig:flow_page2}参照）。
 
-\section{対象ユーザと使用環境}
-対象は機械学習の専門知識を持たない一般ユーザとし、端末はAndroid/iOSの実機を想定する。通信はWi-Fi環境を基本とし、バックエンドAPIはローカル同一LANまたはトンネリングを用いて接続する。UIはExpoアプリ（タブ: Detection / Labeling / Training / Models / Analytics）を使用する。
-
-\section{タスク定義}
-\begin{itemize}
-  \item T1: スマホで対象物（例: 食器/料理）の写真を撮影またはギャラリーから選択する。
-  \item T2: Labelingタブでバウンディングボックスとラベルを付与し送信する（\texttt{/labeling/submit}）。
-  \item T3: 語彙（検出クラス）を\texttt{/model/classes}で登録・更新する（必要なら追加）。
-  \item T4: Trainingタブから学習を起動（同期または非同期）。完了後にモデル自動ロードを確認する。
-  \item T5: Detectionタブで推論し、語彙が正しく反映され検出が成立するか確認する。
-\end{itemize}
-
-\section{プロトコル（手順）}
+\section{操作フローと条件}
 \begin{enumerate}
-  \item 初期語彙を空または最小集合で開始し、Detectionタブで現状の検出挙動を確認する。
-  \item 必要語彙を追加（\texttt{POST /model/classes}）し、Labelingタブで10〜30枚程度を目安にアノテーションを実施する。
-  \item \texttt{/training/start-async}で学習を開始し、\texttt{/training/status}で進捗を監視する。完了後、自動ロードされたモデルで推論を再確認する。
-  \item 検出が不十分な語彙があればデータを追加収集・再ラベリングし、学習・評価を反復する（最大3サイクル程度）。
+  \item Homeでカメラ撮影またはギャラリーから画像選択（初回検出を実行し、対象が\textbf{未検出}であることを確認）。
+  \item 入力欄に新規クラス名（例:\texttt{smartphone}）を入力し、\textbf{Add New Detection Class}を押下（\texttt{POST /model/classes}）。
+  \item 直後に同一画像で再度検出（\texttt{POST /detect}）。語彙が反映され、対象が\textbf{検出}されるかを記録する。
 \end{enumerate}
+語彙は\texttt{custom\_vocab.json}に永続化され、アプリ再起動後も維持される。重複語彙は自動で除外され、空白のみの入力は無効化される。
 
-\section{評価指標}
-\subsection{機能的指標}
+\section{評価項目}
 \begin{itemize}
-  \item 検出成立率: 目標語彙に対し、正しくバウンディングされクラスが一致した割合。
-  \item 語彙反映時間: 語彙登録から推論結果への反映までの所要時間。
-  \item 推論レイテンシ: 端末での1画像あたりの表示までの体感時間（秒）。
-\end{itemize}
-\subsection{運用指標}
-\begin{itemize}
-  \item 設定完了時間: 初回起動から「最初の正しい検出」達成までの時間。
-  \item 反復コスト: 1サイクル（収集→ラベル→学習→検証）に要する平均時間。
-\end{itemize}
-\subsection{主観評価}
-\begin{itemize}
-  \item 使いやすさ（SUSの簡易版）: 操作の迷い、手順の明確さ、成功感などを5件法で評価。
-  \item 負荷（簡易NASA-TLX）: 心理的・時間的負荷を簡易的に記録。
+  \item \textbf{検出成立判定}: 語彙追加\textbf{前後}での検出有無（バウンディングボックスとクラス名の一致）。
+  \item \textbf{語彙反映時間}: \texttt{POST /model/classes}送信から\texttt{/detect}結果に反映されるまでの体感時間（秒）。
+  \item \textbf{推論レイテンシ}: 画像1枚あたりの検出完了までの時間（UI表示基準）。
 \end{itemize}
 
-\section{ログ・記録}
-APIリクエストとレスポンス、学習\texttt{results.csv}/\texttt{args.yaml}、モデル切替履歴、クラッシュログを収集する。個人特定情報は収集しない。
+\section{ケーススタディ（\texttt{smartphone}）}
+スマートフォンの画像を対象に、初回は未検出であっても\texttt{smartphone}を語彙追加後に再検出すると\textbf{検出成功}するケースを確認した。UI例は\textbf{Add New Detection Class}での登録画面（図\ref{fig:flow_page1}）と、\textbf{再検出での成立}（図\ref{fig:flow_page2}）を参照。
 
-\section{倫理配慮とプライバシ}
-個人が特定される顔・氏名・住所などを含む画像を避け、社内・家庭内の共有ルールに従う。第三者が写り込む場合は事前同意を得る。
-
-\section{成功基準と終了条件}
-\begin{itemize}
-  \item 主要語彙（例: 食器/料理）で検出成立率が所定の閾値（例: 80%）以上に到達。
-  \item 反復2〜3サイクル内に改善が頭打ちとなった場合は終了し、改善点を考察に残す。
-\end{itemize}
-
-\section{想定リスクと緩和}
-\begin{itemize}
-  \item データ偏り: 撮影条件（明るさ/角度）を変化させる指示を追加。
-  \item 語彙曖昧性: 類義語や重複概念は語彙定義を明確化。
-  \item 計算資源: 学習は非同期・小規模から開始し、必要時のみ拡張。
-\end{itemize}
-
-\section{結果の反映計画}
-成立率・反復時間・主観評価は表に集計し、改善サイクルの有効性を定性的に記述する。図は後に\texttt{Image\_Goto/}へ出力・差し戻しを行う。
+\section{考察と制約}
+語彙登録のみで検出成立が得られる場合、\textbf{追加学習なし}で現場適合の初期効果が得られる。一方で、外観多様性が大きい対象やカメラ条件の変動が大きい場合は、語彙登録だけでは安定検出に至らない可能性がある。この際は次章の\textbf{手動ラベリング＋ファインチューニング}に移行する。
 
 
 %-------4章--------------------------------------------------------
-\chapter{領域検出精度に関する実験}
+\chapter{手動ラベリングとファインチューニングによる検出成立性の検証}
 \section{目的}
-本実験の目的は二つある。一つは、\ac{Sem}モデルでの残量領域の検出精度を確認することである。
-もう一つは、\ac{Obj}モデルでの食器の検出精度を確認することである。
-実験結果の各種評価指から、それぞれのモデルの比較を行い、その是非を考察する。
+語彙登録（4章）だけでは検出できなかった対象に対し、\textbf{スマホからの手動ラベリング}と\textbf{短時間のファインチューニング}で\textbf{検出が成立するか}を検証する。対象はUI上の\textbf{Manual Labeling}（\texttt{POST /labeling/submit}）と\textbf{Training}（\texttt{POST /training/start-async}）を用いた最短反復で評価する。
 
-\section{データセット}
-本実験で用いるデータセットは、食事中の写真を撮影し,ラベルを付けて作成した。
-このデータセットの画像サイズは456(または455)×608、608×456(または455)であり、モデルの入力画像は224×224にリサイズしており、全部で241枚で構成されている。
-その241枚の内、約85\%(206枚)が学習のトレーニングに使用され、約15\%(35枚)が学習のテストに使用される。
-\ac{Seg}タスクは、「ご飯」と「みそ汁」という二つのラベルを付けている(図\ref{fig:seg_data})。
-\ac{Obj}タスクは、「食器」というラベルを付けている(図\ref{fig:od_data})。
+\section{前提と環境}
+フロントエンドはReact Native + Expo、バックエンドはFastAPI。学習は既定でCPUだが、環境設定によりGPUへ切替可能。収集した画像とYOLO形式ラベルは\texttt{training\_data/images}・\texttt{training\_data/labels}へ保存され、クラス一覧は\texttt{training\_data/classes.txt}で管理される。学習設定\texttt{data.yaml}はAPIが自動生成する。
 
+\section{手順}
+\begin{enumerate}
+  \item Homeで検出を実行し、目標対象が\textbf{未検出}であることを確認。
+  \item Manual Labelingで矩形とラベル名を付与し\textbf{Submit}（\texttt{/labeling/submit}）。これを\textbf{少量ずつ（例:10〜50枚）}蓄積。
+  \item Training画面から\textbf{非同期学習}を起動（\texttt{/training/start-async?epochs=E}）。\texttt{E}は端末状況に応じて調整（例:20/50/100）。
+  \item \texttt{/training/status}で進捗を確認。完了時に最良重み\texttt{best.pt}が自動ロードされる。
+  \item Homeに戻り同一/類似画像で再検出し、\textbf{検出成立}の有無を確認。
+\end{enumerate}
 
-\begin{figure}[htbp]
-\centering
-\begin{minipage}{0.45\linewidth}
-    \centering
-    % \includegraphics[width=0.95\linewidth]{Image_takahashi/seg_data.png}
-    \caption{意味的領域分割タスク用のラベル}
-    \label{fig:seg_data}
-\end{minipage}
-\begin{minipage}{0.47\linewidth}
-    \centering
-    % \includegraphics[width=0.965\linewidth]{Image_takahashi/od_data.png}
-    \caption{物体検出タスク用のラベル}
-    \label{fig:od_data}
-\end{minipage}
-\end{figure}
+\section{評価設計}
+\begin{itemize}
+  \item \textbf{検出成立率}: 学習前後での検出有無の比較（正しくバウンディング・分類できた割合）。
+  \item \textbf{必要ラベル数の目安}: 初回の検出成立に必要だったラベル枚数の概算。
+  \item \textbf{反復時間}: ラベリング→学習→検証の1サイクル所要時間（端末体感）。
+  \item \textbf{副作用の観察}: 語彙衝突・誤検出の増減（類義語追加時など）。
+\end{itemize}
 
-\section{実験条件}
-本実験では、以下の条件で学習、推論を行う(表\ref{tab:conditions})。
-各損失関数・評価関数の説明は節\ref{sec:eval_index}で示している。
-
-\begin{table}[htbp]
-\centering
-\scriptsize
-\caption{学習・推論条件および実験環境}
-\begin{tabular}{c|c|c|c}
-\hline
-& \textbf{項目} & \textbf{\ac{Seg}} & \textbf{\ac{Obj}} \\ \hline
-\multirow{6}{*}{\text{学習条件}} & \text{学習エポック} & \multicolumn{2}{c}{100} \\
-& \text{バッチサイズ} & \multicolumn{2}{c}{4} \\
-& \text{学習率} & $1 \times 10^{-3}$ & $3 \times 10^{-3}$ \\
-& \text{Optimaizer} & \multicolumn{2}{c}{\text{Adam}} \\
-& \text{Scheduler} & \multicolumn{2}{c}{\text{Cosine annealing}} \\
-& \text{損失関数} & Tversky\:Loss & YOLOX\:Loss\\ \hline
-\multirow{1}{*}{\text{推論条件}} & \text{評価関数} & \text{mIoU}&\text{mIoU},\text{mAP} \\ \hline
-\multirow{3}{*}{\text{実験環境}} & OS & \multicolumn{2}{c}{\text{Ubuntu 20.04 LTS}} \\
-& \text{CPU} & \multicolumn{2}{c}{\text{Dual Intel(R) Xeon(R) Gold 6342 CPU}} \\
-& \text{GPU} & \multicolumn{2}{c}{\text{Single NVIDIA RTX A6000 GPU}} \\ \hline
-\end{tabular}
-\label{tab:conditions}
-\end{table}
-
-\section{評価指標}
-\label{sec:eval_index}
-図\ref{fig:FN_TP_FP}は、画像の分類対象に対してTP・FP・FN・TNの四領域に分割したものである。
-TP(True\:Positive)は、正解と予測して、実際に正解である領域。
-FP(False\:Positive)は、正解と予測して、実際は不正解である領域。
-FN(False\:Negative)は、不正解と予測して、実際は正解である領域。
-TN(True\:Positive)は、不正解と予測して、実際に不正解である領域。
-
-\begin{figure}[htbp]
-    \centering
-    % \includegraphics[width=0.45\linewidth]{Image_takahashi/FN_TP_FP.png}
-    \caption{領域の分割の概要}
-    \label{fig:FN_TP_FP}
-\end{figure}
-
-\subsection{Tversky\:loss}
-Tversky\:lossは、式\eqref{eq:Tversky}で定義されている。
-FNとFPの割合($\alpha$,$\beta$)を調整することで、重視したい要素に対して推測精度を向上させる狙いがある。
-本稿では、$\alpha$=0.7$,\beta$=0.3としている。
-
-\begin{equation}
-\label{eq:Tversky}
-\begin{split}
-    Tversky\_index(pred,gt) &= \frac{TP}{TP + \alpha FN+ \beta FP}\\
-    Tversky\_Loss(pred,gt) &=1-Tversky\_index(pred,gt)
-\end{split}
-\end{equation}
-
-\subsection{IoU}
-\ac{IoU}は、式\eqref{eq:IoU}で定義されている。
-\ac{IoU}は\ac{Seg}モデルや\ac{Obj}モデルの精度評価の時によく使われる。
-mIoUは、各クラスの\ac{IoU}の平均を取っている。
-
-\begin{equation}
-\label{eq:IoU}
-\begin{split}
-    IoU(pred,gt) &= \frac{TP}{TP + FN + FP}\\
-    IoU\_Loss(pred,gt)&= 1-IoU(pred,gt)
-\end{split}
-\end{equation}
-
-\subsection{mAP}
-\ac{AP}を求める式は式\eqref{eq:mAP}で定義されている。
-Precisionは、正解と予測したものの内、実際に正解だった割合である。
-Recallは、実際の正解の内、正解と予測した割合である。
-図\ref{fig:pr}は、$p(r)$をグラフにしたものの例である。
-図中の青色の線がPrecisionとRecallからプロットしたものであり、橙色はの線が積分を行うために変換したものである。
-変換先は、各Recallより右にあるデータの内Precisionが最大な値となっている。
-そして、\ac{AP}は、橙色のp(r)の離散積分で求める。
-例での\ac{AP}の計算は式\eqref{eq:AP_ex}で示されている。
-mAPは、各クラスごとの\ac{AP}の平均を取っている。
-$AP_{num}$となっている場合は、その数値のIoUを閾値として、それ以上での\ac{AP}を算出している。
-\begin{figure}[htbp]
-    \centering
-    \begin{minipage}{0.45\linewidth}
-        \begin{equation}
-        \label{eq:mAP}
-        \begin{split}
-        Precision=&\frac{TP}{TP+FP}\\
-        Recall=&\frac{TP}{TP+FN}\\
-        AP=&\int_{0}^{1}p(r)dr\\
-        \end{split}
-        \end{equation}
-    \end{minipage}
-    \begin{minipage}{0.45\linewidth}
-        \centering
-        % \includegraphics[width=0.85\linewidth]{Image_takahashi/pr.png}
-        \caption{P(r)}
-        \label{fig:pr}
-    \end{minipage}
-\end{figure}
-
-\begin{equation}
-\begin{split}
-    AP&=\frac{1}{11}(p(0)+p(0.1)+\cdots +p(1.0))\\
-    &=\frac{1}{11}(1\times5+0.6\times4+0.55\times2)=0.773
-\end{split}
-\label{eq:AP_ex}
-\end{equation}
-
-
-\subsection{YOLOX\:loss}
-YOLOX\:Lossは式\eqref{eq:yolox_loss}で定義されている。
-Box\:Lossは、正解ボックスと予測ボックスからIoU\:Lossを算出する。
-Objectness\:Lossは、物体の有無を予測したグリッドと実際のグリッドの物体の有無からBCE\:With\:Logits\:Lossを算出する。
-BCE\:With\:Logits\:Lossは、式\eqref{eq:BCE}で定義されている。
-式中の$\sigma$はシグモイド関数を示している。
-Classfication\:Lossは、それぞれのグリッドの予測クラスと正解クラスからBCE\:With\:Logits\:Lossから算出する。
-
-\begin{equation}
-\label{eq:BCE}
-\begin{split}
-    \sigma(x) &= \frac{1}{1+e^{-x}}\\
-    BCE\:With\:Logits\:Loss(pred,gt) &= gt\cdot \log \sigma (pred)+(1-gt)\cdot \log (1- \sigma (pred))
-\end{split}
-\end{equation}
-
-\begin{equation}
-    \label{eq:yolox_loss}
-    \begin{split}
-    Box\:Loss&=\sum_{i} IoU(Box_{gt_i},Box_{pred_i})\\
-    Objectness\:Loss&=\sum_{i} BCE\:With\:Logits\:Loss(Obj_{pred_i},Obj_{gt_i})\\
-    Classfication\:Loss&=\sum_{i\in pred } BCE\:With\:Logits\:Loss(Cls_{pred_i},Cls_{gt_i})\\
-    YOLOX\:Loss&=5.0\times Box\:Loss+Objectness\:Loss+Classfication\:Loss\\
-    \end{split}
-\end{equation}
+\section{実装上の要点}
+\begin{itemize}
+  \item \textbf{ラベル保存}: 送信データはYOLO形式で保存され、クラスは\texttt{classes.txt}へ自動追記。新規クラスは\texttt{/model/classes}へ同期される。
+  \item \textbf{学習設定}: \texttt{data.yaml}はAPIが自動生成。簡便化のため学習/検証は同一ディレクトリだが、将来的に分割を厳密化予定。
+  \item \textbf{モデル反映}: 学習完了後、最良重みを自動ロード。\texttt{Models}タブで一覧・切替・バックアップ・簡易検証が可能。
+\end{itemize}
 
 \section{実験結果}
-表\ref{tab:fix_data_pick}はエンコーダ(バックボーン)の重みを固定したユニオンモデルでの実験結果の抜粋であり、図\ref{fig:seg_fix}、\ref{fig:det_fix}はそれぞれ\ac{Seg}に対するバブルグラフと\ac{Obj}に対するバブルグラフである。
-表\ref{tab:seg_data_pick}は学習時のみエンコーダ(バックボーン)の重みを更新したユニオンモデル2の実験結果の抜粋であり、図\ref{fig:seg_seg}、\ref{fig:det_seg}はそれぞれ\ac{Seg}に対するバブルグラフと\ac{Obj}に対するバブルグラフである。
-バブルグラフの横軸はLatency、縦軸はそれぞれ\ac{Seg}のmIoU・\ac{Obj}のmIoU、バブルの大きさはパラメータ量、バブルの色はバックボーン、バブルに紐づいている文字列は\ac{Seg}モデルを示している。
-mIoUは、モデルの精度であり、その数字が大きいほど(図中ではグラフの上になるほど)精度が高いモデルといえる。
-\ac{FLOPs}は、浮動小数点演算の総量を示しており、その数字が小さいほど処理速度が速いモデルといえる。
-パラメータ量は、モデルの大きさであり、その数字が小さいほど(図中ではバブルが小さいほど)小さいモデルといえる。
-Latencyは、一枚の画像がモデルに入力されてから出力されるまでの時間の平均であり、その数字が小さいほど(図中ではグラフの右になるほど)推論速度が速いモデルといえる。
+現時点では\textbf{データセット未確定}のため数値結果は未掲載。運用フローと評価指標のみ提示する。
 
-\begin{table}[htbp]
-\scriptsize
-\centering
-\begin{tabular}{c|c|c|c|c|c|c|c|c}
-\toprule
-\multirow{2}{*}{\textbf{Backbone}}&\multicolumn{2}{c|}{\textbf{Method}}&\textbf{Seg}&\multicolumn{2}{c|}{\textbf{Det}}&\textbf{FLOPs}&\textbf{Params}&\textbf{Latency}\\
-&\textbf{Seg}&\textbf{Det}&\textbf{mIoU[\%]}&\textbf{mAP[\%]}&\textbf{mIoU[\%]}&\textbf{[G]}&\textbf{[M]}&\textbf{[ms]}\\
-\midrule
-\multirow{3}{*}{MB\_v3\_s}&U-Net&\multirow{3}{*}{YOLOX}&88.11&\multirow{3}{*}{100.00}&\multirow{3}{*}{93.80}&\textcolor{red}{\textbf{0.84}}&\textcolor{red}{\textbf{3.67}}&8.38\\
-&DL3+&&89.44&&&4.88&8.97&8.27\\
-&DL3&&75.97&&&0.85&8.27&8.23\\
-\midrule
-\multirow{3}{*}{EF\_b0}&U-Net&\multirow{3}{*}{YOLOX}&90.12&\multirow{3}{*}{100.00}&\multirow{3}{*}{95.02}&2.40&11.06&10.10\\
-&DL3+&&\textcolor{red}{\textbf{91.13}}&&&6.58&21.14&10.03\\
-&DL3&&77.01&&&2.55&20.44&9.99\\
-\midrule
-\multirow{3}{*}{R\_18}&U-Net&\multirow{3}{*}{YOLOX}&90.02&\multirow{3}{*}{100.00}&\multirow{3}{*}{94.40}&4.36&13.70&8.05\\
-&DL3+&&88.94&&&8.25&18.24&6.68\\
-&DL3&&72.85&&&4.21&17.54&\textcolor{red}{\textbf{6.58}}\\
-\midrule
-\multirow{3}{*}{R\_152}&U-Net&\multirow{3}{*}{YOLOX}&89.00&\multirow{3}{*}{100.00}&\multirow{3}{*}{\textcolor{red}{\textbf{95.83}}}&16.30&69.51&16.06\\
-&DL3+&&90.53&&&20.08&83.51&15.88\\
-&DL3&&74.87&&&16.02&82.79&15.43\\
-\bottomrule
-\end{tabular}
-\caption{学習結果の抜粋(ユニオンモデル)}
-\label{tab:fix_data_pick}
-\end{table}
+\section{期待と限界}
+語彙登録だけで立ち上がらない対象でも、\textbf{少量ラベル＋短時間学習}で検出が成立することを期待する。一方で、撮影条件や外観多様性が大きい場合は追加データ収集と反復学習が必要。モバイル中心運用のため、\textbf{学習/推論時間と電力}の制約がある。
 
-\begin{table}[htbp]
-\scriptsize
-\centering
-\begin{tabular}{c|c|c|c|c|c|c|c|c}
-\toprule
-\multirow{2}{*}{\textbf{Backbone}}&\multicolumn{2}{c|}{\textbf{Method}}&\textbf{Seg}&\multicolumn{2}{c|}{\textbf{Det}}&\textbf{FLOPs}&\textbf{Params}&\textbf{Latency}\\
-&\textbf{Seg}&\textbf{Det}&\textbf{mIoU[\%]}&\textbf{mAP[\%]}&\textbf{mIoU[\%]}&\textbf{[G]}&\textbf{[M]}&\textbf{[ms]}\\
-\midrule
-\multirow{3}{*}{MB\_v3\_s}&U-Net&\multirow{3}{*}{YOLOX}&90&99.57&91.05&\textcolor{red}{\textbf{0.84}}&\textcolor{red}{\textbf{3.67}}&8.38\\
-&DL3+&&90.5&99.3&93.15&4.88&8.97&8.27\\
-&DL3&&83.35&100&92.67&0.85&8.27&8.23\\
-\midrule
-\multirow{3}{*}{EF\_b0}&U-Net&\multirow{3}{*}{YOLOX}&90.82&99.3&93.82&2.40&11.06&10.10\\
-&DL3+&&91.2&100&94.45&6.58&21.14&10.03\\
-&DL3&&85.05&99.29&94.71&2.55&20.44&9.99\\
-\midrule
-\multirow{3}{*}{EF\_b4}&U-Net&\multirow{3}{*}{YOLOX}&91.03&100&95.04&7.18&39.41&15.05\\
-&DL3+&&\textcolor{red}{\textbf{91.33}}&100&94.84&11.46&52.95&14.99\\
-&DL3&&84.1&100&\textcolor{red}{\textbf{95.67}}&7.43&52.25&14.90\\
-\midrule
-\multirow{3}{*}{R\_18}&U-Net&\multirow{3}{*}{YOLOX}&90.42&100&94.5&4.36&13.70&8.05\\
-&DL3+&&91.08&100&95.52&8.25&18.24&6.68\\
-&DL3&&84.13&100&95.57&4.21&17.54&\textcolor{red}{\textbf{6.58}}\\
-\bottomrule
-\end{tabular}
-\caption{学習結果の抜粋(ユニオンモデル2)}
-\label{tab:seg_data_pick}
-\end{table}
-
-\begin{figure}[htbp]
-\centering
-\begin{minipage}{0.49\linewidth}
-\centering
-% \includegraphics[width=\linewidth]{Image_takahashi/bubble_chart_with_Seg_fix.png}
-\caption{\ac{Seg}のバブルグラフ(ユニオンモデル)}
-\label{fig:seg_fix}
-\end{minipage}
-\begin{minipage}{0.49\linewidth}
-\centering
-% \includegraphics[width=\linewidth]{Image_takahashi/bubble_chart_with_Det_fix.png}
-\caption{\ac{Obj}のバブルグラフ(ユニオンモデル)}
-\label{fig:det_fix}
-\end{minipage}
-\end{figure}
-
-\begin{figure}[htbp]
-\centering
-\begin{minipage}{0.49\linewidth}
-\centering
-% \includegraphics[width=\linewidth]{Image_takahashi/bubble_chart_with_Seg_Seg.png}
-\caption{\ac{Seg}のバブルグラフ(ユニオンモデル2)}
-\label{fig:seg_seg}
-\end{minipage}
-\begin{minipage}{0.49\linewidth}
-\centering
-% \includegraphics[width=\linewidth]{Image_takahashi/bubble_chart_with_Det_Seg.png}
-\caption{\ac{Obj}のバブルグラフ(ユニオンモデル2)}
-\label{fig:det_seg}
-\end{minipage}
-\end{figure}
-
-\newpage
-
-\section{考察}
-表・バブルグラフから読み取れる点として、バックボーンが同じ場合、Latencyについては大きな差は無く、FLOPsについてはDeeplabv3+が大きくU-NetとDeeplabv3には大きな差は無く、パラメータ量についてはU-Netが小さくDeeplabv3とDeepLabv3＋には大きな差は無い。
-\ac{Seg}の学習時のみバックボーンを学習する場合とバックボーンの重みを更新しない場合の\ac{Seg}精度を比較すると、U-NetとDeepLabv3＋では精度低下は小さいが、Deeplabv3では精度低下が大きくなっている。
-これは、バックボーンの重みを更新しないことによる重み更新可能な層が少ない点が原因だと考えられる。
-また、バックボーンの重みを更新しない場合、ラベル数の少ない本稿のタスクでは、Deeplabv3+とU-Netはバックボーンを変更しても\ac{Seg}精度・\ac{Obj}精度は大きな差は無く、FLOPs・パラメータ量・Lantencyの実行環境での使用可能な計算資源を加味して選択するのが望ましい。
-本稿のタスクでは、\ac{Seg}モデルの学習の時のみバックボーンの重みを更新しても\ac{Obj}モデルの精度に大きな影響を与えていないが、\ac{Obj}タスクが難しくなると\ac{Seg}に向けて学習されたバックボーンを使用すると精度低下は免れないと推測できる。
-そのため、より難しいタスクを行う場合は、バックボーンの重みを更新しないユニオンモデルの方が望ましいと考えられる。
-以上のことから、計算資源が制限された環境でユニオンモデルを構築する場合、バックボーンとしてMobiletNet\:v3\:small・\ac{Seg}モデルとしてU-Net・\ac{Obj}モデルとしてYOLOXのtinyを選択したモデルが精度が高く、必要計算資源が小さいため適しているといえる。
-しかし、ただ必要計算資源の小さいモデルを選択するのが最適とは言えなく、使いたい環境での使用可能な計算資源に対して適しているモデルを選択するのが良いと考えられる。
-一方、計算資源が制限されていない環境でユニオンモデルを構築する場合、バックボーンとしてEfficientnet\:b0・\ac{Seg}モデルとしてDeeplabv3+・\ac{Obj}モデルとしてYOLOXのtinyを選択したモデルが精度が高く適していると言える。
-
-本稿では、判別するクラスを絞っているため、判別するクラスを増加したモデルの構築と、更なる精度向上のためにより良いモデルの探索やより良い学習率・エポック数などの学習条件の探索は今後の課題である。
+\section{今後の改善}
+データ分割の厳密化、GPU環境での高速化、半自動ラベリング支援、同義語正規化、学習履歴の可視化充実（\texttt{/training/history}, \texttt{/training/metrics/\{run\_name\}}の活用）を進める。
 
 
 %-------5章--------------------------------------------------------
-\chapter{残量測定に関する実験}
-\section{目的}
-本実験の目的はの残量推定精度を確認することである。
-実験結果からそれぞれの推定手法の比較を行い、その是非を考察する。
-
-\section{実験条件}
-\subsection{推定用データセット}
-本実験で用いるデータセットは、食事中の写真を撮影し,それぞれの数値を測定した(図\ref{fig:suitei_data})。
-数値は食事前の画像を100\%としている。
-このデータセットの画像サイズは1477×1109であり、全部で34枚で構成されている。
-
-\begin{figure}[htbp]
-    \centering
-    % \includegraphics[width=\linewidth]{Image_takahashi/suitei_data.png}
-    \caption{画像とその数値[\%]}
-    \label{fig:suitei_data}
-\end{figure}
-
-\subsection{評価指標}
-評価指標は実測値[\%]と推定値[\%]の平均二乗誤差(MSE)の平方根(RMSE)を用いている(式\eqref{eq:mse})。
-
-\begin{equation}
-\begin{split}
-    MSE(pred,gt) &= \frac{1}{n}\sum_{i=1}^n (pred_i-gt_i)^2\\
-    RMSE &=\sqrt{MSE}\\
-\end{split}
-    \label{eq:mse}
-\end{equation}
-
-\section{実験結果}
-表\ref{tab:sokutei_pick}はエンコーダ(バックボーン)の重みを固定したユニオンモデルでの測定結果の抜粋であり、図\ref{fig:suitei_rice},\ref{fig:suitei_soup},\ref{fig:suitei_rice_nf},\ref{fig:suitei_soup_nf}は前者は球冠ベース・後者は関数ベースでの測定結果のRMSEのバブルグラフである。
-バブルグラフの横軸は\ac{Seg}のmIoU、縦軸は\ac{Obj}のmIoU、バブルの大きさはRMSEの大きさ、バブルの色はバックボーン、バブルに紐づいている文字列は\ac{Seg}モデルを示している。
-\ac{Seg}のmIoUは、モデルの\ac{Seg}精度であり、その数字が大きいほど(図中ではグラフの左になるほど)精度が高いモデルといえる。
-\ac{Obj}のmIoUは、モデルの\ac{Obj}精度であり、その数字が大きいほど(図中ではグラフの上になるほど)精度が高いモデルといえる。
-RMSEは、推定の精度を示し、その数字が小さいほど(図中ではバブルが小さいほど)推定精度のよいものといえる。
-
-\begin{table}[htbp]
-\scriptsize
-\centering
-\begin{tabular}{c|c|c|c|c|c|c|c|c}
-\toprule
-\multirow{2}{*}{\textbf{Backbone}}&\multicolumn{2}{c|}{\textbf{Method}}&\textbf{Seg}&\textbf{Det}&\multicolumn{2}{c|}{\textbf{球冠ベース}}&\multicolumn{2}{c}{\textbf{関数ベース}}\\
-&\textbf{Seg}&\textbf{Det}&\textbf{mIoU[\%]}&\textbf{mIoU[\%]}&\textbf{ご飯[\%]}&\textbf{みそ汁[\%]}&\textbf{ご飯[\%]}&\textbf{みそ汁[\%]}\\
-\midrule
-MB\_v3\_s & Unet & YOLOX & 88.11 & 93.80 & 9.10 & 29.62 & 9.90 & 25.30 \\
-EF\_b0 & DLv3+ & YOLOX & \textcolor{red}{\textbf{91.13}} & 95.02 & 12.21 & 31.78 & 12.64 & 23.56 \\
-EF\_b6 & Unet & YOLOX & 89.64 & \textcolor{red}{\textbf{95.79}} & 14.03 & \textcolor{red}{\textbf{18.70}} & 14.57 & \textcolor{red}{\textbf{12.78}} \\
-R\_18 & Unet & YOLOX & 90.02 & 94.40 & \textcolor{red}{\textbf{7.56}} & 20.82 & \textcolor{red}{\textbf{8.44}} &17.01 \\
-\bottomrule
-\end{tabular}
-\caption{測定結果の抜粋(ユニオンモデル)}
-\label{tab:sokutei_pick}
-\end{table}
-
-\begin{figure}[htbp]
-\centering
-\begin{minipage}{0.49\linewidth}
-\centering
-% \includegraphics[width=\linewidth]{Image_takahashi/bubble_chart_with_normal_fix_rice.png}
-\caption{球冠ベース(ご飯)のバブルグラフ}
-\label{fig:suitei_rice}
-\end{minipage}
-\begin{minipage}{0.49\linewidth}
-\centering
-% \includegraphics[width=\linewidth]{Image_takahashi/bubble_chart_with_normal_fix_soup.png}
-\caption{球冠ベース(みそ汁)のバブルグラフ}
-\label{fig:suitei_soup}
-\end{minipage}
-\end{figure}
-
-\begin{figure}[htbp]
-\centering
-\begin{minipage}{0.49\linewidth}
-\centering
-% \includegraphics[width=\linewidth]{Image_takahashi/bubble_chart_with_nf_fix_rice.png}
-\caption{関数ベース(ご飯)のバブルグラフ}
-\label{fig:suitei_rice_nf}
-\end{minipage}
-\begin{minipage}{0.49\linewidth}
-\centering
-% \includegraphics[width=\linewidth]{Image_takahashi/bubble_chart_with_nf_fix_soup.png}
-\caption{関数ベース(みそ汁)のバブルグラフ}
-\label{fig:suitei_soup_nf}
-\end{minipage}
-\end{figure}
-
-\section{考察}
-表・バブルグラフから読み取れる点として、どちらの手法(球冠ベース・関数ベース)でも、\ac{Seg}精度・\ac{Obj}の精度が悪いと、その結果から推定するためRMSEが大きくなる。
-また、どちらの手法でもご飯の方がみそ汁よりもRMSEが小さくなっている。
-これはみそ汁の淵が透明であり、その結果みそ汁に対する\ac{Seg}精度が低下したためと考えられる。
-加えて、モデルの精度が低い場合、空になった食器に残る液体をみそ汁と検出していることがRMSEが大きくなった原因として考えられる。
-ご飯に対する精度はご飯の盛り上がり具合に依存しており、どちらの手法も盛り上がりを考慮していないため、盛り上がりが大きいほどRMSEが大きくなると考えられる。
-本実験の球冠ベースと関数ベースを比較すると、ご飯に対しては球冠ベース・みそ汁に対しては関数ベースの手法の方が推定精度が高い。
-この結果から、対象の食器に対して測定手法を変更することが良いと考えられる。
-
-今実験では、mIoUの精度が高いが出力画像の精度が高くない場合があった。
-これは、学習の画像と評価用の画像での画像サイズの違いや画像の輝度の違いが理由として考えられる。
-また、学習データセットの枚数が241枚と少なく、過学習となり汎化性能が落ちた可能性も考えられる。
-
-本稿では、先述したとおり、ご飯の盛り上がりやへこみを考慮しておらず、食器の近似にも限界があるため、\ac{Seg}モデルの特徴マップから残量推定を行う仕組みの構築による推定精度向上が今後の課題である。
-
-
+% （この章は前稿の余剰内容のため削除します。以降は次章に続く）
 
 
 \chapter{まとめ}
