@@ -1,6 +1,0 @@
-PWD /work
-INPUT /usr/local/texlive/2025/texmf.cnf
-INPUT /usr/local/texlive/2025/texmf-dist/web2c/texmf.cnf
-INPUT /usr/local/texlive/2025/texmf-var/web2c/pdftex/latex.fmt
-INPUT Goto.tex
-OUTPUT Goto.log

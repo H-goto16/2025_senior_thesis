@@ -105,4 +105,4 @@ latex-clean:
 	cd $(LATEX_DIR) && rm -f *.aux *.log *.toc *.lof *.lot *.out *.bbl *.blg *.dvi *.synctex.gz *.fls *.fdb_latexmk
 
 latex-docker:
-	docker run --rm -v $(PWD)/$(LATEX_DIR):/work -w /work danteev/texlive sh -lc 'uplatex -interaction=nonstopmode $(LATEX_MAIN) && upbibtex Goto || true && uplatex -interaction=nonstopmode $(LATEX_MAIN) && uplatex -interaction=nonstopmode $(LATEX_MAIN) && dvipdfmx Goto.dvi'
+	docker run --rm -v $(PWD)/$(LATEX_DIR):/work -w /work paperist/alpine-texlive-ja:latest sh -c 'tlmgr update --self --verify-repo=none || true && tlmgr install --verify-repo=none algorithmicx algorithms pxjahyper || true && uplatex -interaction=nonstopmode $(LATEX_MAIN) && upbibtex Goto || true && uplatex -interaction=nonstopmode $(LATEX_MAIN) && uplatex -interaction=nonstopmode $(LATEX_MAIN) && dvipdfmx Goto.dvi'
