@@ -1301,7 +1301,12 @@ async def cleanup_training_runs(keep_latest: int = 5):
 
 def run_training_background(data_config_path: str, epochs: int):
     """Background training function"""
+    import traceback
+
     global training_status
+
+    # Note: signal handlers can only be set in the main thread,
+    # so we skip signal handling in background tasks
 
     try:
         training_status.update({
@@ -1312,19 +1317,36 @@ def run_training_background(data_config_path: str, epochs: int):
             "progress": 0.0
         })
 
-        # Start training
-        results = yolo.fine_tune_model(data_config_path, epochs=epochs)
+        # Start training with error handling
+        try:
+            results = yolo.fine_tune_model(data_config_path, epochs=epochs)
+        except KeyboardInterrupt:
+            raise
+        except Exception as e:
+            error_msg = f"Training error: {str(e)}"
+            print(f"❌ {error_msg}")
+            print(traceback.format_exc())
+            training_status.update({
+                "is_training": False,
+                "status_message": error_msg,
+                "progress": 0.0
+            })
+            return
 
         # Load the best model after training
-        runs_dir = Path("runs/detect")
-        if runs_dir.exists():
-            train_dirs = [d for d in runs_dir.iterdir() if d.is_dir() and d.name.startswith('train')]
-            if train_dirs:
-                latest_run = max(train_dirs, key=lambda x: x.stat().st_mtime)
-                best_model_path = latest_run / "weights" / "best.pt"
+        try:
+            runs_dir = Path("runs/detect")
+            if runs_dir.exists():
+                train_dirs = [d for d in runs_dir.iterdir() if d.is_dir() and d.name.startswith('train')]
+                if train_dirs:
+                    latest_run = max(train_dirs, key=lambda x: x.stat().st_mtime)
+                    best_model_path = latest_run / "weights" / "best.pt"
 
-                if best_model_path.exists():
-                    yolo.load_trained_model(str(best_model_path))
+                    if best_model_path.exists():
+                        yolo.load_trained_model(str(best_model_path))
+                        print(f"✅ Model loaded from: {best_model_path}")
+        except Exception as e:
+            print(f"⚠️ Warning: Could not load trained model: {e}")
 
         training_status.update({
             "is_training": False,
@@ -1334,10 +1356,19 @@ def run_training_background(data_config_path: str, epochs: int):
             "progress": 1.0
         })
 
-    except Exception as e:
+    except KeyboardInterrupt:
         training_status.update({
             "is_training": False,
-            "status_message": f"Training failed: {str(e)}",
+            "status_message": "Training interrupted by user",
+            "progress": 0.0
+        })
+    except Exception as e:
+        error_msg = f"Training failed: {str(e)}"
+        print(f"❌ {error_msg}")
+        print(traceback.format_exc())
+        training_status.update({
+            "is_training": False,
+            "status_message": error_msg,
             "progress": 0.0
         })
 

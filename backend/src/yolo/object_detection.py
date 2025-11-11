@@ -39,8 +39,9 @@ class YoloDetector:
             return False
         try:
             major, minor = torch.cuda.get_device_capability(0)
-            # Conservative gate aligned with typical PyTorch prebuilt minimum (>= 7.0)
-            return (major * 10 + minor) >= 70
+            # Support GTX980Ti (5.2) and newer GPUs
+            # PyTorch supports compute capability 3.5+, but we use 5.2 as minimum for stability
+            return (major * 10 + minor) >= 52
         except Exception:
             return False
 
@@ -113,18 +114,90 @@ class YoloDetector:
         try:
             print(f"Starting fine-tuning with config: {data_config_path}")
             print(f"Training parameters: epochs={epochs}, imgsz={imgsz}")
+            print(f"Using device: {self.device}")
 
-            # Start training
-            results = self.model.train(
-                data=data_config_path,
-                epochs=epochs,
-                imgsz=imgsz,
-                patience=10,
-                save=True,
-                plots=True,
-                device='cpu',  # Use CPU for compatibility, change to 'cuda' if GPU available
-                verbose=True
-            )
+            # Calculate optimal batch size based on data size
+            data_dir = Path(data_config_path).parent
+            images_dir = data_dir / "images"
+            image_count = 0
+            if images_dir.exists():
+                image_count = len(list(images_dir.glob("*.jpg")) + list(images_dir.glob("*.png")))
+                # Use smaller batch size to reduce memory usage, especially on CPU
+                if self.device.startswith("cuda"):
+                    batch_size = min(16, max(8, image_count // 4))
+                else:
+                    # Reduce batch size for CPU to prevent memory issues
+                    batch_size = min(4, max(2, image_count // 8))
+                print(f"Detected {image_count} images, using batch_size={batch_size}")
+            else:
+                batch_size = 8 if self.device.startswith("cuda") else 2
+                print(f"Using default batch_size={batch_size}")
+
+            # Set workers to 0 to avoid multiprocessing issues and reduce memory usage
+            # YOLO may automatically set workers=0 in certain environments anyway
+            workers = 0
+            print(f"Using workers={workers} for data loading (single-threaded to reduce memory usage)")
+
+            # Start training with error handling for CUDA compatibility
+            try:
+                # Optimize for memory-constrained environments
+                train_kwargs = {
+                    "data": data_config_path,
+                    "epochs": epochs,
+                    "imgsz": imgsz,
+                    "batch": batch_size,
+                    "workers": workers,
+                    "patience": 10,
+                    "save": True,
+                    "plots": False,  # Disable plots to save memory
+                    "device": self.device,
+                    "verbose": True,
+                    "val": True,  # Explicitly enable validation
+                    "save_period": 10,  # Save checkpoint every 10 epochs to prevent data loss
+                    "cache": False,  # Disable caching to reduce memory usage
+                    "amp": False,  # Disable mixed precision on CPU (not needed)
+                }
+
+                results = self.model.train(**train_kwargs)
+            except RuntimeError as e:
+                error_msg = str(e).lower()
+                # Check if it's a CUDA compatibility error
+                if "cuda" in error_msg and ("kernel" in error_msg or "device" in error_msg or "capability" in error_msg):
+                    if self.device.startswith("cuda"):
+                        print(f"⚠️ CUDA error detected: {e}")
+                        print("⚠️ Falling back to CPU training (this will be slower but should work)")
+                        # Recalculate batch size for CPU fallback (reduce to save memory)
+                        if image_count > 0:
+                            batch_size = min(4, max(2, image_count // 8))
+                        else:
+                            batch_size = 2
+                        # Set workers to 0 for CPU fallback to reduce memory usage
+                        workers = 0
+
+                        # Retry on CPU with memory-optimized settings
+                        train_kwargs = {
+                            "data": data_config_path,
+                            "epochs": epochs,
+                            "imgsz": imgsz,
+                            "batch": batch_size,
+                            "workers": workers,
+                            "patience": 10,
+                            "save": True,
+                            "plots": False,  # Disable plots to save memory
+                            "device": "cpu",
+                            "verbose": True,
+                            "val": True,
+                            "save_period": 10,  # Save checkpoint every 10 epochs to prevent data loss
+                            "cache": False,  # Disable caching to reduce memory usage
+                            "amp": False,  # Disable mixed precision on CPU
+                        }
+                        results = self.model.train(**train_kwargs)
+                        # Update device to CPU for future operations
+                        self.device = "cpu"
+                    else:
+                        raise
+                else:
+                    raise
 
             print("Fine-tuning completed successfully!")
             return results
