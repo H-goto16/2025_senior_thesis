@@ -15,8 +15,8 @@
 \usepackage{amssymb}
 \usepackage{algpseudocode}
 \usepackage{algorithm}
-\renewcommand{\algorithmicrequire}{\textbf{Input}}
-\renewcommand{\algorithmicensure}{\textbf{Output}}
+\renewcommand{\algorithmicrequire}{Input}
+\renewcommand{\algorithmicensure}{Output}
 \usepackage[numbers,sort&compress]{natbib}
 \usepackage{pdfpages}
 \usepackage[dvipdfmx]{hyperref}
@@ -138,19 +138,19 @@ X' \;=\; X \odot \mathrm{Sigmoid}\!\left(\max\!\bigl(\mathrm{Conv}(X, W), \mathr
 %-------3章--------------------------------------------------------
 %-------3章--------------------------------------------------------
 \chapter{提案手法}
-本研究の目的は、\textbf{スマートフォンを含む汎用端末のみで}データ収集からラベリング、学習、評価、運用までを\textbf{一気通貫に反復}できる実用システムを構築し、非専門家でも短時間で自作の用途特化モデルを育てられることを示す点にある。中核には開放語彙検出器であるYOLO-World\cite{yoloworld}を据え、\textbf{事前語彙化（prompt-then-detect）}によって実行時の言語エンコーダ依存を排除し、軽量・高速な推論を維持する。
+本研究の目的は、スマートフォンを含む汎用端末のみでデータ収集からラベリング、学習、評価、運用までを一気通貫に反復できる実用システムを構築し、非専門家でも短時間で自作の用途特化モデルを育てられることを示す点にある。中核には開放語彙検出器であるYOLO-World\cite{yoloworld}を据え、事前語彙化（prompt-then-detect）によって実行時の言語エンコーダ依存を排除し、軽量・高速な推論を維持する。
 
 \section{設計方針と構成}
-フロントエンドはReact Native + ExpoによりAndroid/iOS/Webを単一コードベースで提供し、タブ（Detection / Labeling / Training / Models / Analytics）に機能を整理する。バックエンドはFastAPIで統一し、検出・語彙管理・学習・履歴・可視化・データ分析のAPIを備える。ユーザは\textbf{語彙を自ら定義・追加}し、必要データを小刻みに収集・注釈付けして学習をトリガし、結果を見ながら再収集・再学習を繰り返す。
+フロントエンドはReact Native + ExpoによりAndroid/iOS/Webを単一コードベースで提供し、タブ（Detection / Labeling / Training / Models / Analytics）に機能を整理する。バックエンドはFastAPIで統一し、検出・語彙管理・学習・履歴・可視化・データ分析のAPIを備える。ユーザは語彙を自ら定義・追加し、必要データを小刻みに収集・注釈付けして学習をトリガし、結果を見ながら再収集・再学習を繰り返す。
 
 \section{YOLO-Worldの運用}
-YOLO-Worldは視覚−言語モデリングにより、\textbf{ユーザ定義語彙}での開放語彙検出を実現する。\texttt{POST /model/classes}で登録した語彙は\texttt{custom\_vocab.json}に永続化され、モデルのクラス埋め込みへ反映される。推論は\texttt{/detect}で実行し、バウンディングボックス・クラス・スコアと描画済み画像を返す。\textbf{事前語彙化}により、推論時はオフラインで固定した語彙埋め込みを用い、モバイルでも実用的なレイテンシを確保する。
+YOLO-Worldは視覚−言語モデリングにより、ユーザ定義語彙での開放語彙検出を実現する。\texttt{POST /model/classes}で登録した語彙は\texttt{custom\_vocab.json}に永続化され、モデルのクラス埋め込みへ反映される。推論は\texttt{/detect}で実行し、バウンディングボックス・クラス・スコアと描画済み画像を返す。事前語彙化により、推論時はオフラインで固定した語彙埋め込みを用い、モバイルでも実用的なレイテンシを確保する。
 
 \section{データ収集・ラベリング・学習}
-Labelingタブで作成したアノテーションはYOLO形式で保存し（\texttt{training\_data/} 配下）、\texttt{/training/start}または\texttt{/training/start-async}で微調整を起動する。\textbf{既定はCPU実行}だが、\textbf{CUDA対応マシンでは設定によりGPU（device=`cuda'）で学習・推論が可能}である。完了時には\texttt{best.pt}を自動ロードし、\texttt{/training/status}で進捗を可視化する。\texttt{/models/*}群でモデル一覧・切替・バックアップ・検証が可能で、\texttt{/training/history}と\texttt{/training/metrics/\{run\_name\}}から学習履歴・時系列メトリクスを取得しUIでPlotly描画する。
+Labelingタブで作成したアノテーションはYOLO形式で保存し（\texttt{training\_data/} 配下）、\texttt{/training/start}または\texttt{/training/start-async}で微調整を起動する。既定はCPU実行だが、CUDA対応マシンでは設定によりGPU（device=`cuda'）で学習・推論が可能である。完了時には\texttt{best.pt}を自動ロードし、\texttt{/training/status}で進捗を可視化する。\texttt{/models/*}群でモデル一覧・切替・バックアップ・検証が可能で、\texttt{/training/history}と\texttt{/training/metrics/\{run\_name\}}から学習履歴・時系列メトリクスを取得しUIでPlotly描画する。
 
 \section{UIフロー（スマホ中心）と操作例}
-本節では、スマートフォン想定の\textbf{最短反復ループ}（撮影→検出→語彙追加→再検出→ラベリング→学習→評価）を画面遷移で示す。各ページに4枚ずつ配置する。
+本節では、スマートフォン想定の最短反復ループ（撮影→検出→語彙追加→再検出→ラベリング→学習→評価）を画面遷移で示す。各ページに4枚ずつ配置する。
 
 \begin{figure}[p]
 \centering
@@ -199,77 +199,151 @@ Labelingタブで作成したアノテーションはYOLO形式で保存し（\t
 
 \section{スマホ最適化と制約}
 \begin{itemize}
-  \item \textbf{推論効率}: 事前語彙化によりテキストエンコーダを実行時から排除し、端末上のレイテンシを低減。
-  \item \textbf{操作負荷の低減}: 撮影→検出→語彙追加→学習の\textbf{短サイクル}をUIで誘導し、少量データでも改善可能に。
-\item \textbf{制約}: 既定はCPU学習であり大規模学習は長時間を要する。\textbf{一方でCUDA対応マシンでは設定によりGPU学習・推論へ切替可能}であり、反復時間を短縮できる。現状は学習/検証分割を簡便化しており、厳密評価は今後の拡張で対応する。
+  \item 推論効率: 事前語彙化によりテキストエンコーダを実行時から排除し、端末上のレイテンシを低減。
+  \item 操作負荷の低減: 撮影→検出→語彙追加→学習の短サイクルをUIで誘導し、少量データでも改善可能に。
+\item 制約: 既定はCPU学習であり大規模学習は長時間を要する。一方でCUDA対応マシンでは設定によりGPU学習・推論へ切替可能であり、反復時間を短縮できる。現状は学習/検証分割を簡便化しており、厳密評価は今後の拡張で対応する。
 \end{itemize}
 
-以上より、\textbf{ユーザ主導の反復改善}（語彙設定→収集/ラベリング→学習→推論/評価→運用）を一つのUIに束ね、スマートフォンを中心とした現場適用に耐える\textbf{軽量な開放語彙検出運用}を実現する。
+以上より、ユーザ主導の反復改善（語彙設定→収集/ラベリング→学習→推論/評価→運用）を一つのUIに束ね、スマートフォンを中心とした現場適用に耐える軽量な開放語彙検出運用を実現する。
 
 
 \chapter{語彙登録のみでの検出成立性の検証}
 \section{目的}
-本章では、\textbf{語彙登録（Add New Detection Class）のみ}で未検出の対象が\textbf{検出可能になるか}をスマートフォンから検証する。モデルはYOLO-Worldの\textbf{事前語彙化}運用であり、UI上の語彙追加が\texttt{POST /model/classes}に対応、検出は\texttt{POST /detect}に対応する。対象例として\texttt{smartphone}クラスを用い、\textbf{Home → Capture Image → Add New Detection Class → Detect}の最短ループで成立性を確認する（図\ref{fig:flow_page1}, 図\ref{fig:flow_page2}参照）。
+本章では、語彙登録（Add New Detection Class）のみで未検出の対象が検出可能になるかをスマートフォンから検証する。モデルはYOLO-Worldの事前語彙化運用であり、UI上の語彙追加が\texttt{POST /model/classes}に対応、検出は\texttt{POST /detect}に対応する。対象例として\texttt{smartphone}クラスを用い、Home → Capture Image → Add New Detection Class → Detect の最短ループで成立性を確認する（図\ref{fig:flow_page1}, 図\ref{fig:flow_page2}参照）。
 
 \section{操作フローと条件}
 \begin{enumerate}
-  \item Homeでカメラ撮影またはギャラリーから画像選択（初回検出を実行し、対象が\textbf{未検出}であることを確認）。
-  \item 入力欄に新規クラス名（例:\texttt{smartphone}）を入力し、\textbf{Add New Detection Class}を押下（\texttt{POST /model/classes}）。
-  \item 直後に同一画像で再度検出（\texttt{POST /detect}）。語彙が反映され、対象が\textbf{検出}されるかを記録する。
+  \item Homeでカメラ撮影またはギャラリーから画像選択（初回検出を実行し、対象が未検出であることを確認）。
+  \item 入力欄に新規クラス名（例:\texttt{smartphone}）を入力し、Add New Detection Classを押下（\texttt{POST /model/classes}）。
+  \item 直後に同一画像で再度検出（\texttt{POST /detect}）。語彙が反映され、対象が検出されるかを記録する。
 \end{enumerate}
 語彙は\texttt{custom\_vocab.json}に永続化され、アプリ再起動後も維持される。重複語彙は自動で除外され、空白のみの入力は無効化される。
 
 \section{評価項目}
 \begin{itemize}
-  \item \textbf{検出成立判定}: 語彙追加\textbf{前後}での検出有無（バウンディングボックスとクラス名の一致）。
-  \item \textbf{語彙反映時間}: \texttt{POST /model/classes}送信から\texttt{/detect}結果に反映されるまでの体感時間（秒）。
-  \item \textbf{推論レイテンシ}: 画像1枚あたりの検出完了までの時間（UI表示基準）。
+  \item 検出成立判定: 語彙追加前後での検出有無（バウンディングボックスとクラス名の一致）。
+  \item 語彙反映時間: \texttt{POST /model/classes}送信から\texttt{/detect}結果に反映されるまでの体感時間（秒）。
+  \item 推論レイテンシ: 画像1枚あたりの検出完了までの時間（UI表示基準）。
 \end{itemize}
 
 \section{ケーススタディ（\texttt{smartphone}）}
-スマートフォンの画像を対象に、初回は未検出であっても\texttt{smartphone}を語彙追加後に再検出すると\textbf{検出成功}するケースを確認した。UI例は\textbf{Add New Detection Class}での登録画面（図\ref{fig:flow_page1}）と、\textbf{再検出での成立}（図\ref{fig:flow_page2}）を参照。
+スマートフォンの画像を対象に、初回は未検出であっても\texttt{smartphone}を語彙追加後に再検出すると検出成功するケースを確認した。UI例はAdd New Detection Classでの登録画面（図\ref{fig:flow_page1}）と、再検出での成立（図\ref{fig:flow_page2}）を参照。
+
+\section{実験結果（\texttt{smartphone}10枚）}
+語彙\texttt{smartphone}がある／ないの2条件で、同一の10枚画像（\texttt{assets/smartphone}由来）に対して\texttt{POST /detect}を実行した。追加学習は行っていない。\par
+結果: 表\ref{tab:ch4_vocab_only_smartphone}のとおり、語彙登録のみで\texttt{smartphone}の検出が全件成立した。
+\begin{table}[htbp]
+\centering
+\begin{tabular}{lcc}
+\toprule
+条件 & 検出枚数 & 成立率 \\
+\midrule
+WITH（\texttt{smartphone}あり） & 10/10 & 100\% \\
+WITHOUT（\texttt{smartphone}なし） & 0/10  & 0\% \\
+\bottomrule
+\end{tabular}
+\caption{語彙登録の有無による\texttt{smartphone}検出成立（10枚）}
+\label{tab:ch4_vocab_only_smartphone}
+\end{table}
+検出例: 以下にWITHOUT/ WITHの比較（左: 語彙なし, 右: 語彙あり）を示す。語彙\texttt{smartphone}を追加することで、右図のように検出が成立している。\par
+\begin{figure}[p]
+\centering
+\subfigure[1: without]{\includegraphics[width=0.45\linewidth]{Image_Goto/ch4_smartphone_wo_01.jpg}}
+\subfigure[1: with]{\includegraphics[width=0.45\linewidth]{Image_Goto/ch4_smartphone_01.jpg}}
+
+\subfigure[2: without]{\includegraphics[width=0.45\linewidth]{Image_Goto/ch4_smartphone_wo_02.jpg}}
+\subfigure[2: with]{\includegraphics[width=0.45\linewidth]{Image_Goto/ch4_smartphone_02.jpg}}
+
+\subfigure[3: without]{\includegraphics[width=0.45\linewidth]{Image_Goto/ch4_smartphone_wo_03.jpg}}
+\subfigure[3: with]{\includegraphics[width=0.45\linewidth]{Image_Goto/ch4_smartphone_03.jpg}}
+
+\subfigure[4: without]{\includegraphics[width=0.45\linewidth]{Image_Goto/ch4_smartphone_wo_04.jpg}}
+\subfigure[4: with]{\includegraphics[width=0.45\linewidth]{Image_Goto/ch4_smartphone_04.jpg}}
+
+\subfigure[5: without]{\includegraphics[width=0.45\linewidth]{Image_Goto/ch4_smartphone_wo_05.jpg}}
+\subfigure[5: with]{\includegraphics[width=0.45\linewidth]{Image_Goto/ch4_smartphone_05.jpg}}
+\caption{語彙\texttt{smartphone}の有無による比較（1/2）：左=WITHOUT, 右=WITH}
+\label{fig:ch4_smartphone_results_cmp_1}
+\end{figure}
+
+\begin{figure}[p]
+\centering
+\subfigure[6: without]{\includegraphics[width=0.45\linewidth]{Image_Goto/ch4_smartphone_wo_06.jpg}}
+\subfigure[6: with]{\includegraphics[width=0.45\linewidth]{Image_Goto/ch4_smartphone_06.jpg}}
+
+\subfigure[7: without]{\includegraphics[width=0.45\linewidth]{Image_Goto/ch4_smartphone_wo_07.jpg}}
+\subfigure[7: with]{\includegraphics[width=0.45\linewidth]{Image_Goto/ch4_smartphone_07.jpg}}
+
+\subfigure[8: without]{\includegraphics[width=0.45\linewidth]{Image_Goto/ch4_smartphone_wo_08.jpg}}
+\subfigure[8: with]{\includegraphics[width=0.45\linewidth]{Image_Goto/ch4_smartphone_08.jpg}}
+
+\subfigure[9: without]{\includegraphics[width=0.45\linewidth]{Image_Goto/ch4_smartphone_wo_09.jpg}}
+\subfigure[9: with]{\includegraphics[width=0.45\linewidth]{Image_Goto/ch4_smartphone_09.jpg}}
+
+\subfigure[10: without]{\includegraphics[width=0.45\linewidth]{Image_Goto/ch4_smartphone_wo_10.jpg}}
+\subfigure[10: with]{\includegraphics[width=0.45\linewidth]{Image_Goto/ch4_smartphone_10.jpg}}
+\caption{語彙\texttt{smartphone}の有無による比較（2/2）：左=WITHOUT, 右=WITH}
+\label{fig:ch4_smartphone_results_cmp_2}
+\end{figure}
+\clearpage
 
 \section{考察と制約}
-語彙登録のみで検出成立が得られる場合、\textbf{追加学習なし}で現場適合の初期効果が得られる。一方で、外観多様性が大きい対象やカメラ条件の変動が大きい場合は、語彙登録だけでは安定検出に至らない可能性がある。この際は次章の\textbf{手動ラベリング＋ファインチューニング}に移行する。
+本章の\texttt{smartphone}実験では、語彙登録のみで10/10枚の検出成立を確認した。一方で、少数の誤検出（False Positive: FP）や重複検出が見られるケースがあり、概ね検出できているが万能ではないという実務的な感触を得た。以下に観察と改善方針を整理する。
+\begin{itemize}
+  \item 成立性: 語彙\texttt{smartphone}の追加だけで、未検出から検出へと挙動が切り替わる。YOLO-Worldの事前語彙化により、\texttt{POST /model/classes}直後の\texttt{/detect}で反映が確認でき、UI上の操作で反復が容易。
+  \item 誤検出の傾向: 画面の反射や光沢、矩形に近い背景パターン、他機器（リモコン・充電器等）の類似外観で低スコアのFPが稀に発生。部分的に写るスマホ（遮蔽・極端なスケール変化）では検出の不安定化が起きやすい。
+  \item 重複検出: 近接した複数候補が残る場合があり、1画素ズレの候補が同時に残るなど、NMS後も重複が残ることがある（本実装ではNMS閾値を明示設定していない）。
+  \item WITH/ WITHOUT比較の示唆: WITHOUTでは0/10、WITHでは10/10という実用上の差が大きく、語彙登録が最初の立ち上げ策として有効。ただし、誤検出抑制や難条件対応は語彙追加だけでは不十分な場合がある。
+\end{itemize}
+\noindent 改善方針と運用のヒント:
+\begin{itemize}
+  \item 閾値調整: \texttt{POST /detect/with-confidence?confidence=\{c\}}で信頼度閾値を上げるとFPが減る一方、見逃し（FN）が増えるため、0.3〜0.5を基準に対象や端末で調整する。
+  \item 語彙の絞り込み: 同時に有効化する語彙を必要最小限に限定し、近縁語・紛らわしい語の同時登録を避けると混同が減る。クラス命名を一意で具体的に保つと安定しやすい。
+  \item データ取り増し: 反射・逆光・部分遮蔽・遠距離など難条件の「負例（Hard Negative）」や多様な正例を収集して、次章の手動ラベリング＋短時間ファインチューニングに回すとFP/FNの双方が改善しやすい。
+  \item UI側の対策（confidence調整）: スライダ/ステップボタンで\texttt{confidence}を即時変更し、端末ごと/クラスごとの既定値を記憶（ローカル）する。低スコア候補は枠色を薄く、トップ1のみ表示やヒステリシス（表示の入り切りに差を持たせる）でちらつきを抑える。
+  \item ユーザフィードバック（今後の拡張）: 検出枠ごとに正しい/誤検出のワンタップ評価、長押しで誤検出タグ付け、見逃し箇所のタップ追加などの軽量フィードバックを収集。正例/負例を自動エクスポートして保存し、一定数たまったら非同期トレーニングを提案する。難例キューを作り、Hard Negative重点微調整でFP低減を狙う。
+  \item 将来拡張: NMSしきい値や最大検出数のAPIパラメータ化、疑似負例（類似物体）を含む微調整レシピの提供、同義語正規化やクラス階層の導入で、FPに強い運用へ拡張可能。
+\end{itemize}
+総じて、語彙登録だけで「使い始められる」ことは本システムの強みであり、概ね期待どおりに検出が立ち上がる。一方で、少数の誤検出や難条件の安定性は残課題であり、閾値調整→データ増し→軽い微調整の順で段階的に品質を高めるのが実務的である。
 
 
 %-------4章--------------------------------------------------------
 \chapter{手動ラベリングとファインチューニングによる検出成立性の検証}
 \section{目的}
-語彙登録（4章）だけでは検出できなかった対象に対し、\textbf{スマホからの手動ラベリング}と\textbf{短時間のファインチューニング}で\textbf{検出が成立するか}を検証する。対象はUI上の\textbf{Manual Labeling}（\texttt{POST /labeling/submit}）と\textbf{Training}（\texttt{POST /training/start-async}）を用いた最短反復で評価する。
+語彙登録（4章）だけでは検出できなかった対象に対し、スマホからの手動ラベリングと短時間のファインチューニングで検出が成立するかを検証する。対象はUI上のManual Labeling（\texttt{POST /labeling/submit}）とTraining（\texttt{POST /training/start-async}）を用いた最短反復で評価する。
 
 \section{前提と環境}
 フロントエンドはReact Native + Expo、バックエンドはFastAPI。学習は既定でCPUだが、環境設定によりGPUへ切替可能。収集した画像とYOLO形式ラベルは\texttt{training\_data/images}・\texttt{training\_data/labels}へ保存され、クラス一覧は\texttt{training\_data/classes.txt}で管理される。学習設定\texttt{data.yaml}はAPIが自動生成する。
 
 \section{手順}
 \begin{enumerate}
-  \item Homeで検出を実行し、目標対象が\textbf{未検出}であることを確認。
-  \item Manual Labelingで矩形とラベル名を付与し\textbf{Submit}（\texttt{/labeling/submit}）。これを\textbf{少量ずつ（例:10〜50枚）}蓄積。
-  \item Training画面から\textbf{非同期学習}を起動（\texttt{/training/start-async?epochs=E}）。\texttt{E}は端末状況に応じて調整（例:20/50/100）。
+  \item Homeで検出を実行し、目標対象が未検出であることを確認。
+  \item Manual Labelingで矩形とラベル名を付与しSubmit（\texttt{/labeling/submit}）。これを少量ずつ（例:10〜50枚）蓄積。
+  \item Training画面から非同期学習を起動（\texttt{/training/start-async?epochs=E}）。\texttt{E}は端末状況に応じて調整（例:20/50/100）。
   \item \texttt{/training/status}で進捗を確認。完了時に最良重み\texttt{best.pt}が自動ロードされる。
-  \item Homeに戻り同一/類似画像で再検出し、\textbf{検出成立}の有無を確認。
+  \item Homeに戻り同一/類似画像で再検出し、検出成立の有無を確認。
 \end{enumerate}
 
 \section{評価設計}
 \begin{itemize}
-  \item \textbf{検出成立率}: 学習前後での検出有無の比較（正しくバウンディング・分類できた割合）。
-  \item \textbf{必要ラベル数の目安}: 初回の検出成立に必要だったラベル枚数の概算。
-  \item \textbf{反復時間}: ラベリング→学習→検証の1サイクル所要時間（端末体感）。
-  \item \textbf{副作用の観察}: 語彙衝突・誤検出の増減（類義語追加時など）。
+  \item 検出成立率: 学習前後での検出有無の比較（正しくバウンディング・分類できた割合）。
+  \item 必要ラベル数の目安: 初回の検出成立に必要だったラベル枚数の概算。
+  \item 反復時間: ラベリング→学習→検証の1サイクル所要時間（端末体感）。
+  \item 副作用の観察: 語彙衝突・誤検出の増減（類義語追加時など）。
 \end{itemize}
 
 \section{実装上の要点}
 \begin{itemize}
-  \item \textbf{ラベル保存}: 送信データはYOLO形式で保存され、クラスは\texttt{classes.txt}へ自動追記。新規クラスは\texttt{/model/classes}へ同期される。
-  \item \textbf{学習設定}: \texttt{data.yaml}はAPIが自動生成。簡便化のため学習/検証は同一ディレクトリだが、将来的に分割を厳密化予定。
-  \item \textbf{モデル反映}: 学習完了後、最良重みを自動ロード。\texttt{Models}タブで一覧・切替・バックアップ・簡易検証が可能。
+  \item ラベル保存: 送信データはYOLO形式で保存され、クラスは\texttt{classes.txt}へ自動追記。新規クラスは\texttt{/model/classes}へ同期される。
+  \item 学習設定: \texttt{data.yaml}はAPIが自動生成。簡便化のため学習/検証は同一ディレクトリだが、将来的に分割を厳密化予定。
+  \item モデル反映: 学習完了後、最良重みを自動ロード。\texttt{Models}タブで一覧・切替・バックアップ・簡易検証が可能。
 \end{itemize}
 
 \section{実験結果}
-現時点では\textbf{データセット未確定}のため数値結果は未掲載。運用フローと評価指標のみ提示する。
+現時点ではデータセット未確定のため数値結果は未掲載。運用フローと評価指標のみ提示する。
 
 \section{期待と限界}
-語彙登録だけで立ち上がらない対象でも、\textbf{少量ラベル＋短時間学習}で検出が成立することを期待する。一方で、撮影条件や外観多様性が大きい場合は追加データ収集と反復学習が必要。モバイル中心運用のため、\textbf{学習/推論時間と電力}の制約がある。
+語彙登録だけで立ち上がらない対象でも、少量ラベル＋短時間学習で検出が成立することを期待する。一方で、撮影条件や外観多様性が大きい場合は追加データ収集と反復学習が必要。モバイル中心運用のため、学習/推論時間と電力の制約がある。
 
 \section{今後の改善}
 データ分割の厳密化、GPU環境での高速化、半自動ラベリング支援、同義語正規化、学習履歴の可視化充実（\texttt{/training/history}, \texttt{/training/metrics/\{run\_name\}}の活用）を進める。
@@ -300,13 +374,13 @@ Labelingタブで作成したアノテーションはYOLO形式で保存し（\t
 \chapter*{研究業績}
 \paragraph{査読付き国際学会}
 \begin{enumerate}
-    \item{\textbf{Haruhiro Takahashi}, Ryuto Ishibashi, Hayata Kaneko, and Lin Meng, ``Leftover Food Measurement using Deep Learning Based Semantic Segmentation," The 6th International Symposium on Advanced Technologies and Applications in the Internet of Things (ATAIT 2024), Aug. 2024. (in Kusatsu, Japan)}
-    \item{Ishibashi, Ryuto, \textbf{Haruhiro Takahashi}, and Lin Meng. "ViT-Based Hybrid Segmentation for Leftover Food Detection." The 6th International Conference on Industrial Artificial Intelligence (IAI2024). Aug. 2024. (in Shenyang, China)}
+    \item{Haruhiro Takahashi, Ryuto Ishibashi, Hayata Kaneko, and Lin Meng, ``Leftover Food Measurement using Deep Learning Based Semantic Segmentation," The 6th International Symposium on Advanced Technologies and Applications in the Internet of Things (ATAIT 2024), Aug. 2024. (in Kusatsu, Japan)}
+    \item{Ishibashi, Ryuto, Haruhiro Takahashi, and Lin Meng. "ViT-Based Hybrid Segmentation for Leftover Food Detection." The 6th International Conference on Industrial Artificial Intelligence (IAI2024). Aug. 2024. (in Shenyang, China)}
 \end{enumerate}
 
 \paragraph{シンポジウム}
 \begin{enumerate}
-    \item{\textbf{Haruhhiro Takhashi}, ``Leftover Food Measurement using Segmentation and Detection", The 21th English Presentation Competition in Ritsumeikan University（EPCR2024）,Nov. 2024 (in Kusatsu, Japan)}
+    \item{Haruhhiro Takhashi, ``Leftover Food Measurement using Segmentation and Detection", The 21th English Presentation Competition in Ritsumeikan University（EPCR2024）,Nov. 2024 (in Kusatsu, Japan)}
 \end{enumerate}
 
 

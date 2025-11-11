@@ -1,4 +1,4 @@
-This is e-upTeX, Version 3.141592653-p4.1.2-u2.00-250202-2.6 (utf8.uptex) (TeX Live 2025) (preloaded format=uplatex 2025.10.2)  9 NOV 2025 01:27
+This is e-upTeX, Version 3.141592653-p4.1.2-u2.00-250202-2.6 (utf8.uptex) (TeX Live 2025) (preloaded format=uplatex 2025.10.2)  10 NOV 2025 07:20
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -691,6 +691,14 @@ LaTeX Font Warning: Font shape `OMS/cmtt/m/n' undefined
 (Font)              using `OMS/cmsy/m/n' instead
 (Font)              for symbol `textbraceleft' on input line 150.
 
+
+Overfull \hbox (54.94643pt too wide) in paragraph at lines 150--151
+\JY2/mc/m/n/10.95 モデル一覧 ・ 切替 ・ バ ックア ップ ・ 検
+証が可能で 、 \OT1/cmtt/m/n/10.95 /training/history \JY2/mc/m/n/10.95 と
+\OT1/cmtt/m/n/10.95 /training/metrics/\OMS/cmtt/m/n/10.95 f\OT1/cmtt/m/n/10.95 
+run[]name\OMS/cmtt/m/n/10.95 g
+ []
+
 File: Image_Goto/01_take_photo.png Graphic file (type bmp)
 <Image_Goto/01_take_photo.png>
 LaTeX Font Info:    Font shape `JT2/mc/m/n' will be
@@ -761,11 +769,67 @@ LaTeX Font Info:    Font shape `OT1/cmtt/bx/n' in size <12> not available
 [11
 
 ]
+File: Image_Goto/ch4_smartphone_wo_01.jpg Graphic file (type bmp)
+<Image_Goto/ch4_smartphone_wo_01.jpg>
+File: Image_Goto/ch4_smartphone_01.jpg Graphic file (type bmp)
+<Image_Goto/ch4_smartphone_01.jpg>
+File: Image_Goto/ch4_smartphone_wo_02.jpg Graphic file (type bmp)
+<Image_Goto/ch4_smartphone_wo_02.jpg>
+File: Image_Goto/ch4_smartphone_02.jpg Graphic file (type bmp)
+<Image_Goto/ch4_smartphone_02.jpg>
+File: Image_Goto/ch4_smartphone_wo_03.jpg Graphic file (type bmp)
+<Image_Goto/ch4_smartphone_wo_03.jpg>
+File: Image_Goto/ch4_smartphone_03.jpg Graphic file (type bmp)
+<Image_Goto/ch4_smartphone_03.jpg>
+File: Image_Goto/ch4_smartphone_wo_04.jpg Graphic file (type bmp)
+<Image_Goto/ch4_smartphone_wo_04.jpg>
+File: Image_Goto/ch4_smartphone_04.jpg Graphic file (type bmp)
+<Image_Goto/ch4_smartphone_04.jpg>
+File: Image_Goto/ch4_smartphone_wo_05.jpg Graphic file (type bmp)
+<Image_Goto/ch4_smartphone_wo_05.jpg>
+File: Image_Goto/ch4_smartphone_05.jpg Graphic file (type bmp)
+<Image_Goto/ch4_smartphone_05.jpg>
+
+
+LaTeX Warning: Float too large for page by 762.02403pt on input line 267.
+
+File: Image_Goto/ch4_smartphone_wo_06.jpg Graphic file (type bmp)
+<Image_Goto/ch4_smartphone_wo_06.jpg>
+File: Image_Goto/ch4_smartphone_06.jpg Graphic file (type bmp)
+<Image_Goto/ch4_smartphone_06.jpg>
+File: Image_Goto/ch4_smartphone_wo_07.jpg Graphic file (type bmp)
+<Image_Goto/ch4_smartphone_wo_07.jpg>
+File: Image_Goto/ch4_smartphone_07.jpg Graphic file (type bmp)
+<Image_Goto/ch4_smartphone_07.jpg>
+File: Image_Goto/ch4_smartphone_wo_08.jpg Graphic file (type bmp)
+<Image_Goto/ch4_smartphone_wo_08.jpg>
+File: Image_Goto/ch4_smartphone_08.jpg Graphic file (type bmp)
+<Image_Goto/ch4_smartphone_08.jpg>
+File: Image_Goto/ch4_smartphone_wo_09.jpg Graphic file (type bmp)
+<Image_Goto/ch4_smartphone_wo_09.jpg>
+File: Image_Goto/ch4_smartphone_09.jpg Graphic file (type bmp)
+<Image_Goto/ch4_smartphone_09.jpg>
+File: Image_Goto/ch4_smartphone_wo_10.jpg Graphic file (type bmp)
+<Image_Goto/ch4_smartphone_wo_10.jpg>
+File: Image_Goto/ch4_smartphone_10.jpg Graphic file (type bmp)
+<Image_Goto/ch4_smartphone_10.jpg>
+
+LaTeX Warning: Float too large for page by 650.02748pt on input line 287.
+
+
 
 [12]
+
+[13]
+
+[14]
+
+[15
+
+]
  5.
 
-Overfull \hbox (33.46349pt too wide) in paragraph at lines 242--243
+Overfull \hbox (33.46349pt too wide) in paragraph at lines 316--317
 \JY2/mc/m/n/10.95 が 、 環境設定により \OT1/cmr/m/n/10.95 GPU \JY2/mc/
 m/n/10.95 へ切替可能 。 収集した画像と \OT1/cmr/m/n/10.95 YOLO \JY
 2/mc/m/n/10.95 形式ラベルは \OT1/cmtt/m/n/10.95 training[]data/images \JY
@@ -774,59 +838,59 @@ m/n/10.95 へ切替可能 。 収集した画像と \OT1/cmr/m/n/10.95 YOLO \JY
 
 
 
-[13
+[16
 
 ]
 
-[14]
+[17]
  6.
 Package acronym Info: Label `acro:Sem' newly defined as it shall be overridden
-although it is yet undefined on input line 284.
+although it is yet undefined on input line 358.
 Package acronym Info: Label `acro:Obj' newly defined as it shall be overridden
-although it is yet undefined on input line 284.
+although it is yet undefined on input line 358.
 Package acronym Info: Label `acro:Seg' newly defined as it shall be overridden
-although it is yet undefined on input line 285.
+although it is yet undefined on input line 359.
 
-
-[15
-
-]
-
-[16]
-
-[17
-
-]
 
 [18
 
 ]
-付録 A.
-LaTeX Font Info:    Font shape `JT2/mc/m/n' will be
-(Font)              scaled to size 7.69775pt on input line 328.
-LaTeX Font Info:    Font shape `JY2/mc/m/n' will be
-(Font)              scaled to size 7.69775pt on input line 328.
-LaTeX Font Info:    Font shape `JT2/mc/bx/n' in size <8> not available
-(Font)              Font shape `JT2/gt/m/n' tried instead on input line 332.
-LaTeX Font Info:    Font shape `JT2/gt/m/n' will be
-(Font)              scaled to size 7.69775pt on input line 332.
-LaTeX Font Info:    Font shape `JY2/mc/bx/n' in size <8> not available
-(Font)              Font shape `JY2/gt/m/n' tried instead on input line 332.
-LaTeX Font Info:    Font shape `JY2/gt/m/n' will be
-(Font)              scaled to size 7.69775pt on input line 332.
 
+[19]
 
-[19
+[20
 
 ]
 
-[20]
+[21
 
-[21]
+]
+付録 A.
+LaTeX Font Info:    Font shape `JT2/mc/m/n' will be
+(Font)              scaled to size 7.69775pt on input line 402.
+LaTeX Font Info:    Font shape `JY2/mc/m/n' will be
+(Font)              scaled to size 7.69775pt on input line 402.
+LaTeX Font Info:    Font shape `JT2/mc/bx/n' in size <8> not available
+(Font)              Font shape `JT2/gt/m/n' tried instead on input line 406.
+LaTeX Font Info:    Font shape `JT2/gt/m/n' will be
+(Font)              scaled to size 7.69775pt on input line 406.
+LaTeX Font Info:    Font shape `JY2/mc/bx/n' in size <8> not available
+(Font)              Font shape `JY2/gt/m/n' tried instead on input line 406.
+LaTeX Font Info:    Font shape `JY2/gt/m/n' will be
+(Font)              scaled to size 7.69775pt on input line 406.
 
-[22]
 
-[23] (./Goto.aux)
+[22
+
+]
+
+[23]
+
+[24]
+
+[25]
+
+[26] (./Goto.aux)
  ***********
 pLaTeX2e <2023-02-14u04>+1, based on
 LaTeX2e <2025-06-01> patch level 1
@@ -837,15 +901,15 @@ L3 programming layer <2025-09-02>
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
 Package rerunfilecheck Info: File `Goto.out' has not changed.
-(rerunfilecheck)             Checksum: 02D183FB3346BCD5A10B01FD5EA26D2F;3341.
+(rerunfilecheck)             Checksum: 217947622CD1ACE2B5330EA4AEE75D0B;3512.
  ) 
 Here is how much of TeX's memory you used:
- 13864 strings out of 469857
- 213016 string characters out of 5478696
- 744277 words of memory out of 5000000
- 42211 multiletter control sequences out of 15000+600000
+ 13988 strings out of 469857
+ 217679 string characters out of 5478696
+ 744653 words of memory out of 5000000
+ 42314 multiletter control sequences out of 15000+600000
  696099 words of font info for 112 fonts, out of 8000000 for 9000
  36 hyphenation exceptions out of 8191
  72i,10n,79p,1877b,651s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on Goto.dvi (28 pages, 125980 bytes).
+Output written on Goto.dvi (31 pages, 139184 bytes).

@@ -13,19 +13,20 @@
 \contentsline {section}{\numberline {4.2}操作フローと条件}{11}{section.4.2}%
 \contentsline {section}{\numberline {4.3}評価項目}{11}{section.4.3}%
 \contentsline {section}{\numberline {4.4}ケーススタディ（\texttt {smartphone}）}{11}{section.4.4}%
-\contentsline {section}{\numberline {4.5}考察と制約}{12}{section.4.5}%
-\contentsline {chapter}{\numberline {5}手動ラベリングとファインチューニングによる検出成立性の検証}{13}{chapter.5}%
-\contentsline {section}{\numberline {5.1}目的}{13}{section.5.1}%
-\contentsline {section}{\numberline {5.2}前提と環境}{13}{section.5.2}%
-\contentsline {section}{\numberline {5.3}手順}{13}{section.5.3}%
-\contentsline {section}{\numberline {5.4}評価設計}{13}{section.5.4}%
-\contentsline {section}{\numberline {5.5}実装上の要点}{14}{section.5.5}%
-\contentsline {section}{\numberline {5.6}実験結果}{14}{section.5.6}%
-\contentsline {section}{\numberline {5.7}期待と限界}{14}{section.5.7}%
-\contentsline {section}{\numberline {5.8}今後の改善}{14}{section.5.8}%
-\contentsline {chapter}{\numberline {6}まとめ}{15}{chapter.6}%
-\contentsline {paragraph}{査読付き国際学会}{17}{section*.9}%
-\contentsline {paragraph}{シンポジウム}{17}{section*.10}%
-\contentsline {chapter}{\numberline {A}実験結果}{19}{appendix.A}%
-\contentsline {section}{\numberline {A.1}領域検出精度の実験結果一覧}{19}{section.A.1}%
-\contentsline {section}{\numberline {A.2}測定の実験結果一覧}{19}{section.A.2}%
+\contentsline {section}{\numberline {4.5}実験結果（\texttt {smartphone}10枚）}{12}{section.4.5}%
+\contentsline {section}{\numberline {4.6}考察と制約}{15}{section.4.6}%
+\contentsline {chapter}{\numberline {5}手動ラベリングとファインチューニングによる検出成立性の検証}{16}{chapter.5}%
+\contentsline {section}{\numberline {5.1}目的}{16}{section.5.1}%
+\contentsline {section}{\numberline {5.2}前提と環境}{16}{section.5.2}%
+\contentsline {section}{\numberline {5.3}手順}{16}{section.5.3}%
+\contentsline {section}{\numberline {5.4}評価設計}{16}{section.5.4}%
+\contentsline {section}{\numberline {5.5}実装上の要点}{17}{section.5.5}%
+\contentsline {section}{\numberline {5.6}実験結果}{17}{section.5.6}%
+\contentsline {section}{\numberline {5.7}期待と限界}{17}{section.5.7}%
+\contentsline {section}{\numberline {5.8}今後の改善}{17}{section.5.8}%
+\contentsline {chapter}{\numberline {6}まとめ}{18}{chapter.6}%
+\contentsline {paragraph}{査読付き国際学会}{20}{section*.9}%
+\contentsline {paragraph}{シンポジウム}{20}{section*.10}%
+\contentsline {chapter}{\numberline {A}実験結果}{22}{appendix.A}%
+\contentsline {section}{\numberline {A.1}領域検出精度の実験結果一覧}{22}{section.A.1}%
+\contentsline {section}{\numberline {A.2}測定の実験結果一覧}{22}{section.A.2}%

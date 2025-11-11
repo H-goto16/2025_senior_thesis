@@ -23,6 +23,9 @@ training_manager = TrainingManager()
 # Training data directory
 TRAINING_DATA_DIR = Path("training_data")
 TRAINING_DATA_DIR.mkdir(exist_ok=True)
+# Predictions output directory (for saving images with drawn bounding boxes)
+PREDICTIONS_DIR = Path("predictions")
+PREDICTIONS_DIR.mkdir(exist_ok=True)
 
 # Global training status
 training_status = {
@@ -603,10 +606,23 @@ async def detect_object(
             # 画像にバウンディングボックスを描画
             processed_image_b64 = draw_bounding_boxes(temp_file_path, detections_data)
 
+            # 保存先ファイル名を生成し、描画済み画像を保存
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+            safe_name = Path(image.filename).stem if image.filename else "uploaded_image"
+            output_filename = f"{timestamp}_{safe_name}_detected.jpg"
+            output_path = PREDICTIONS_DIR / output_filename
+            try:
+                with open(output_path, "wb") as f_out:
+                    f_out.write(base64.b64decode(processed_image_b64))
+            except Exception as e:
+                # 保存に失敗しても処理は続行し、ログのみ出力
+                print(f"Warning: failed to save processed image: {e}")
+
             return {
                 "detections": detections,
                 "message": f"Object detection completed. Found {len(detections)} objects.",
-                "processed_image": processed_image_b64
+                "processed_image": processed_image_b64,
+                "saved_path": str(output_path)
             }
 
         finally:
@@ -691,18 +707,34 @@ async def detect_object_with_confidence(
 
             # Extract detection information
             detections = []
+            detections_data = []
             if result.boxes is not None and len(result.boxes) > 0:
                 for box in result.boxes:
                     detection = {
                         "class": result.names[int(box.cls[0])],
                         "confidence": float(box.conf[0]),
-                        "bbox": box.xyxy[0].tolist()  # [x1, y1, x2, y2]
+                        "bbox": [float(coord) for coord in box.xyxy[0].tolist()]  # [x1, y1, x2, y2]
                     }
                     detections.append(detection)
+                    detections_data.append(detection)
+
+            # 画像にバウンディングボックスを描画して保存
+            processed_image_b64 = draw_bounding_boxes(temp_file_path, detections_data)
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+            safe_name = Path(image.filename).stem if image.filename else "uploaded_image"
+            output_filename = f"{timestamp}_{safe_name}_detected.jpg"
+            output_path = PREDICTIONS_DIR / output_filename
+            try:
+                with open(output_path, "wb") as f_out:
+                    f_out.write(base64.b64decode(processed_image_b64))
+            except Exception as e:
+                print(f"Warning: failed to save processed image: {e}")
 
             return {
                 "detections": detections,
-                "message": f"Object detection completed with confidence {confidence}. Found {len(detections)} objects."
+                "message": f"Object detection completed with confidence {confidence}. Found {len(detections)} objects.",
+                "processed_image": processed_image_b64,
+                "saved_path": str(output_path)
             }
 
         finally:
