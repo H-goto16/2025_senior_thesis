@@ -19,4 +19,4 @@ venv/
 venv.bak/
 
 runs/
-training_data/
+# training_data/

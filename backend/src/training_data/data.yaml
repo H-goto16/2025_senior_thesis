@@ -1,0 +1,10 @@
+names:
+- Chopstics
+- egg
+- Soup
+- Rice
+- mouse
+nc: 5
+path: /home/haruki-goto/workspace/lab/dish-detection/backend/src/training_data
+train: images
+val: images
