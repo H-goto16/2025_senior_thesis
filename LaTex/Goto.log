@@ -1,4 +1,4 @@
-This is e-upTeX, Version 3.141592653-p4.1.2-u2.00-250202-2.6 (utf8.uptex) (TeX Live 2025) (preloaded format=uplatex 2025.10.2)  10 NOV 2025 07:20
+This is e-upTeX, Version 3.141592653-p4.1.2-u2.00-250202-2.6 (utf8.uptex) (TeX Live 2025) (preloaded format=uplatex 2025.10.2)  12 NOV 2025 12:48
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -505,28 +505,28 @@ File: l3backend-dvipdfmx.def 2025-06-09 L3 backend support: dvipdfmx
 ) (./Goto.aux)
 \openout1 = `Goto.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 67.
-LaTeX Font Info:    ... okay on input line 67.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 67.
-LaTeX Font Info:    ... okay on input line 67.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 67.
-LaTeX Font Info:    ... okay on input line 67.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 67.
-LaTeX Font Info:    ... okay on input line 67.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 67.
-LaTeX Font Info:    ... okay on input line 67.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 67.
-LaTeX Font Info:    ... okay on input line 67.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 67.
-LaTeX Font Info:    ... okay on input line 67.
-LaTeX Font Info:    Checking defaults for JY2/mc/m/n on input line 67.
-LaTeX Font Info:    ... okay on input line 67.
-LaTeX Font Info:    Checking defaults for JT2/mc/m/n on input line 67.
-LaTeX Font Info:    ... okay on input line 67.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 67.
-LaTeX Font Info:    ... okay on input line 67.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 67.
-LaTeX Font Info:    ... okay on input line 67.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 51.
+LaTeX Font Info:    ... okay on input line 51.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 51.
+LaTeX Font Info:    ... okay on input line 51.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 51.
+LaTeX Font Info:    ... okay on input line 51.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 51.
+LaTeX Font Info:    ... okay on input line 51.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 51.
+LaTeX Font Info:    ... okay on input line 51.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 51.
+LaTeX Font Info:    ... okay on input line 51.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 51.
+LaTeX Font Info:    ... okay on input line 51.
+LaTeX Font Info:    Checking defaults for JY2/mc/m/n on input line 51.
+LaTeX Font Info:    ... okay on input line 51.
+LaTeX Font Info:    Checking defaults for JT2/mc/m/n on input line 51.
+LaTeX Font Info:    ... okay on input line 51.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 51.
+LaTeX Font Info:    ... okay on input line 51.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 51.
+LaTeX Font Info:    ... okay on input line 51.
 
 (/usr/local/texlive/2025/texmf-dist/tex/latex/pdflscape/pdflscape.sty
 Package: pdflscape 2025-06-23 v0.14 Display of landscape pages in PDF
@@ -538,7 +538,7 @@ F (HO)
  (/usr/local/texlive/2025/texmf-dist/tex/latex/graphics/lscape.sty
 Package: lscape 2020/05/28 v3.02 Landscape Pages (DPC)
 )))
-Package hyperref Info: Link coloring OFF on input line 67.
+Package hyperref Info: Link coloring OFF on input line 51.
 
 (./Goto.out) (./Goto.out)
 \@outlinefile=\write3
@@ -579,38 +579,38 @@ Package hyperref Info: Link coloring OFF on input line 67.
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
 LaTeX Font Info:    Font shape `JT2/mc/m/n' will be
-(Font)              scaled to size 13.85594pt on input line 71.
+(Font)              scaled to size 13.85594pt on input line 54.
 LaTeX Font Info:    Font shape `JY2/mc/m/n' will be
-(Font)              scaled to size 13.85594pt on input line 71.
+(Font)              scaled to size 13.85594pt on input line 54.
 LaTeX Font Info:    Font shape `JT2/mc/m/n' will be
-(Font)              scaled to size 16.62714pt on input line 73.
+(Font)              scaled to size 16.62714pt on input line 56.
 LaTeX Font Info:    Font shape `JY2/mc/m/n' will be
-(Font)              scaled to size 16.62714pt on input line 73.
+(Font)              scaled to size 16.62714pt on input line 56.
 LaTeX Font Info:    Font shape `JT2/mc/bx/n' in size <14.4> not available
-(Font)              Font shape `JT2/gt/m/n' tried instead on input line 77.
+(Font)              Font shape `JT2/gt/m/n' tried instead on input line 60.
 LaTeX Font Info:    Font shape `JT2/gt/m/n' will be
-(Font)              scaled to size 13.85594pt on input line 77.
+(Font)              scaled to size 13.85594pt on input line 60.
 LaTeX Font Info:    Font shape `JY2/mc/bx/n' in size <14.4> not available
-(Font)              Font shape `JY2/gt/m/n' tried instead on input line 77.
+(Font)              Font shape `JY2/gt/m/n' tried instead on input line 60.
 LaTeX Font Info:    Font shape `JY2/gt/m/n' will be
-(Font)              scaled to size 13.85594pt on input line 77.
+(Font)              scaled to size 13.85594pt on input line 60.
 LaTeX Font Info:    Font shape `JT2/mc/m/n' will be
-(Font)              scaled to size 11.54663pt on input line 79.
+(Font)              scaled to size 11.54663pt on input line 62.
 LaTeX Font Info:    Font shape `JY2/mc/m/n' will be
-(Font)              scaled to size 11.54663pt on input line 79.
+(Font)              scaled to size 11.54663pt on input line 62.
 
 
 [1
 
 ]
 LaTeX Font Info:    Font shape `JT2/mc/bx/n' in size <17.28> not available
-(Font)              Font shape `JT2/gt/m/n' tried instead on input line 87.
+(Font)              Font shape `JT2/gt/m/n' tried instead on input line 70.
 LaTeX Font Info:    Font shape `JT2/gt/m/n' will be
-(Font)              scaled to size 16.62714pt on input line 87.
+(Font)              scaled to size 16.62714pt on input line 70.
 LaTeX Font Info:    Font shape `JY2/mc/bx/n' in size <17.28> not available
-(Font)              Font shape `JY2/gt/m/n' tried instead on input line 87.
+(Font)              Font shape `JY2/gt/m/n' tried instead on input line 70.
 LaTeX Font Info:    Font shape `JY2/gt/m/n' will be
-(Font)              scaled to size 16.62714pt on input line 87.
+(Font)              scaled to size 16.62714pt on input line 70.
 
 
 [2
@@ -668,13 +668,13 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 [2]
  2.
 LaTeX Font Info:    Font shape `JT2/mc/bx/n' in size <12> not available
-(Font)              Font shape `JT2/gt/m/n' tried instead on input line 121.
+(Font)              Font shape `JT2/gt/m/n' tried instead on input line 102.
 LaTeX Font Info:    Font shape `JT2/gt/m/n' will be
-(Font)              scaled to size 11.54663pt on input line 121.
+(Font)              scaled to size 11.54663pt on input line 102.
 LaTeX Font Info:    Font shape `JY2/mc/bx/n' in size <12> not available
-(Font)              Font shape `JY2/gt/m/n' tried instead on input line 121.
+(Font)              Font shape `JY2/gt/m/n' tried instead on input line 102.
 LaTeX Font Info:    Font shape `JY2/gt/m/n' will be
-(Font)              scaled to size 11.54663pt on input line 121.
+(Font)              scaled to size 11.54663pt on input line 102.
 
 
 [3
@@ -684,15 +684,15 @@ LaTeX Font Info:    Font shape `JY2/gt/m/n' will be
 [4]
  3.
 LaTeX Font Info:    Trying to load font information for OMS+cmtt on input line 
-150.
-LaTeX Font Info:    No file OMScmtt.fd. on input line 150.
+129.
+LaTeX Font Info:    No file OMScmtt.fd. on input line 129.
 
 LaTeX Font Warning: Font shape `OMS/cmtt/m/n' undefined
 (Font)              using `OMS/cmsy/m/n' instead
-(Font)              for symbol `textbraceleft' on input line 150.
+(Font)              for symbol `textbraceleft' on input line 129.
 
 
-Overfull \hbox (54.94643pt too wide) in paragraph at lines 150--151
+Overfull \hbox (54.94643pt too wide) in paragraph at lines 129--130
 \JY2/mc/m/n/10.95 モデル一覧 ・ 切替 ・ バ ックア ップ ・ 検
 証が可能で 、 \OT1/cmtt/m/n/10.95 /training/history \JY2/mc/m/n/10.95 と
 \OT1/cmtt/m/n/10.95 /training/metrics/\OMS/cmtt/m/n/10.95 f\OT1/cmtt/m/n/10.95 
@@ -702,9 +702,9 @@ run[]name\OMS/cmtt/m/n/10.95 g
 File: Image_Goto/01_take_photo.png Graphic file (type bmp)
 <Image_Goto/01_take_photo.png>
 LaTeX Font Info:    Font shape `JT2/mc/m/n' will be
-(Font)              scaled to size 8.65997pt on input line 157.
+(Font)              scaled to size 8.65997pt on input line 136.
 LaTeX Font Info:    Font shape `JY2/mc/m/n' will be
-(Font)              scaled to size 8.65997pt on input line 157.
+(Font)              scaled to size 8.65997pt on input line 136.
 File: Image_Goto/02_0_no_detect.png Graphic file (type bmp)
 <Image_Goto/02_0_no_detect.png>
 File: Image_Goto/02_1_detect.png Graphic file (type bmp)
@@ -720,7 +720,7 @@ File: Image_Goto/02_5_fine_tuning.png Graphic file (type bmp)
 File: Image_Goto/03_fine-tuning.png Graphic file (type bmp)
 <Image_Goto/03_fine-tuning.png>
 
-LaTeX Warning: Float too large for page by 3.49382pt on input line 175.
+LaTeX Warning: Float too large for page by 3.49382pt on input line 154.
 
 File: Image_Goto/04_classes.png Graphic file (type bmp)
 <Image_Goto/04_classes.png>
@@ -731,7 +731,7 @@ File: Image_Goto/06_model.png Graphic file (type bmp)
 File: Image_Goto/07_nmodel_overview.png Graphic file (type bmp)
 <Image_Goto/07_nmodel_overview.png>
 
-LaTeX Warning: Float too large for page by 45.49911pt on input line 186.
+LaTeX Warning: Float too large for page by 45.49911pt on input line 165.
 
 File: Image_Goto/08_model_dateset.png Graphic file (type bmp)
 <Image_Goto/08_model_dateset.png>
@@ -742,7 +742,7 @@ File: Image_Goto/02_1_detect.png Graphic file (type bmp)
 File: Image_Goto/02_4_manual.png Graphic file (type bmp)
 <Image_Goto/02_4_manual.png>
 
-LaTeX Warning: Float too large for page by 1.37953pt on input line 197.
+LaTeX Warning: Float too large for page by 1.37953pt on input line 176.
 
 
 
@@ -763,7 +763,7 @@ LaTeX Warning: Float too large for page by 1.37953pt on input line 197.
 ]
  4.
 LaTeX Font Info:    Font shape `OT1/cmtt/bx/n' in size <12> not available
-(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 229.
+(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 208.
 
 
 [11
@@ -791,7 +791,7 @@ File: Image_Goto/ch4_smartphone_05.jpg Graphic file (type bmp)
 <Image_Goto/ch4_smartphone_05.jpg>
 
 
-LaTeX Warning: Float too large for page by 762.02403pt on input line 267.
+LaTeX Warning: Float too large for page by 762.02403pt on input line 246.
 
 File: Image_Goto/ch4_smartphone_wo_06.jpg Graphic file (type bmp)
 <Image_Goto/ch4_smartphone_wo_06.jpg>
@@ -814,7 +814,7 @@ File: Image_Goto/ch4_smartphone_wo_10.jpg Graphic file (type bmp)
 File: Image_Goto/ch4_smartphone_10.jpg Graphic file (type bmp)
 <Image_Goto/ch4_smartphone_10.jpg>
 
-LaTeX Warning: Float too large for page by 650.02748pt on input line 287.
+LaTeX Warning: Float too large for page by 650.02748pt on input line 266.
 
 
 
@@ -829,7 +829,7 @@ LaTeX Warning: Float too large for page by 650.02748pt on input line 287.
 ]
  5.
 
-Overfull \hbox (33.46349pt too wide) in paragraph at lines 316--317
+Overfull \hbox (33.46349pt too wide) in paragraph at lines 293--294
 \JY2/mc/m/n/10.95 が 、 環境設定により \OT1/cmr/m/n/10.95 GPU \JY2/mc/
 m/n/10.95 へ切替可能 。 収集した画像と \OT1/cmr/m/n/10.95 YOLO \JY
 2/mc/m/n/10.95 形式ラベルは \OT1/cmtt/m/n/10.95 training[]data/images \JY
@@ -841,56 +841,31 @@ m/n/10.95 へ切替可能 。 収集した画像と \OT1/cmr/m/n/10.95 YOLO \JY
 [16
 
 ]
+Overfull \hbox (48.97246pt too wide) in paragraph at lines 326--327
+[]\OT1/cmr/m/n/10.95 50 \JY2/mc/m/n/10.95 枚の画像に対して手動ラベ
+リングを実施し 、 \OT1/cmtt/m/n/10.95 training[]data/images \JY2/mc/m/n
+/10.95 と \OT1/cmtt/m/n/10.95 training[]data/labels
+ []
+
+
 
 [17]
- 6.
-Package acronym Info: Label `acro:Sem' newly defined as it shall be overridden
-although it is yet undefined on input line 358.
-Package acronym Info: Label `acro:Obj' newly defined as it shall be overridden
-although it is yet undefined on input line 358.
-Package acronym Info: Label `acro:Seg' newly defined as it shall be overridden
-although it is yet undefined on input line 359.
 
-
-[18
-
-]
+[18]
 
 [19]
+ 6.
+
 
 [20
 
 ]
 
-[21
-
-]
-付録 A.
-LaTeX Font Info:    Font shape `JT2/mc/m/n' will be
-(Font)              scaled to size 7.69775pt on input line 402.
-LaTeX Font Info:    Font shape `JY2/mc/m/n' will be
-(Font)              scaled to size 7.69775pt on input line 402.
-LaTeX Font Info:    Font shape `JT2/mc/bx/n' in size <8> not available
-(Font)              Font shape `JT2/gt/m/n' tried instead on input line 406.
-LaTeX Font Info:    Font shape `JT2/gt/m/n' will be
-(Font)              scaled to size 7.69775pt on input line 406.
-LaTeX Font Info:    Font shape `JY2/mc/bx/n' in size <8> not available
-(Font)              Font shape `JY2/gt/m/n' tried instead on input line 406.
-LaTeX Font Info:    Font shape `JY2/gt/m/n' will be
-(Font)              scaled to size 7.69775pt on input line 406.
-
+[21]
 
 [22
 
-]
-
-[23]
-
-[24]
-
-[25]
-
-[26] (./Goto.aux)
+] (./Goto.aux)
  ***********
 pLaTeX2e <2023-02-14u04>+1, based on
 LaTeX2e <2025-06-01> patch level 1
@@ -901,15 +876,15 @@ L3 programming layer <2025-09-02>
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
 Package rerunfilecheck Info: File `Goto.out' has not changed.
-(rerunfilecheck)             Checksum: 217947622CD1ACE2B5330EA4AEE75D0B;3512.
+(rerunfilecheck)             Checksum: F3AEB86D261B843FCFF008C62D772D06;3601.
  ) 
 Here is how much of TeX's memory you used:
- 13988 strings out of 469857
- 217679 string characters out of 5478696
- 744653 words of memory out of 5000000
- 42314 multiletter control sequences out of 15000+600000
- 696099 words of font info for 112 fonts, out of 8000000 for 9000
+ 13953 strings out of 469857
+ 217224 string characters out of 5478696
+ 629376 words of memory out of 5000000
+ 42282 multiletter control sequences out of 15000+600000
+ 694571 words of font info for 104 fonts, out of 8000000 for 9000
  36 hyphenation exceptions out of 8191
- 72i,10n,79p,1877b,651s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 72i,9n,79p,1079b,651s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on Goto.dvi (31 pages, 139184 bytes).
+Output written on Goto.dvi (27 pages, 90724 bytes).

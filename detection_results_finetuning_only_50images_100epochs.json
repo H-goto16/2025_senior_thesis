@@ -1,0 +1,186 @@
+[
+  {
+    "image_name": "mouse_1.jpg",
+    "image_path": "assets/mouse/test_mouse/mouse_1.jpg",
+    "detections": []
+  },
+  {
+    "image_name": "mouse_10.jpg",
+    "image_path": "assets/mouse/test_mouse/mouse_10.jpg",
+    "detections": [
+      {
+        "class": "mouse",
+        "confidence": 0.3583317995071411,
+        "bbox": [
+          316.6069641113281,
+          375.42938232421875,
+          491.92144775390625,
+          1758.2626953125
+        ]
+      }
+    ]
+  },
+  {
+    "image_name": "mouse_11.jpg",
+    "image_path": "assets/mouse/test_mouse/mouse_11.jpg",
+    "detections": [
+      {
+        "class": "mouse",
+        "confidence": 0.33214983344078064,
+        "bbox": [
+          338.00927734375,
+          299.5688171386719,
+          544.3126831054688,
+          1783.8358154296875
+        ]
+      }
+    ]
+  },
+  {
+    "image_name": "mouse_12.jpg",
+    "image_path": "assets/mouse/test_mouse/mouse_12.jpg",
+    "detections": []
+  },
+  {
+    "image_name": "mouse_13.jpg",
+    "image_path": "assets/mouse/test_mouse/mouse_13.jpg",
+    "detections": [
+      {
+        "class": "mouse",
+        "confidence": 0.27946367859840393,
+        "bbox": [
+          341.7363586425781,
+          346.38726806640625,
+          531.33447265625,
+          1834.314208984375
+        ]
+      }
+    ]
+  },
+  {
+    "image_name": "mouse_2.jpg",
+    "image_path": "assets/mouse/test_mouse/mouse_2.jpg",
+    "detections": [
+      {
+        "class": "mouse",
+        "confidence": 0.26873183250427246,
+        "bbox": [
+          478.3575744628906,
+          360.7075500488281,
+          742.31591796875,
+          1744.514892578125
+        ]
+      },
+      {
+        "class": "mouse",
+        "confidence": 0.26515141129493713,
+        "bbox": [
+          378.87396240234375,
+          279.808837890625,
+          619.697509765625,
+          1763.15478515625
+        ]
+      }
+    ]
+  },
+  {
+    "image_name": "mouse_3.jpg",
+    "image_path": "assets/mouse/test_mouse/mouse_3.jpg",
+    "detections": []
+  },
+  {
+    "image_name": "mouse_4.jpg",
+    "image_path": "assets/mouse/test_mouse/mouse_4.jpg",
+    "detections": [
+      {
+        "class": "mouse",
+        "confidence": 0.5252729654312134,
+        "bbox": [
+          451.0809631347656,
+          335.88970947265625,
+          646.906494140625,
+          1583.1549072265625
+        ]
+      },
+      {
+        "class": "mouse",
+        "confidence": 0.2537674605846405,
+        "bbox": [
+          485.0250549316406,
+          317.14642333984375,
+          676.2333374023438,
+          1639.8028564453125
+        ]
+      }
+    ]
+  },
+  {
+    "image_name": "mouse_5.jpg",
+    "image_path": "assets/mouse/test_mouse/mouse_5.jpg",
+    "detections": [
+      {
+        "class": "mouse",
+        "confidence": 0.48914769291877747,
+        "bbox": [
+          458.0330810546875,
+          369.0673828125,
+          665.6884765625,
+          1622.3001708984375
+        ]
+      }
+    ]
+  },
+  {
+    "image_name": "mouse_6.jpg",
+    "image_path": "assets/mouse/test_mouse/mouse_6.jpg",
+    "detections": [
+      {
+        "class": "mouse",
+        "confidence": 0.5026718974113464,
+        "bbox": [
+          461.0565185546875,
+          369.6192626953125,
+          651.0913696289062,
+          1644.9930419921875
+        ]
+      }
+    ]
+  },
+  {
+    "image_name": "mouse_7.jpg",
+    "image_path": "assets/mouse/test_mouse/mouse_7.jpg",
+    "detections": []
+  },
+  {
+    "image_name": "mouse_8.jpg",
+    "image_path": "assets/mouse/test_mouse/mouse_8.jpg",
+    "detections": [
+      {
+        "class": "mouse",
+        "confidence": 0.60101717710495,
+        "bbox": [
+          467.6607971191406,
+          367.2080383300781,
+          650.365234375,
+          1613.07470703125
+        ]
+      }
+    ]
+  },
+  {
+    "image_name": "mouse_9.jpg",
+    "image_path": "assets/mouse/test_mouse/mouse_9.jpg",
+    "detections": [
+      {
+        "class": "mouse",
+        "confidence": 0.4346058666706085,
+        "bbox": [
+          444.0552978515625,
+          351.8350830078125,
+          667.17578125,
+          1661.582275390625
+        ]
+      }
+    ]
+  }
+]

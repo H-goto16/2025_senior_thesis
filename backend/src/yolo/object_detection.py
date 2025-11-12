@@ -9,11 +9,14 @@ import torch
 
 class YoloDetector:
     def __init__(self, model_path="./yolov8s-world.pt", vocab_file="custom_vocab.json"):
+        # Resolve device first before loading model
+        self.device = self._resolve_device()
+        # Load model with explicit device to avoid CUDA issues
+        print(f"Initializing YOLO model on device: {self.device}")
         self.model = YOLOWorld(model_path)
         self.model_path = model_path
         self.vocab_file = Path(vocab_file)
         self.current_classes = set()
-        self.device = self._resolve_device()
         self._load_custom_vocab()
 
     def _resolve_device(self) -> str:
@@ -39,10 +42,28 @@ class YoloDetector:
             return False
         try:
             major, minor = torch.cuda.get_device_capability(0)
-            # Support GTX980Ti (5.2) and newer GPUs
-            # PyTorch supports compute capability 3.5+, but we use 5.2 as minimum for stability
-            return (major * 10 + minor) >= 52
-        except Exception:
+            capability = major * 10 + minor
+
+            # Check PyTorch CUDA version
+            cuda_version = torch.version.cuda
+            if cuda_version:
+                # CUDA 12.x requires Compute Capability 7.0+ (Ampere or newer)
+                # CUDA 11.x supports Compute Capability 3.5+ (Kepler or newer)
+                if cuda_version.startswith("12."):
+                    # CUDA 12.x: Only support Compute Capability 7.0+ (RTX 30 series, A100, etc.)
+                    if capability < 70:
+                        print(f"⚠️ GPU Compute Capability {capability/10:.1f} is not supported by CUDA {cuda_version}")
+                        print(f"⚠️ CUDA 12.x requires Compute Capability 7.0+ (Ampere or newer)")
+                        print(f"⚠️ Falling back to CPU")
+                        return False
+                elif cuda_version.startswith("11."):
+                    # CUDA 11.x: Support Compute Capability 3.5+ (GTX980Ti is 5.2, so OK)
+                    return capability >= 35
+
+            # Default: Support Compute Capability 5.2+ for older CUDA versions
+            return capability >= 52
+        except Exception as e:
+            print(f"⚠️ Error checking CUDA capability: {e}")
             return False
 
     def _load_custom_vocab(self):
@@ -89,15 +110,50 @@ class YoloDetector:
         try:
             results = self.model.predict(image_path, conf=conf_threshold, device=self.device, verbose=False)
             return results[0]
-        except Exception as e:
+        except (RuntimeError, Exception) as e:
+            error_msg = str(e).lower()
+            # Check if it's a CUDA compatibility error
+            is_cuda_error = (
+                "cuda" in error_msg and
+                ("kernel" in error_msg or "device" in error_msg or "capability" in error_msg or "no kernel image" in error_msg)
+            )
+
             # Retry on CPU if a CUDA/device error occurs
-            if self.device != "cpu":
-                print(f"Device '{self.device}' failed with error: {e}. Retrying on CPU...")
-                results = self.model.predict(image_path, conf=conf_threshold, device="cpu", verbose=False)
-                # Stick to CPU after a fallback
-                self.device = "cpu"
-                return results[0]
-            raise
+            if self.device != "cpu" and (is_cuda_error or "cuda" in error_msg):
+                print(f"⚠️ Device '{self.device}' failed with error: {e}")
+                print("⚠️ Falling back to CPU for detection...")
+                try:
+                    # Force model to CPU by moving it explicitly
+                    if hasattr(self.model, 'model') and hasattr(self.model.model, 'to'):
+                        self.model.model.to('cpu')
+                    # Update device setting
+                    self.device = "cpu"
+                    # Retry prediction on CPU
+                    results = self.model.predict(image_path, conf=conf_threshold, device="cpu", verbose=False)
+                    print("✅ Detection completed on CPU")
+                    return results[0]
+                except Exception as cpu_error:
+                    print(f"❌ CPU fallback also failed: {cpu_error}")
+                    # Try to reload model on CPU as last resort
+                    try:
+                        print("⚠️ Attempting to reload model on CPU...")
+                        model_path = self.model_path
+                        self.model = YOLOWorld(model_path)
+                        if self.current_classes:
+                            self._update_model_classes()
+                        self.device = "cpu"
+                        results = self.model.predict(image_path, conf=conf_threshold, device="cpu", verbose=False)
+                        print("✅ Detection completed after model reload on CPU")
+                        return results[0]
+                    except Exception as reload_error:
+                        print(f"❌ Model reload also failed: {reload_error}")
+                        raise cpu_error
+            elif self.device == "cpu":
+                # Already on CPU, just re-raise
+                raise
+            else:
+                # Other error, re-raise
+                raise
 
     def fine_tune_model(self, data_config_path: str, epochs: int = 50, imgsz: int = 640):
         """
@@ -200,6 +256,23 @@ class YoloDetector:
                     raise
 
             print("Fine-tuning completed successfully!")
+
+            # Print training summary
+            if results:
+                try:
+                    print("\n" + "=" * 80)
+                    print("📊 TRAINING SUMMARY")
+                    print("=" * 80)
+                    if hasattr(results, 'results_dict'):
+                        metrics = results.results_dict
+                        print(f"Final mAP50: {metrics.get('metrics/mAP50(B)', 'N/A'):.4f}" if isinstance(metrics.get('metrics/mAP50(B)', None), (int, float)) else f"Final mAP50: {metrics.get('metrics/mAP50(B)', 'N/A')}")
+                        print(f"Final mAP50-95: {metrics.get('metrics/mAP50-95(B)', 'N/A'):.4f}" if isinstance(metrics.get('metrics/mAP50-95(B)', None), (int, float)) else f"Final mAP50-95: {metrics.get('metrics/mAP50-95(B)', 'N/A')}")
+                        print(f"Final Precision: {metrics.get('metrics/precision(B)', 'N/A'):.4f}" if isinstance(metrics.get('metrics/precision(B)', None), (int, float)) else f"Final Precision: {metrics.get('metrics/precision(B)', 'N/A')}")
+                        print(f"Final Recall: {metrics.get('metrics/recall(B)', 'N/A'):.4f}" if isinstance(metrics.get('metrics/recall(B)', None), (int, float)) else f"Final Recall: {metrics.get('metrics/recall(B)', 'N/A')}")
+                    print("=" * 80 + "\n")
+                except Exception as e:
+                    print(f"⚠️ Could not print training summary: {e}")
+
             return results
 
         except Exception as e:
@@ -215,6 +288,12 @@ class YoloDetector:
         """
         try:
             print(f"Loading fine-tuned model from: {model_path}")
+            # Ensure device is set to CPU if CUDA is not usable
+            if self.device.startswith("cuda") and not self._is_cuda_usable():
+                print(f"⚠️ CUDA not usable, switching to CPU for model loading")
+                self.device = "cpu"
+
+            print(f"Loading model on device: {self.device}")
             self.model = YOLOWorld(model_path)
             self.model_path = model_path
 

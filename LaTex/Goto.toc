@@ -22,11 +22,11 @@
 \contentsline {section}{\numberline {5.4}評価設計}{16}{section.5.4}%
 \contentsline {section}{\numberline {5.5}実装上の要点}{17}{section.5.5}%
 \contentsline {section}{\numberline {5.6}実験結果}{17}{section.5.6}%
-\contentsline {section}{\numberline {5.7}期待と限界}{17}{section.5.7}%
-\contentsline {section}{\numberline {5.8}今後の改善}{17}{section.5.8}%
-\contentsline {chapter}{\numberline {6}まとめ}{18}{chapter.6}%
-\contentsline {paragraph}{査読付き国際学会}{20}{section*.9}%
-\contentsline {paragraph}{シンポジウム}{20}{section*.10}%
-\contentsline {chapter}{\numberline {A}実験結果}{22}{appendix.A}%
-\contentsline {section}{\numberline {A.1}領域検出精度の実験結果一覧}{22}{section.A.1}%
-\contentsline {section}{\numberline {A.2}測定の実験結果一覧}{22}{section.A.2}%
+\contentsline {subsection}{\numberline {5.6.1}実験設定}{17}{subsection.5.6.1}%
+\contentsline {subsection}{\numberline {5.6.2}実験手順}{17}{subsection.5.6.2}%
+\contentsline {subsection}{\numberline {5.6.3}学習結果}{17}{subsection.5.6.3}%
+\contentsline {subsection}{\numberline {5.6.4}検出結果}{18}{subsection.5.6.4}%
+\contentsline {subsection}{\numberline {5.6.5}考察}{18}{subsection.5.6.5}%
+\contentsline {section}{\numberline {5.7}期待と限界}{19}{section.5.7}%
+\contentsline {section}{\numberline {5.8}今後の改善}{19}{section.5.8}%
+\contentsline {chapter}{\numberline {6}まとめ}{20}{chapter.6}%
