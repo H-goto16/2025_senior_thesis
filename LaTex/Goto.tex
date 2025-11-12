@@ -26,9 +26,9 @@
 \newacro{Obj}[物体検出]{Object Detection}
 \newacro{Cla}[物体認識]{Classification}
 \newacro{Seg}[領域分割]{Semantic Segmentation}
-\newacro{Ins}[実例的領域分割]{Instance Segmetation}
+\newacro{Ins}[インスタンスセグメンテーション]{Instance Segmentation}
 \newacro{Sem}[意味的領域分割]{Semantic Segmentation}
-\newacro{Pan}[包括的領域分割]{Panoptic Segmentaion}
+\newacro{Pan}[パノプティックセグメンテーション]{Panoptic Segmentation}
 \newacro{CNN}[CNN]{畳み込みニューラルネットワーク}
 \newacro{DSConv}[Depthwise Separable Conv]{Depthwise Separable Convolution}
 \newacro{DConv}[Depthwise Conv]{Depthwise Convolution}
@@ -68,7 +68,7 @@
 \end{titlepage}
 
 \chapter*{\centering 論文要旨}
-AIが広く普及した現代において、対話型AIは一般ユーザに浸透している一方、画像認識は依然として専門知識を要し、エンジニア主体の領域に留まっている。本研究は一般ユーザを主対象とし、データ収集からアノテーション、学習、評価、利用までを一貫して支援し、個々の利用状況に特化した画像認識モデルの調整・ファインチューニングを可能にするアプリケーションを開発した。本システムにより、プログラミング経験が乏しいユーザでも少量の自前データから用途特化モデルを反復的に改善でき、画像認識活用の敷居を下げる。ケースとして料理画像検出を対象に、UI内でのデータ収集・ラベリングから学習、精度の可視化までを一連の操作で完結できることを示し、一般ユーザによるモデルカスタマイズの実用可能性を示唆する。
+AIが広く普及した現代において、対話型AIは一般ユーザに浸透している一方、画像認識は依然として専門知識を要し、エンジニア主体の領域に留まっている。本研究は一般ユーザを主対象とし、データ収集からアノテーション、学習、評価、利用までを一貫して支援し、個々の利用状況に特化した画像認識モデルの調整・ファインチューニングを可能にするアプリケーションを開発した。本システムにより、プログラミング経験が乏しいユーザでも少量の自前データから用途特化モデルを反復的に改善でき、画像認識活用の敷居を下げる。ケースとして料理画像検出を対象に、UI内でのデータ収集・ラベリングから学習、精度の可視化までを一連の操作で完結できることを示し、一般ユーザによるモデルカスタマイズの実用可能性を示した。
 \\
 
 \frontmatter
@@ -82,7 +82,7 @@ AIが広く普及した現代において、対話型AIは一般ユーザに浸�
 
 本研究では、こうしたギャップを解消し、一般ユーザが「自分の目的に合った画像認識モデル」を自力で構築・調整できる環境を提供することを目的として、エンドツーエンドのモデル管理アプリケーションを開発した。本システムは、スマートフォン／PCのいずれからでも利用可能なクロスプラットフォームUIと、高性能なWeb APIを組み合わせ、データ収集・ラベリング・学習・推論・評価・モデル運用までを一貫して支援する。具体的には、カメラやギャラリーからの画像取得、ドラッグ\&ドロップによる直感的なアノテーション、Ultralytics YOLOを用いたリアルタイム物体検出、学習の非同期実行と進捗監視、履歴の可視化、データセット分析、モデルの保存・切替といった機能を統合し、一般ユーザでも試行錯誤を通じてモデルを改善できる実用的なワークフローを実現した。
 
-運用面では、限られた計算資源でも現実的に扱えるよう、学習をバックグラウンドで非同期実行し、UIをブロックしない設計とした。さらに、再現性と保守性を高めるため、Makefileによるセットアップ・起動・テストの自動化、パッケージマネージャ（pnpm）による依存関係管理、OpenAPIによるエンドポイント定義の明示化を行っている。これにより、ユーザは最小限の初期設定で環境を整え、反復的なモデル改善に集中できる。
+運用面では、限られた計算資源でも現実的に扱えるよう、学習をバックグラウンドで非同期実行し、UIをブロックしない設計とした。さらに、再現性と保守性を高めるため、APIの仕様を明確化し、環境構築と動作手順を統一した。これにより、ユーザは最小限の初期設定で環境を整え、反復的なモデル改善に集中できる。
 
 適用領域としては、料理画像を例題に据え、器や料理種別に応じた検出のしやすさ、データの集め方、モデルの差し替えやクラス管理など、実務的な観点からの検討を行った。用途特化の小規模データから出発し、UI上でのアノテーションと学習、可視化により改善ポイントを特定しながら、ユーザ自身の目的に合わせたモデルを段階的に洗練させることが可能である。これにより、画像認識活用の敷居を下げ、一般ユーザ主導の"現場適合"モデルの創出を後押しする。
 
@@ -94,7 +94,7 @@ AIが広く普及した現代において、対話型AIは一般ユーザに浸�
     \item Web/Android/iOSでのクロスプラットフォームUIの提供
 \end{itemize}
 
-本論文では2章で背景および関連研究について述べ、3章で提案システムの設計方針と機能構成を示す。4章では語彙登録のみでの検出成立性をスマートフォンから検証し、5章では手動ラベリングとファインチューニングによる検出成立性の検証計画（結果は未掲載）を示す。6章ではまとめと今後の課題（軽量化・最適化、拡張可能性、運用上の安全性・信頼性など）について議論する。
+本論文では2章で背景および関連研究について述べ、3章で提案システムの設計方針と機能構成を示す。4章では語彙登録のみでの検出成立性をスマートフォンから検証し、5章では手動ラベリングとファインチューニングによる検出成立性の検証結果を示す。6章ではまとめと今後の課題（軽量化・最適化、拡張可能性、運用上の安全性・信頼性など）について議論する。
 \\
 %-------2章--------------------------------------------------------
 \chapter{関連研究}
@@ -137,7 +137,7 @@ Labelingタブで作成したアノテーションはYOLO形式で保存し（\t
 \subfigure[初回検出（未学習）]{\includegraphics[width=0.48\linewidth]{Image_Goto/02_0_no_detect.png}}
 
 \subfigure[クラス追加後の検出（既存クラス）]{\includegraphics[width=0.48\linewidth]{Image_Goto/02_1_detect.png}}
-\subfigure[スマートフォンクラスの追加（Models）]{\includegraphics[width=0.48\linewidth]{Image_Goto/02_2_add_c;lass.png}}
+\subfigure[スマートフォンクラスの追加（Models）]{\includegraphics[width=0.48\linewidth]{Image_Goto/02_2_add_class.png}}
 \caption{提案UIの反復ループ（1/4）：撮影→初回検出→語彙確認/追加}
 \label{fig:flow_page1}
 \end{figure}
@@ -159,14 +159,14 @@ Labelingタブで作成したアノテーションはYOLO形式で保存し（\t
 \subfigure[学習履歴・指標の確認（Analytics）]{\includegraphics[width=0.48\linewidth]{Image_Goto/05_analytics.png}}
 
 \subfigure[モデルの切替・管理]{\includegraphics[width=0.48\linewidth]{Image_Goto/06_model.png}}
-\subfigure[モデル概要の確認]{\includegraphics[width=0.48\linewidth]{Image_Goto/07_nmodel_overview.png}}
+\subfigure[モデル概要の確認]{\includegraphics[width=0.48\linewidth]{Image_Goto/07_model_overview.png}}
 \caption{提案UIの反復ループ（3/4）：語彙・履歴・モデル管理}
 \label{fig:flow_page3}
 \end{figure}
 
 \begin{figure}[p]
 \centering
-\subfigure[データセット確認]{\includegraphics[width=0.48\linewidth]{Image_Goto/08_model_dateset.png}}
+\subfigure[データセット確認]{\includegraphics[width=0.48\linewidth]{Image_Goto/08_model_dataset.png}}
 \subfigure[性能比較・推移の確認]{\includegraphics[width=0.48\linewidth]{Image_Goto/09_model_performance.png}}
 
 \subfigure[]{\includegraphics[width=0.48\linewidth]{Image_Goto/02_1_detect.png}} % 補助枠（統一のため再掲）
@@ -229,40 +229,55 @@ WITHOUT（\texttt{smartphone}なし） & 0/10  & 0\% \\
 \centering
 \subfigure[1: without]{\includegraphics[width=0.45\linewidth]{Image_Goto/ch4_smartphone_wo_01.jpg}}
 \subfigure[1: with]{\includegraphics[width=0.45\linewidth]{Image_Goto/ch4_smartphone_01.jpg}}
-
+\\[0.5em]
 \subfigure[2: without]{\includegraphics[width=0.45\linewidth]{Image_Goto/ch4_smartphone_wo_02.jpg}}
 \subfigure[2: with]{\includegraphics[width=0.45\linewidth]{Image_Goto/ch4_smartphone_02.jpg}}
-
-\subfigure[3: without]{\includegraphics[width=0.45\linewidth]{Image_Goto/ch4_smartphone_wo_03.jpg}}
-\subfigure[3: with]{\includegraphics[width=0.45\linewidth]{Image_Goto/ch4_smartphone_03.jpg}}
-
-\subfigure[4: without]{\includegraphics[width=0.45\linewidth]{Image_Goto/ch4_smartphone_wo_04.jpg}}
-\subfigure[4: with]{\includegraphics[width=0.45\linewidth]{Image_Goto/ch4_smartphone_04.jpg}}
-
-\subfigure[5: without]{\includegraphics[width=0.45\linewidth]{Image_Goto/ch4_smartphone_wo_05.jpg}}
-\subfigure[5: with]{\includegraphics[width=0.45\linewidth]{Image_Goto/ch4_smartphone_05.jpg}}
-\caption{語彙\texttt{smartphone}の有無による比較（1/2）：左=WITHOUT, 右=WITH}
+\caption{語彙\texttt{smartphone}の有無による比較（1/5）：左=WITHOUT, 右=WITH}
 \label{fig:ch4_smartphone_results_cmp_1}
 \end{figure}
 
 \begin{figure}[p]
 \centering
+\subfigure[3: without]{\includegraphics[width=0.45\linewidth]{Image_Goto/ch4_smartphone_wo_03.jpg}}
+\subfigure[3: with]{\includegraphics[width=0.45\linewidth]{Image_Goto/ch4_smartphone_03.jpg}}
+\\[0.5em]
+\subfigure[4: without]{\includegraphics[width=0.45\linewidth]{Image_Goto/ch4_smartphone_wo_04.jpg}}
+\subfigure[4: with]{\includegraphics[width=0.45\linewidth]{Image_Goto/ch4_smartphone_04.jpg}}
+\caption{語彙\texttt{smartphone}の有無による比較（2/5）：左=WITHOUT, 右=WITH}
+\label{fig:ch4_smartphone_results_cmp_2}
+\end{figure}
+
+\begin{figure}[p]
+\centering
+\subfigure[5: without]{\includegraphics[width=0.45\linewidth]{Image_Goto/ch4_smartphone_wo_05.jpg}}
+\subfigure[5: with]{\includegraphics[width=0.45\linewidth]{Image_Goto/ch4_smartphone_05.jpg}}
+\\[0.5em]
 \subfigure[6: without]{\includegraphics[width=0.45\linewidth]{Image_Goto/ch4_smartphone_wo_06.jpg}}
 \subfigure[6: with]{\includegraphics[width=0.45\linewidth]{Image_Goto/ch4_smartphone_06.jpg}}
+\caption{語彙\texttt{smartphone}の有無による比較（3/5）：左=WITHOUT, 右=WITH}
+\label{fig:ch4_smartphone_results_cmp_3}
+\end{figure}
 
+\begin{figure}[p]
+\centering
 \subfigure[7: without]{\includegraphics[width=0.45\linewidth]{Image_Goto/ch4_smartphone_wo_07.jpg}}
 \subfigure[7: with]{\includegraphics[width=0.45\linewidth]{Image_Goto/ch4_smartphone_07.jpg}}
-
+\\[0.5em]
 \subfigure[8: without]{\includegraphics[width=0.45\linewidth]{Image_Goto/ch4_smartphone_wo_08.jpg}}
 \subfigure[8: with]{\includegraphics[width=0.45\linewidth]{Image_Goto/ch4_smartphone_08.jpg}}
+\caption{語彙\texttt{smartphone}の有無による比較（4/5）：左=WITHOUT, 右=WITH}
+\label{fig:ch4_smartphone_results_cmp_4}
+\end{figure}
 
+\begin{figure}[p]
+\centering
 \subfigure[9: without]{\includegraphics[width=0.45\linewidth]{Image_Goto/ch4_smartphone_wo_09.jpg}}
 \subfigure[9: with]{\includegraphics[width=0.45\linewidth]{Image_Goto/ch4_smartphone_09.jpg}}
-
+\\[0.5em]
 \subfigure[10: without]{\includegraphics[width=0.45\linewidth]{Image_Goto/ch4_smartphone_wo_10.jpg}}
 \subfigure[10: with]{\includegraphics[width=0.45\linewidth]{Image_Goto/ch4_smartphone_10.jpg}}
-\caption{語彙\texttt{smartphone}の有無による比較（2/2）：左=WITHOUT, 右=WITH}
-\label{fig:ch4_smartphone_results_cmp_2}
+\caption{語彙\texttt{smartphone}の有無による比較（5/5）：左=WITHOUT, 右=WITH}
+\label{fig:ch4_smartphone_results_cmp_5}
 \end{figure}
 \clearpage
 
@@ -342,7 +357,7 @@ WITHOUT（\texttt{smartphone}なし） & 0/10  & 0\% \\
 学習時間は約0.453時間（約27分）であり、32枚のデータでEpoch 50を実行した前回実験と比較して、データ量の増加とEarly Stoppingにより効率的に学習が完了した。
 
 \subsection{検出結果}
-テスト画像13枚に対する検出結果を表\ref{tab:detection_results}に示す。クラス追加なしでファインチューニング済みモデルをロードした場合、モデル内部にクラス情報（\texttt{\{0: 'Chopstics', 1: 'egg', 2: 'Soup', 3: 'Rice', 4: 'mouse'\}}）が埋め込まれていることを確認した。直接モデルの\texttt{predict}メソッドを呼び出すことで、検出が成立することを確認した。
+テスト画像13枚に対する検出結果を表\ref{tab:detection_results}に示す。クラス追加なしでファインチューニング済みモデルをロードした場合、モデル内部にクラス情報（\texttt{\{0: 'Chopsticks', 1: 'egg', 2: 'Soup', 3: 'Rice', 4: 'mouse'\}}）が埋め込まれていることを確認した。直接モデルの\texttt{predict}メソッドを呼び出すことで、検出が成立することを確認した。
 
 \begin{table}[htbp]
 \centering
@@ -410,6 +425,8 @@ mouse\_13.jpg & 1 & 0.279 \\
 一方で、検出できなかった画像（4枚）も存在し、学習データと異なる撮影条件や角度、背景を持つ可能性がある。より高い検出率を達成するには、学習データの多様性をさらに向上させ、様々な撮影条件をカバーする必要がある。また、現在の実装では、\texttt{predict\_image}メソッドがクラス追加のチェックを行っているため、通常のAPI経由ではクラス追加なしでは検出できない。しかし、モデル内部にはクラス情報が含まれているため、実装を改善すればクラス追加なしでも検出可能である。
 
 今後の課題として、学習データの多様性向上、データ分割の厳密化（train/valの明確な分離）、GPU環境での高速化、半自動ラベリング支援、同義語正規化、学習履歴の可視化充実などが挙げられる。本システムにより、プログラミング経験が乏しいユーザでも少量の自前データから用途特化モデルを反復的に改善でき、画像認識活用の敷居を下げることができた。
+
+\noindent なお、本システムは単一のコードベースからiOS・Android・Web向けにビルドおよび公開が可能である。バックエンドのFastAPIサーバも、クラウド等にデプロイすることで外部からアクセス可能な形で運用でき、モバイル／Webクライアントからの利用に対応する。
 
 \begin{acknowledge}
 本研究を進めるにあたり、終始熱心なご指導を頂いた孟林教授に深く感謝いたします。また、本研究において手助けをしていただいた研究室の皆様に感謝の念が絶えません。本当にありがとうございました。

@@ -4,5 +4,5 @@
 \addvspace {10\p@ }
 \contentsline {table}{\numberline {4.1}{\ignorespaces 語彙登録の有無による\texttt {smartphone}検出成立（10枚）}}{12}{table.4.1}%
 \addvspace {10\p@ }
-\contentsline {table}{\numberline {5.1}{\ignorespaces ファインチューニング後の検出結果（テスト画像13枚、50枚学習、38エポック）}}{18}{table.5.1}%
+\contentsline {table}{\numberline {5.1}{\ignorespaces ファインチューニング後の検出結果（テスト画像13枚、50枚学習、38エポック）}}{21}{table.5.1}%
 \addvspace {10\p@ }
