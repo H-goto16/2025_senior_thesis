@@ -1,48 +1,48 @@
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {3.1}{\ignorespaces 提案UIの反復ループ（1/4）：撮影→初回検出→語彙確認/追加}}{7}{figure.3.1}%
+\contentsline {figure}{\numberline {3.1}{\ignorespaces 提案UIの反復ループ（1/4）}}{7}{figure.3.1}%
 \contentsline {subfigure}{\numberline {(a)}{\ignorespaces {撮影/選択（Detection）}}}{7}{figure.3.1}%
 \contentsline {subfigure}{\numberline {(b)}{\ignorespaces {初回検出（未学習）}}}{7}{figure.3.1}%
 \contentsline {subfigure}{\numberline {(c)}{\ignorespaces {クラス追加後の検出（既存クラス）}}}{7}{figure.3.1}%
 \contentsline {subfigure}{\numberline {(d)}{\ignorespaces {スマートフォンクラスの追加（Models）}}}{7}{figure.3.1}%
-\contentsline {figure}{\numberline {3.2}{\ignorespaces 提案UIの反復ループ（2/4）：再検出→ラベリング→学習起動}}{8}{figure.3.2}%
+\contentsline {figure}{\numberline {3.2}{\ignorespaces 提案UIの反復ループ（2/4）}}{8}{figure.3.2}%
 \contentsline {subfigure}{\numberline {(a)}{\ignorespaces {smartphoneクラスで検出成功}}}{8}{figure.3.2}%
 \contentsline {subfigure}{\numberline {(b)}{\ignorespaces {マニュアルラベリング}}}{8}{figure.3.2}%
 \contentsline {subfigure}{\numberline {(c)}{\ignorespaces {ファインチューニング開始}}}{8}{figure.3.2}%
 \contentsline {subfigure}{\numberline {(d)}{\ignorespaces {学習の起動（Training）}}}{8}{figure.3.2}%
-\contentsline {figure}{\numberline {3.3}{\ignorespaces 提案UIの反復ループ（3/4）：語彙・履歴・モデル管理}}{9}{figure.3.3}%
+\contentsline {figure}{\numberline {3.3}{\ignorespaces 提案UIの反復ループ（3/4）}}{9}{figure.3.3}%
 \contentsline {subfigure}{\numberline {(a)}{\ignorespaces {語彙・クラス一覧（Models）}}}{9}{figure.3.3}%
 \contentsline {subfigure}{\numberline {(b)}{\ignorespaces {学習履歴・指標の確認（Analytics）}}}{9}{figure.3.3}%
 \contentsline {subfigure}{\numberline {(c)}{\ignorespaces {モデルの切替・管理}}}{9}{figure.3.3}%
 \contentsline {subfigure}{\numberline {(d)}{\ignorespaces {モデル概要の確認}}}{9}{figure.3.3}%
-\contentsline {figure}{\numberline {3.4}{\ignorespaces 提案UIの反復ループ（4/4）：データ・性能の確認と再反復}}{10}{figure.3.4}%
+\contentsline {figure}{\numberline {3.4}{\ignorespaces 提案UIの反復ループ（4/4）}}{10}{figure.3.4}%
 \contentsline {subfigure}{\numberline {(a)}{\ignorespaces {データセット確認}}}{10}{figure.3.4}%
 \contentsline {subfigure}{\numberline {(b)}{\ignorespaces {性能比較・推移の確認}}}{10}{figure.3.4}%
 \contentsline {subfigure}{\numberline {(c)}{\ignorespaces {}}}{10}{figure.3.4}%
 \contentsline {subfigure}{\numberline {(d)}{\ignorespaces {}}}{10}{figure.3.4}%
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {4.1}{\ignorespaces 語彙\texttt {smartphone}の有無による比較（1/5）。(a)(c) 語彙未登録（WITHOUT）：対象周辺に矩形状パターンがあるがスコアが閾値未満で検出不成立。(b)(d) 語彙登録後（WITH）：エッジとテクスチャが語彙埋め込みと整合し検出成立。反射が強い場合はスコアの揺らぎが残るが，confidenceを0.4以上に設定すると一部の誤検出（例：キーボード）は低減した。}}{14}{figure.4.1}%
+\contentsline {figure}{\numberline {4.1}{\ignorespaces 語彙\texttt {smartphone}の有無による比較（1/5）}}{14}{figure.4.1}%
 \contentsline {subfigure}{\numberline {(a)}{\ignorespaces {1: without}}}{14}{figure.4.1}%
 \contentsline {subfigure}{\numberline {(b)}{\ignorespaces {1: with}}}{14}{figure.4.1}%
 \contentsline {subfigure}{\numberline {(c)}{\ignorespaces {2: without}}}{14}{figure.4.1}%
 \contentsline {subfigure}{\numberline {(d)}{\ignorespaces {2: with}}}{14}{figure.4.1}%
-\contentsline {figure}{\numberline {4.2}{\ignorespaces 語彙\texttt {smartphone}の有無による比較（2/5）。(a)(c) 未登録では反射・陰影により境界が曖昧で不成立。(b)(d) 登録後は一貫して成立。低照度ではスコア低下がみられ，conf=0.4で安定化。}}{15}{figure.4.2}%
+\contentsline {figure}{\numberline {4.2}{\ignorespaces 語彙\texttt {smartphone}の有無による比較（2/5）}}{15}{figure.4.2}%
 \contentsline {subfigure}{\numberline {(a)}{\ignorespaces {3: without}}}{15}{figure.4.2}%
 \contentsline {subfigure}{\numberline {(b)}{\ignorespaces {3: with}}}{15}{figure.4.2}%
 \contentsline {subfigure}{\numberline {(c)}{\ignorespaces {4: without}}}{15}{figure.4.2}%
 \contentsline {subfigure}{\numberline {(d)}{\ignorespaces {4: with}}}{15}{figure.4.2}%
-\contentsline {figure}{\numberline {4.3}{\ignorespaces 語彙\texttt {smartphone}の有無による比較（3/5）。(a)(c) スケール変化と部分遮蔽で候補が閾値未満。(b)(d) 登録後は小物体でも成立するが，極小スケールでは見逃しが残る。}}{16}{figure.4.3}%
+\contentsline {figure}{\numberline {4.3}{\ignorespaces 語彙\texttt {smartphone}の有無による比較（3/5）}}{16}{figure.4.3}%
 \contentsline {subfigure}{\numberline {(a)}{\ignorespaces {5: without}}}{16}{figure.4.3}%
 \contentsline {subfigure}{\numberline {(b)}{\ignorespaces {5: with}}}{16}{figure.4.3}%
 \contentsline {subfigure}{\numberline {(c)}{\ignorespaces {6: without}}}{16}{figure.4.3}%
 \contentsline {subfigure}{\numberline {(d)}{\ignorespaces {6: with}}}{16}{figure.4.3}%
-\contentsline {figure}{\numberline {4.4}{\ignorespaces 語彙\texttt {smartphone}の有無による比較（4/5）。(a)(c) 背景の矩形パターンが類似外観として干渉。(b)(d) 登録後は成立するが，背景依存の誤検出が散見される。}}{17}{figure.4.4}%
+\contentsline {figure}{\numberline {4.4}{\ignorespaces 語彙\texttt {smartphone}の有無による比較（4/5）}}{17}{figure.4.4}%
 \contentsline {subfigure}{\numberline {(a)}{\ignorespaces {7: without}}}{17}{figure.4.4}%
 \contentsline {subfigure}{\numberline {(b)}{\ignorespaces {7: with}}}{17}{figure.4.4}%
 \contentsline {subfigure}{\numberline {(c)}{\ignorespaces {8: without}}}{17}{figure.4.4}%
 \contentsline {subfigure}{\numberline {(d)}{\ignorespaces {8: with}}}{17}{figure.4.4}%
-\contentsline {figure}{\numberline {4.5}{\ignorespaces 語彙\texttt {smartphone}の有無による比較（5/5）。(a)(c) 視点変化が大きい場合は特徴の一致が弱く不成立。(b)(d) 登録後は視点変化に一定の頑健性を示す。}}{18}{figure.4.5}%
+\contentsline {figure}{\numberline {4.5}{\ignorespaces 語彙\texttt {smartphone}の有無による比較（5/5）}}{18}{figure.4.5}%
 \contentsline {subfigure}{\numberline {(a)}{\ignorespaces {9: without}}}{18}{figure.4.5}%
 \contentsline {subfigure}{\numberline {(b)}{\ignorespaces {9: with}}}{18}{figure.4.5}%
 \contentsline {subfigure}{\numberline {(c)}{\ignorespaces {10: without}}}{18}{figure.4.5}%

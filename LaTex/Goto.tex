@@ -190,7 +190,7 @@ Labelingタブで作成したアノテーションはYOLO形式で保存し（\t
 
 \subfigure[クラス追加後の検出（既存クラス）]{\includegraphics[width=0.48\linewidth]{Image_Goto/02_1_detect.png}}
 \subfigure[スマートフォンクラスの追加（Models）]{\includegraphics[width=0.48\linewidth]{Image_Goto/02_2_add_class.png}}
-\caption{提案UIの反復ループ（1/4）：撮影→初回検出→語彙確認/追加}
+\caption[提案UIの反復ループ（1/4）]{提案UIの反復ループ（1/4）：撮影→初回検出→語彙確認/追加}
 \label{fig:flow_page1}
 \end{figure}
 
@@ -202,7 +202,7 @@ Labelingタブで作成したアノテーションはYOLO形式で保存し（\t
 
 \subfigure[ファインチューニング開始]{\includegraphics[width=0.48\linewidth]{Image_Goto/02_5_fine_tuning.png}}
 \subfigure[学習の起動（Training）]{\includegraphics[width=0.48\linewidth]{Image_Goto/03_fine-tuning.png}}
-\caption{提案UIの反復ループ（2/4）：再検出→ラベリング→学習起動}
+\caption[提案UIの反復ループ（2/4）]{提案UIの反復ループ（2/4）：再検出→ラベリング→学習起動}
 \label{fig:flow_page2}
 \end{figure}
 
@@ -214,7 +214,7 @@ Labelingタブで作成したアノテーションはYOLO形式で保存し（\t
 
 \subfigure[モデルの切替・管理]{\includegraphics[width=0.48\linewidth]{Image_Goto/06_model.png}}
 \subfigure[モデル概要の確認]{\includegraphics[width=0.48\linewidth]{Image_Goto/07_model_overview.png}}
-\caption{提案UIの反復ループ（3/4）：語彙・履歴・モデル管理}
+\caption[提案UIの反復ループ（3/4）]{提案UIの反復ループ（3/4）：語彙・履歴・モデル管理}
 \label{fig:flow_page3}
 \end{figure}
 
@@ -226,7 +226,7 @@ Labelingタブで作成したアノテーションはYOLO形式で保存し（\t
 
 \subfigure[]{\includegraphics[width=0.48\linewidth]{Image_Goto/02_1_detect.png}} % 補助枠（統一のため再掲）
 \subfigure[]{\includegraphics[width=0.48\linewidth]{Image_Goto/02_4_manual.png}} % 補助枠（統一のため再掲）
-\caption{提案UIの反復ループ（4/4）：データ・性能の確認と再反復}
+\caption[提案UIの反復ループ（4/4）]{提案UIの反復ループ（4/4）：データ・性能の確認と再反復}
 \label{fig:flow_page4}
 \end{figure}
 \clearpage
@@ -305,7 +305,7 @@ WITHOUT（\texttt{smartphone}なし） & 0/10  & 0\% \\
 \\[0.5em]
 \subfigure[2: without]{\includegraphics[width=0.45\linewidth]{Image_Goto/ch4_smartphone_wo_02.jpg}}
 \subfigure[2: with]{\includegraphics[width=0.45\linewidth]{Image_Goto/ch4_smartphone_02.jpg}}
-\caption{語彙\texttt{smartphone}の有無による比較（1/5）。
+\caption[語彙\texttt{smartphone}の有無による比較（1/5）]{語彙\texttt{smartphone}の有無による比較（1/5）。
 (a)(c) 語彙未登録（WITHOUT）：対象周辺に矩形状パターンがあるがスコアが閾値未満で検出不成立。
 (b)(d) 語彙登録後（WITH）：エッジとテクスチャが語彙埋め込みと整合し検出成立。
 反射が強い場合はスコアの揺らぎが残るが，confidenceを0.4以上に設定すると一部の誤検出（例：キーボード）は低減した。}
@@ -321,7 +321,7 @@ WITHOUT（\texttt{smartphone}なし） & 0/10  & 0\% \\
 \\[0.5em]
 \subfigure[4: without]{\includegraphics[width=0.45\linewidth]{Image_Goto/ch4_smartphone_wo_04.jpg}}
 \subfigure[4: with]{\includegraphics[width=0.45\linewidth]{Image_Goto/ch4_smartphone_04.jpg}}
-\caption{語彙\texttt{smartphone}の有無による比較（2/5）。(a)(c) 未登録では反射・陰影により境界が曖昧で不成立。(b)(d) 登録後は一貫して成立。低照度ではスコア低下がみられ，conf=0.4で安定化。}
+\caption[語彙\texttt{smartphone}の有無による比較（2/5）]{語彙\texttt{smartphone}の有無による比較（2/5）。(a)(c) 未登録では反射・陰影により境界が曖昧で不成立。(b)(d) 登録後は一貫して成立。低照度ではスコア低下がみられ，conf=0.4で安定化。}
 \label{fig:ch4_smartphone_results_cmp_2}
 \end{figure}
 \noindent 図\ref{fig:ch4_smartphone_results_cmp_2}では，反射・低照度が主因で未登録時は不成立。登録後は成立し，conf上げで安定化が確認できる。
@@ -333,7 +333,7 @@ WITHOUT（\texttt{smartphone}なし） & 0/10  & 0\% \\
 \\[0.5em]
 \subfigure[6: without]{\includegraphics[width=0.45\linewidth]{Image_Goto/ch4_smartphone_wo_06.jpg}}
 \subfigure[6: with]{\includegraphics[width=0.45\linewidth]{Image_Goto/ch4_smartphone_06.jpg}}
-\caption{語彙\texttt{smartphone}の有無による比較（3/5）。(a)(c) スケール変化と部分遮蔽で候補が閾値未満。(b)(d) 登録後は小物体でも成立するが，極小スケールでは見逃しが残る。}
+\caption[語彙\texttt{smartphone}の有無による比較（3/5）]{語彙\texttt{smartphone}の有無による比較（3/5）。(a)(c) スケール変化と部分遮蔽で候補が閾値未満。(b)(d) 登録後は小物体でも成立するが，極小スケールでは見逃しが残る。}
 \label{fig:ch4_smartphone_results_cmp_3}
 \end{figure}
 \noindent 図\ref{fig:ch4_smartphone_results_cmp_3}では，小スケールと遮蔽が難例。登録後も極小対象は検出信頼度が低く追加データが有効。
@@ -345,7 +345,7 @@ WITHOUT（\texttt{smartphone}なし） & 0/10  & 0\% \\
 \\[0.5em]
 \subfigure[8: without]{\includegraphics[width=0.45\linewidth]{Image_Goto/ch4_smartphone_wo_08.jpg}}
 \subfigure[8: with]{\includegraphics[width=0.45\linewidth]{Image_Goto/ch4_smartphone_08.jpg}}
-\caption{語彙\texttt{smartphone}の有無による比較（4/5）。(a)(c) 背景の矩形パターンが類似外観として干渉。(b)(d) 登録後は成立するが，背景依存の誤検出が散見される。}
+\caption[語彙\texttt{smartphone}の有無による比較（4/5）]{語彙\texttt{smartphone}の有無による比較（4/5）。(a)(c) 背景の矩形パターンが類似外観として干渉。(b)(d) 登録後は成立するが，背景依存の誤検出が散見される。}
 \label{fig:ch4_smartphone_results_cmp_4}
 \end{figure}
 \noindent 図\ref{fig:ch4_smartphone_results_cmp_4}では，背景の矩形パターンが誤検出の温床。語彙の絞り込みとconf調整で低減可能。
@@ -357,7 +357,7 @@ WITHOUT（\texttt{smartphone}なし） & 0/10  & 0\% \\
 \\[0.5em]
 \subfigure[10: without]{\includegraphics[width=0.45\linewidth]{Image_Goto/ch4_smartphone_wo_10.jpg}}
 \subfigure[10: with]{\includegraphics[width=0.45\linewidth]{Image_Goto/ch4_smartphone_10.jpg}}
-\caption{語彙\texttt{smartphone}の有無による比較（5/5）。(a)(c) 視点変化が大きい場合は特徴の一致が弱く不成立。(b)(d) 登録後は視点変化に一定の頑健性を示す。}
+\caption[語彙\texttt{smartphone}の有無による比較（5/5）]{語彙\texttt{smartphone}の有無による比較（5/5）。(a)(c) 視点変化が大きい場合は特徴の一致が弱く不成立。(b)(d) 登録後は視点変化に一定の頑健性を示す。}
 \label{fig:ch4_smartphone_results_cmp_5}
 \end{figure}
 \noindent 図\ref{fig:ch4_smartphone_results_cmp_5}では，視点変化が大きい画像で信頼度が揺らぐ。データ多様化（角度・距離）で改善余地。
@@ -522,6 +522,7 @@ mouse\_13.jpg & 1 & 0.279 \\
 
 今後の課題として、学習データの多様性向上、データ分割の厳密化（train/valの明確な分離）、GPU環境での高速化、半自動ラベリング支援、同義語正規化、学習履歴の可視化充実などが挙げられる。本システムにより、プログラミング経験が乏しいユーザでも少量の自前データから用途特化モデルを反復的に改善でき、画像認識活用の敷居を下げることができた。
 
+\noindent なお、本実験は小規模プロトタイプであり，テスト画像は13枚に限られている。実運用を見据えた評価には，より大規模なデータセットと厳密な検証が必要である。
 \noindent なお、本システムは単一のコードベースからiOS・Android・Web向けにビルドおよび公開が可能である。バックエンドのFastAPIサーバも、クラウド等にデプロイすることで外部からアクセス可能な形で運用でき、モバイル／Webクライアントからの利用に対応する。
 
 \appendix
@@ -529,6 +530,8 @@ mouse\_13.jpg & 1 & 0.279 \\
 \begin{itemize}
   \item 端末: Xiaomi 13T Pro (Android)\
   \item 備考: 実験の主要なゼロショット検証・推論を当端末で実施\
+  \item 学習用PC: CPU: AMD Ryzen 5 4500 (6-Core), メモリ: 16 GB, OS: Linux (kernel 6.8.0-87-generic), GPU: なし（CPU学習）\
+  \item 再現条件: 50枚, Epoch 100（Early Stopping: patience=10）, 38エポック, 学習時間 約27分\
 \end{itemize}
 
 \begin{acknowledge}
@@ -538,7 +541,7 @@ mouse\_13.jpg & 1 & 0.279 \\
 % 参考文献（内包）
 \begin{thebibliography}{9}
 \bibitem{yoloworld}
-Tianheng Cheng, Lin Song, Yixiao Ge, Wenyu Liu, Xinggang Wang, Ying Shan,
+Cheng, T., Song, L., Ge, Y., Liu, W., Wang, X., Shan, Y.,
 ``YOLO-World: Real-Time Open-Vocabulary Object Detection,''
 In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR), 2024. arXiv:2401.17270 (v2).
 \url{https://arxiv.org/abs/2401.17270}
@@ -591,7 +594,7 @@ arXiv:2107.13375, 2021. \url{https://arxiv.org/abs/2107.13375}
 \bibitem{im2calories}
 Meyers, A., et al.,
 ``Im2Calories: Toward an Automated System for Calorie Estimation Using Food Images,''
-CVPR, 2015.
+CVPR, 2015. \url{https://openaccess.thecvf.com/content_cvpr_2015/html/Meyers_Im2Calories_Toward_an_2015_CVPR_paper.html}
 
 \bibitem{nutrition5k}
 Chen, M., et al.,
