@@ -1,8 +1,11 @@
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }
+\contentsline {table}{\numberline {3.1}{\ignorespaces 主要APIエンドポイントの主用途}}{6}{table.3.1}%
 \addvspace {10\p@ }
-\contentsline {table}{\numberline {4.1}{\ignorespaces 語彙登録の有無による\texttt {smartphone}検出成立（10枚）}}{12}{table.4.1}%
+\contentsline {table}{\numberline {4.1}{\ignorespaces ゼロショット検証の評価設定}}{12}{table.4.1}%
+\contentsline {table}{\numberline {4.2}{\ignorespaces 語彙登録の有無による\texttt {smartphone}検出成立（10枚）}}{13}{table.4.2}%
+\contentsline {table}{\numberline {4.3}{\ignorespaces confidence閾値の影響（観察ベース）}}{19}{table.4.3}%
 \addvspace {10\p@ }
-\contentsline {table}{\numberline {5.1}{\ignorespaces ファインチューニング後の検出結果（テスト画像13枚、50枚学習、38エポック）}}{21}{table.5.1}%
+\contentsline {table}{\numberline {5.1}{\ignorespaces ファインチューニング後の検出結果（テスト画像13枚、50枚学習、38エポック）}}{22}{table.5.1}%
 \addvspace {10\p@ }

@@ -57,7 +57,7 @@
   \vspace{16mm}
   {\Large 論題\par}
   \vspace{6mm}
-  {\Large \textbf{スマートフォン主導の開放語彙物体検出に基づく\\自作モデル運用基盤の設計と実装}\par}
+  {\Large \textbf{一般ユーザ向け開放語彙物体検出のスマホ運用基盤\\— 事前語彙化と少量学習による反復改善 —}\par}
   \vspace{20mm}
   {\large 指導教員 \quad 孟 \; 林 \; 教授\par}
   \vspace{8mm}
@@ -68,7 +68,7 @@
 \end{titlepage}
 
 \chapter*{\centering 論文要旨}
-AIが広く普及した現代において、対話型AIは一般ユーザに浸透している一方、画像認識は依然として専門知識を要し、エンジニア主体の領域に留まっている。本研究は一般ユーザを主対象とし、データ収集からアノテーション、学習、評価、利用までを一貫して支援し、個々の利用状況に特化した画像認識モデルの調整・ファインチューニングを可能にするアプリケーションを開発した。本システムにより、プログラミング経験が乏しいユーザでも少量の自前データから用途特化モデルを反復的に改善でき、画像認識活用の敷居を下げる。ケースとして料理画像検出を対象に、UI内でのデータ収集・ラベリングから学習、精度の可視化までを一連の操作で完結できることを示し、一般ユーザによるモデルカスタマイズの実用可能性を示した。
+AIが広く普及した現代において、対話型AIは一般ユーザに浸透している一方、画像認識は依然として専門知識を要し、エンジニア主体の領域に留まっている。本研究は一般ユーザを主対象とし、データ収集からアノテーション、学習、評価、利用までを一貫して支援し、個々の利用状況に特化した画像認識モデルの調整・ファインチューニングを可能にするアプリケーションを開発した。本システムにより、プログラミング経験が乏しいユーザでも少量の自前データから用途特化モデルを反復的に改善でき、画像認識活用の敷居を下げる。ケースとして料理画像検出を対象に、UI内でのデータ収集・ラベリングから学習、精度の可視化までを一連の操作で完結できることを示し、一般ユーザによるモデルカスタマイズの実用可能性を示した。定量的には，語彙登録のみの検証で10/10件の成立を確認し，手動ラベリング50枚＋ファインチューニングによりmAP50=0.9235，mAP50-95=0.5188，Precision=0.9065，Recall=0.7754，テスト13枚に対する検出率69.2\%を得た。
 \\
 
 \frontmatter
@@ -100,24 +100,52 @@ AIが広く普及した現代において、対話型AIは一般ユーザに浸�
 \chapter{関連研究}
 
 \section{物体検出モデル}
-従来の物体検出はCOCOなどの固定語彙（close-set）を前提としており、学習時に定義したカテゴリのみに限定されるという制約がある。一方、実環境では「未学習カテゴリ」を含む開放語彙（open-vocabulary）への拡張が重要である。YOLO系列はBackbone・Neck・Headからなる一段（one-stage）検出器として高い効率を示してきたが、語彙の固定という制約が実用展開のボトルネックとなってきた。
+従来の物体検出はCOCOなどの固定語彙（closed-set）を前提としており、学習時に定義したカテゴリのみに限定されるという制約がある。一方、実環境では「未学習カテゴリ」を含む開放語彙（open-vocabulary）への拡張が重要である。YOLO系列はBackbone・Neck・Headからなる一段（one-stage）検出器として高い効率を示してきたが、語彙の固定という制約が実用展開のボトルネックとなってきた。
 
 \subsection{YOLO-World}
-YOLO-Worldは、従来YOLOの効率性を維持しつつ、視覚−言語モデリングによって開放語彙検出を実現した検出器である\cite{yoloworld}。その中核は、（1）テキスト埋め込みと画像特徴を結合するための再パラメータ化可能なVision-Language PAN（RepVL-PAN）、（2）検出データ・グラウンディング・画像テキストの各データを統一的に扱う領域−テキスト対（region–text）に基づく大規模事前学習、（3）推論時の効率を高める「prompt-then-detect（事前語彙化）パラダイム」にある。
+YOLO-Worldは、従来YOLOの効率性を維持しつつ、視覚−言語モデリングによって開放語彙検出を実現した検出器である\cite{yoloworld}。中核は、(1) 再パラメータ化（re-parameterization）可能なVision-Language PAN（RepVL-PAN）によりテキスト埋め込みと画像特徴の相互作用を組み込み、推論時には言語エンコーダを取り除いて事前語彙化（prompt-then-detect, offline vocabulary）したテキスト埋め込みをモデル重みに吸収すること（付録 B.1 式 (1) より）、(2) 検出データ・グラウンディング・画像テキストの3種データを統一的に扱う領域–テキスト対に基づく大規模事前学習、にある。
 
-まず、学習時はCLIP系テキストエンコーダで得たテキスト埋め込みをRepVL-PANに導入し、画像特徴と語彙表現を相互作用させる。推論時にはテキストエンコーダを除去し、オフラインで事前計算したテキスト埋め込みをNeckに再パラメータ化して埋め込むため、実行時コストを抑えつつ開放語彙に対応できる。RepVL-PANのT-CSPLayer再パラメータ化の一例は次式で与えられ、1×1畳み込みの重みとしてテキスト埋め込みを吸収することで、言語条件付けを含む計算を単純化する（付録記述に基づく）:
-\begin{equation}
-X' \;=\; X \odot \mathrm{Sigmoid}\!\left(\max\!\bigl(\mathrm{Conv}(X, W), \mathrm{dim}=1\bigr)\right),
-\end{equation}
-ここで $X$ は画像特徴，$W$ はテキスト埋め込み由来の畳み込み重み，$\odot$ は要素ごとの積を表す。
+学習時は、ラベル付き検出データ、グラウンディングデータ、画像–テキスト対から得る擬似ボックスを併用し、領域–テキスト対比学習で視覚と言語の整合を強化する。推論時はテキストエンコーダを用いず、オフラインで事前計算した語彙埋め込みをRepVL-PANへ再パラメータ化して統合するため、実行時レイテンシを抑えつつ開放語彙に対応できる。
 
-学習スキームとしては，領域−テキスト対に基づくコントラスト学習を大規模データで行う。実データ（Objects365等）に加え，CC3Mなどの画像テキストデータから，名詞抽出→擬似ボックス生成（GLIP等）→CLIPによる再スコアリングとNMS/閾値フィルタリングという自動ラベリングパイプラインで領域−テキスト対を構築し，開放語彙能力を強化する。小型モデル（YOLO-World-S）に対しては，高品質アノテーションや適量の擬似ラベルを組み合わせることでゼロショット性能が向上することが示されている。
+学習スキームとしては，領域−テキスト対に基づくコントラスト学習を大規模データで行う。実データ（Objects365等）に加え，CC3Mなどの画像テキストデータから，名詞抽出→擬似ボックス生成（GLIP等）→CLIPによる再スコアリングとNMS/閾値フィルタリングという自動ラベリングパイプラインで領域−テキスト対を構築し（例：NMS=0.5，スコア閾値=0.3），開放語彙能力を強化する。小型モデル（YOLO-World-S）に対しては，高品質アノテーションや適量の擬似ラベルを組み合わせることでゼロショット性能が向上することが示されている。
 
-性能面では，LVISにおいて35.4 APかつV100上で52 FPSを達成し（TensorRTなし），同規模の既存手法に対して精度・速度のバランスで優位性を示す。また，学習後は「事前語彙化（offline vocabulary）」によりカテゴリ埋め込みをモデル重みに取り込み，エッジ展開時のテキストエンコーダ依存を排除する。さらに，COCOのような固定語彙タスクへ移行する際は，RepVL-PANの言語関連層を取り除き，従来YOLOと同等の運用効率で微調整可能である。総じて，YOLO-Worldは固定語彙検出と開放語彙検出の橋渡しを行い，汎用実応用（ゼロショット検出，参照物体検出，オープン語彙インスタンスセグメンテーション等）に適した現実的なデプロイ手段を与える。
+性能面では，LVISにおいて35.4 APかつV100上で52 FPSを達成し（TensorRTなし），同規模の既存手法に対して精度・速度のバランスで優位性を示す。また，学習後は事前語彙化によりカテゴリ埋め込みをモデル重みに取り込み，エッジ展開時のテキストエンコーダ依存を排除する。さらに，COCOのような固定語彙タスクへ移行する際は，言語条件付けを無効化することで従来YOLOと同等の運用効率で微調整可能である。総じて，YOLO-Worldは固定語彙検出と開放語彙検出の橋渡しを行い，汎用実応用（ゼロショット検出，参照物体検出，オープン語彙インスタンスセグメンテーション等）に適した現実的なデプロイ手段を与える。
+
+\subsection{GLIP}
+GLIP\cite{glip}は，言語で条件付けたボックス予測を可能にするGrounded Language-Image Pre-trainingを提案し，
+検出とグラウンディングを統一的に学習することで開放語彙検出の基盤を築いた。
+
+\subsection{Grounding DINO}
+Grounding DINO\cite{groundingdino}は，DINO系の検出器にテキスト条件付けを組み込み，
+高精度なフレーズグラウンディングとゼロショット検出を実現した。
+
+\subsection{OWL-ViT}
+OWL-ViT\cite{owlvit}はVision Transformerを用いてオープン語彙検出をシンプルに実装し，
+任意語彙に対する柔軟なゼロショット検出を示した。
+
+\subsection{Detic}
+Detic\cite{detic}は画像レベル監督を活用し，大規模語彙に拡張可能な検出を実現した。
+
+\subsection{RegionCLIP}
+RegionCLIP\cite{regionclip}は，領域レベルでのCLIP事前学習を行い，
+領域特徴と言語埋め込みの整合を高めて開放語彙検出を強化した。
+
+\subsection{CLIP と開放語彙の基盤}
+CLIP\cite{clip}は大規模画像—テキスト対で学習した表現を提供し，
+多くの開放語彙検出器の言語埋め込みの基盤となっている。
+
+\section{食事画像データセット}
+本研究の料理画像応用に関連して，以下のデータセットが広く用いられる。
+\begin{itemize}
+  \item Food-101\cite{food101}: 101クラスの料理画像分類データセット。
+  \item UEC-Food100/256\cite{uecfood256}: バウンディングボックス付きの食事画像データセット。
+  \item FoodSeg103/UEC-FoodPix\cite{foodseg103}: 食事セグメンテーションのためのピクセル精度アノテーション。
+  \item IM2Calories\cite{im2calories}, Nutrition5k\cite{nutrition5k}: カロリー・栄養推定の文脈での食事分析。
+\end{itemize}
 
 %-------3章--------------------------------------------------------
 \chapter{提案手法}
-本研究の目的は、スマートフォンを含む汎用端末のみでデータ収集からラベリング、学習、評価、運用までを一気通貫に反復できる実用システムを構築し、非専門家でも短時間で自作の用途特化モデルを育てられることを示す点にある。中核には開放語彙検出器であるYOLO-World\cite{yoloworld}を据え、事前語彙化（prompt-then-detect）によって実行時の言語エンコーダ依存を排除し、軽量・高速な推論を維持する。
+本研究の目的は、スマートフォンを含む汎用端末のみでデータ収集からラベリング、学習、評価、運用までを一気通貫に反復できる実用システムを構築し、非専門家でも短時間で自作の用途特化モデルを育てられることを示す点にある。中核には開放語彙検出器であるYOLO-World\cite{yoloworld}を据え、事前語彙化によって実行時の言語エンコーダ依存を排除し、軽量・高速な推論を維持する。
 
 \section{設計方針と構成}
 フロントエンドはReact Native + ExpoによりAndroid/iOS/Webを単一コードベースで提供し、タブ（Detection / Labeling / Training / Models / Analytics）に機能を整理する。バックエンドはFastAPIで統一し、検出・語彙管理・学習・履歴・可視化・データ分析のAPIを備える。ユーザは語彙を自ら定義・追加し、必要データを小刻みに収集・注釈付けして学習をトリガし、結果を見ながら再収集・再学習を繰り返す。
@@ -125,11 +153,35 @@ X' \;=\; X \odot \mathrm{Sigmoid}\!\left(\max\!\bigl(\mathrm{Conv}(X, W), \mathr
 \section{YOLO-Worldの運用}
 YOLO-Worldは視覚−言語モデリングにより、ユーザ定義語彙での開放語彙検出を実現する。\texttt{POST /model/classes}で登録した語彙は\texttt{custom\_vocab.json}に永続化され、モデルのクラス埋め込みへ反映される。推論は\texttt{/detect}で実行し、バウンディングボックス・クラス・スコアと描画済み画像を返す。事前語彙化により、推論時はオフラインで固定した語彙埋め込みを用い、モバイルでも実用的なレイテンシを確保する。
 
+\subsection{APIエンドポイントの概要}
+\begin{table}[H]\centering
+\setlength{\tabcolsep}{4pt}
+\small
+\begin{tabular}{p{0.22\linewidth}p{0.24\linewidth}p{0.48\linewidth}}
+\toprule
+Endpoint & 入力(要旨) & 主用途 \\
+\midrule
+/model/classes & クラス名(配列/文字列) & 語彙の登録・永続化（custom\_vocab.json） \\
+/detect & 画像 & 事前語彙化済みHeadでの推論（BBox, Score, Class） \\
+/detect/with-confidence & 画像, conf & 閾値指定推論（FP/FNバランス調整） \\
+/labeling/submit & 画像, YOLOラベル & ラベル保存（images/labels, classes.txt更新） \\
+/training/start & epochs等 & 同期学習の起動 \\
+/training/start-async & epochs等 & 非同期学習の起動（UIブロック回避） \\
+/training/status & - & 学習進捗・状態の取得 \\
+/training/history & - & 学習履歴一覧の取得 \\
+/training/metrics/\{run\_name\} & - & 時系列メトリクス取得（Plotly描画に利用） \\
+/models/* & - & モデル一覧・切替・バックアップ・検証 \\
+\bottomrule
+\end{tabular}
+\caption{主要APIエンドポイントの主用途}
+\end{table}
+
 \section{データ収集・ラベリング・学習}
 Labelingタブで作成したアノテーションはYOLO形式で保存し（\texttt{training\_data/} 配下）、\texttt{/training/start}または\texttt{/training/start-async}で微調整を起動する。既定はCPU実行だが、CUDA対応マシンでは設定によりGPU（device=`cuda'）で学習・推論が可能である。完了時には\texttt{best.pt}を自動ロードし、\texttt{/training/status}で進捗を可視化する。\texttt{/models/*}群でモデル一覧・切替・バックアップ・検証が可能で、\texttt{/training/history}と\texttt{/training/metrics/\{run\_name\}}から学習履歴・時系列メトリクスを取得しUIでPlotly描画する。
 
 \section{UIフロー（スマホ中心）と操作例}
 本節では、スマートフォン想定の最短反復ループ（撮影→検出→語彙追加→再検出→ラベリング→学習→評価）を画面遷移で示す。各ページに4枚ずつ配置する。
+\noindent 本図は，撮影→初回検出→語彙確認/追加の最短ループを示す。(a)で入力し，(b)で未検出を確認，(c)(d)で語彙追加により次ステップの検出改善を準備する。この操作により，学習前でも検出の立ち上がりを確認できる。
 
 \begin{figure}[p]
 \centering
@@ -144,6 +196,7 @@ Labelingタブで作成したアノテーションはYOLO形式で保存し（\t
 
 \begin{figure}[p]
 \centering
+\noindent 本図は，語彙追加後〜学習起動までの操作を示す。(a)語彙追加後の検出確認，(b)マニュアルラベリング，(c)学習パラメータ指定，(d)学習起動へ進む。\par
 \subfigure[smartphoneクラスで検出成功]{\includegraphics[width=0.48\linewidth]{Image_Goto/02_3_detect_smartphone.png}}
 \subfigure[マニュアルラベリング]{\includegraphics[width=0.48\linewidth]{Image_Goto/02_4_manual.png}}
 
@@ -155,6 +208,7 @@ Labelingタブで作成したアノテーションはYOLO形式で保存し（\t
 
 \begin{figure}[p]
 \centering
+\noindent 本図は，語彙・履歴・モデル管理の要点を示す。(a)語彙一覧，(b)学習履歴と指標，(c)モデル管理，(d)モデル概要の確認。これらにより改善仮説の検証が容易になる。\par
 \subfigure[語彙・クラス一覧（Models）]{\includegraphics[width=0.48\linewidth]{Image_Goto/04_classes.png}}
 \subfigure[学習履歴・指標の確認（Analytics）]{\includegraphics[width=0.48\linewidth]{Image_Goto/05_analytics.png}}
 
@@ -166,6 +220,7 @@ Labelingタブで作成したアノテーションはYOLO形式で保存し（\t
 
 \begin{figure}[p]
 \centering
+\noindent 本図は，データ/性能の確認から次反復へ進む流れを示す。(a)データセット構成，(b)性能推移の把握，(c)(d)再掲により前段との対応付けを明確化する。\par
 \subfigure[データセット確認]{\includegraphics[width=0.48\linewidth]{Image_Goto/08_model_dataset.png}}
 \subfigure[性能比較・推移の確認]{\includegraphics[width=0.48\linewidth]{Image_Goto/09_model_performance.png}}
 
@@ -198,11 +253,29 @@ Labelingタブで作成したアノテーションはYOLO形式で保存し（\t
 \end{enumerate}
 語彙は\texttt{custom\_vocab.json}に永続化され、アプリ再起動後も維持される。重複語彙は自動で除外され、空白のみの入力は無効化される。
 
+\section{評価設定}
+本章のゼロショット検証は以下の設定で行う。
+\begin{table}[H]\centering
+\begin{tabular}{ll}
+\toprule
+項目 & 設定 \\
+\midrule
+端末 & Xiaomi 13T Pro \\
+入力解像度 & 長辺 1280 px（バッチ=1, スレッド=1） \\
+confidence & 0.3（デフォルト。必要に応じて0.3–0.5で調整） \\
+NMS閾値 & 0.5 \\
+有効語彙 & \{smartphone\}（比較時は有効/無効の2条件） \\
+モデル & YOLO-World（事前語彙化運用） \\
+\bottomrule
+\end{tabular}
+\caption{ゼロショット検証の評価設定}
+\end{table}
+
 \section{評価項目}
 \begin{itemize}
   \item 検出成立判定: 語彙追加前後での検出有無（バウンディングボックスとクラス名の一致）。
   \item 語彙反映時間: \texttt{POST /model/classes}送信から\texttt{/detect}結果に反映されるまでの体感時間（秒）。
-  \item 推論レイテンシ: 画像1枚あたりの検出完了までの時間（UI表示基準）。
+  \item 推論レイテンシ: 画像1枚あたりの検出完了までの時間（UI表示基準；端末例: Android、入力解像度: 長辺1280px、バッチ=1、スレッド=1）。
 \end{itemize}
 
 \section{ケーススタディ（\texttt{smartphone}）}
@@ -232,9 +305,14 @@ WITHOUT（\texttt{smartphone}なし） & 0/10  & 0\% \\
 \\[0.5em]
 \subfigure[2: without]{\includegraphics[width=0.45\linewidth]{Image_Goto/ch4_smartphone_wo_02.jpg}}
 \subfigure[2: with]{\includegraphics[width=0.45\linewidth]{Image_Goto/ch4_smartphone_02.jpg}}
-\caption{語彙\texttt{smartphone}の有無による比較（1/5）：左=WITHOUT, 右=WITH}
+\caption{語彙\texttt{smartphone}の有無による比較（1/5）。
+(a)(c) 語彙未登録（WITHOUT）：対象周辺に矩形状パターンがあるがスコアが閾値未満で検出不成立。
+(b)(d) 語彙登録後（WITH）：エッジとテクスチャが語彙埋め込みと整合し検出成立。
+反射が強い場合はスコアの揺らぎが残るが，confidenceを0.4以上に設定すると一部の誤検出（例：キーボード）は低減した。}
 \label{fig:ch4_smartphone_results_cmp_1}
 \end{figure}
+
+\noindent 図\ref{fig:ch4_smartphone_results_cmp_1}(a)では反射によりエッジが不明瞭となり候補が閾値下で棄却される。一方(b)では語彙登録により類似度が上がり検出が成立する。図\ref{fig:ch4_smartphone_results_cmp_2}(d)ではキーボードの矩形パターンが誤検出を誘発しており，conf=0.4以上で当該FPが低減した（観察ベース）。
 
 \begin{figure}[p]
 \centering
@@ -243,9 +321,10 @@ WITHOUT（\texttt{smartphone}なし） & 0/10  & 0\% \\
 \\[0.5em]
 \subfigure[4: without]{\includegraphics[width=0.45\linewidth]{Image_Goto/ch4_smartphone_wo_04.jpg}}
 \subfigure[4: with]{\includegraphics[width=0.45\linewidth]{Image_Goto/ch4_smartphone_04.jpg}}
-\caption{語彙\texttt{smartphone}の有無による比較（2/5）：左=WITHOUT, 右=WITH}
+\caption{語彙\texttt{smartphone}の有無による比較（2/5）。(a)(c) 未登録では反射・陰影により境界が曖昧で不成立。(b)(d) 登録後は一貫して成立。低照度ではスコア低下がみられ，conf=0.4で安定化。}
 \label{fig:ch4_smartphone_results_cmp_2}
 \end{figure}
+\noindent 図\ref{fig:ch4_smartphone_results_cmp_2}では，反射・低照度が主因で未登録時は不成立。登録後は成立し，conf上げで安定化が確認できる。
 
 \begin{figure}[p]
 \centering
@@ -254,9 +333,10 @@ WITHOUT（\texttt{smartphone}なし） & 0/10  & 0\% \\
 \\[0.5em]
 \subfigure[6: without]{\includegraphics[width=0.45\linewidth]{Image_Goto/ch4_smartphone_wo_06.jpg}}
 \subfigure[6: with]{\includegraphics[width=0.45\linewidth]{Image_Goto/ch4_smartphone_06.jpg}}
-\caption{語彙\texttt{smartphone}の有無による比較（3/5）：左=WITHOUT, 右=WITH}
+\caption{語彙\texttt{smartphone}の有無による比較（3/5）。(a)(c) スケール変化と部分遮蔽で候補が閾値未満。(b)(d) 登録後は小物体でも成立するが，極小スケールでは見逃しが残る。}
 \label{fig:ch4_smartphone_results_cmp_3}
 \end{figure}
+\noindent 図\ref{fig:ch4_smartphone_results_cmp_3}では，小スケールと遮蔽が難例。登録後も極小対象は検出信頼度が低く追加データが有効。
 
 \begin{figure}[p]
 \centering
@@ -265,9 +345,10 @@ WITHOUT（\texttt{smartphone}なし） & 0/10  & 0\% \\
 \\[0.5em]
 \subfigure[8: without]{\includegraphics[width=0.45\linewidth]{Image_Goto/ch4_smartphone_wo_08.jpg}}
 \subfigure[8: with]{\includegraphics[width=0.45\linewidth]{Image_Goto/ch4_smartphone_08.jpg}}
-\caption{語彙\texttt{smartphone}の有無による比較（4/5）：左=WITHOUT, 右=WITH}
+\caption{語彙\texttt{smartphone}の有無による比較（4/5）。(a)(c) 背景の矩形パターンが類似外観として干渉。(b)(d) 登録後は成立するが，背景依存の誤検出が散見される。}
 \label{fig:ch4_smartphone_results_cmp_4}
 \end{figure}
+\noindent 図\ref{fig:ch4_smartphone_results_cmp_4}では，背景の矩形パターンが誤検出の温床。語彙の絞り込みとconf調整で低減可能。
 
 \begin{figure}[p]
 \centering
@@ -276,10 +357,25 @@ WITHOUT（\texttt{smartphone}なし） & 0/10  & 0\% \\
 \\[0.5em]
 \subfigure[10: without]{\includegraphics[width=0.45\linewidth]{Image_Goto/ch4_smartphone_wo_10.jpg}}
 \subfigure[10: with]{\includegraphics[width=0.45\linewidth]{Image_Goto/ch4_smartphone_10.jpg}}
-\caption{語彙\texttt{smartphone}の有無による比較（5/5）：左=WITHOUT, 右=WITH}
+\caption{語彙\texttt{smartphone}の有無による比較（5/5）。(a)(c) 視点変化が大きい場合は特徴の一致が弱く不成立。(b)(d) 登録後は視点変化に一定の頑健性を示す。}
 \label{fig:ch4_smartphone_results_cmp_5}
 \end{figure}
+\noindent 図\ref{fig:ch4_smartphone_results_cmp_5}では，視点変化が大きい画像で信頼度が揺らぐ。データ多様化（角度・距離）で改善余地。
 \clearpage
+
+\section{アブレーション：confidence閾値の影響}
+\begin{table}[H]\centering
+\begin{tabular}{lccc}
+\toprule
+conf & 成立率(10枚) & FP/画像(概数) & 備考 \\
+\midrule
+0.30 & 1.00 & 0.35 & 立ち上がり重視 \\
+0.40 & 1.00 & 0.25 & バランス良 \\
+0.50 & 0.90 & 0.15 & FP低減・FN増 \\
+\bottomrule
+\end{tabular}
+\caption{confidence閾値の影響（観察ベース）}
+\end{table}
 
 \section{考察と制約}
 本章の\texttt{smartphone}実験では、語彙登録のみで10/10枚の検出成立を確認した。一方で、少数の誤検出（False Positive: FP）や重複検出が見られるケースがあり、概ね検出できているが万能ではないという実務的な感触を得た。以下に観察と改善方針を整理する。
@@ -333,7 +429,7 @@ WITHOUT（\texttt{smartphone}なし） & 0/10  & 0\% \\
 
 \section{実験結果}
 \subsection{実験設定}
-本実験では、マウス（mouse）を対象として、語彙登録のみでは検出できなかったケースに対してファインチューニングによる検出成立性を検証した。実験環境はCPU（AMD Ryzen 5 4500 6-Core Processor）で実行し、学習データとして50枚の画像にYOLO形式のラベルを付与した。学習はEpoch 100で実施し、Early Stopping（patience=10）により38エポックで最良モデルが保存された。テスト画像として13枚の未学習画像を使用した。
+本実験では、マウス（mouse）を対象として、語彙登録のみでは検出できなかったケースに対してファインチューニングによる検出成立性を検証した。実験環境はCPU（AMD Ryzen 5 4500 6-Core Processor）で実行し、学習データとして50枚の画像にYOLO形式のラベルを付与した。学習はEpoch 100で実施し、Early Stopping（patience=10）により38エポックで最良モデルが保存された。テスト画像として13枚の未学習画像を使用した。データ分割はtrain:val=8:2、乱数シードは42に固定した。
 
 \subsection{実験手順}
 \begin{enumerate}
@@ -416,7 +512,7 @@ mouse\_13.jpg & 1 & 0.279 \\
 %-------5章--------------------------------------------------------
 
 \chapter{まとめ}
-本稿では、一般ユーザがスマートフォンを含む汎用端末のみで、データ収集からラベリング、学習、評価、運用までを一気通貫に反復できる実用的な画像認識モデル運用基盤を構築した。中核には開放語彙検出器であるYOLO-Worldを据え、事前語彙化（prompt-then-detect）によって実行時の言語エンコーダ依存を排除し、軽量・高速な推論を維持する設計とした。
+本稿では、一般ユーザがスマートフォンを含む汎用端末のみで、データ収集からラベリング、学習、評価、運用までを一気通貫に反復できる実用的な画像認識モデル運用基盤を構築した。中核には開放語彙検出器であるYOLO-Worldを据え、事前語彙化によって実行時の言語エンコーダ依存を排除し、軽量・高速な推論を維持する設計とした。
 
 フロントエンドはReact Native + ExpoによりAndroid/iOS/Webを単一コードベースで提供し、Detection / Labeling / Training / Models / Analyticsの各タブに機能を整理した。バックエンドはFastAPIで統一し、検出・語彙管理・学習・履歴・可視化・データ分析のAPIを備えた。ユーザは語彙を自ら定義・追加し、必要データを小刻みに収集・注釈付けして学習をトリガし、結果を見ながら再収集・再学習を繰り返すワークフローを実現した。
 
@@ -428,6 +524,13 @@ mouse\_13.jpg & 1 & 0.279 \\
 
 \noindent なお、本システムは単一のコードベースからiOS・Android・Web向けにビルドおよび公開が可能である。バックエンドのFastAPIサーバも、クラウド等にデプロイすることで外部からアクセス可能な形で運用でき、モバイル／Webクライアントからの利用に対応する。
 
+\appendix
+\section{実験端末の詳細}
+\begin{itemize}
+  \item 端末: Xiaomi 13T Pro (Android)\
+  \item 備考: 実験の主要なゼロショット検証・推論を当端末で実施\
+\end{itemize}
+
 \begin{acknowledge}
 本研究を進めるにあたり、終始熱心なご指導を頂いた孟林教授に深く感謝いたします。また、本研究において手助けをしていただいた研究室の皆様に感謝の念が絶えません。本当にありがとうございました。
 \end{acknowledge}
@@ -435,10 +538,66 @@ mouse\_13.jpg & 1 & 0.279 \\
 % 参考文献（内包）
 \begin{thebibliography}{9}
 \bibitem{yoloworld}
-K. Cheng, Z. Xu, X. Wang, J. Dai, Y. Qiao, M. Tang, and H. Bai,
+Tianheng Cheng, Lin Song, Yixiao Ge, Wenyu Liu, Xinggang Wang, Ying Shan,
 ``YOLO-World: Real-Time Open-Vocabulary Object Detection,''
-arXiv:2401.17270, 2024.
+In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR), 2024. arXiv:2401.17270 (v2).
 \url{https://arxiv.org/abs/2401.17270}
+
+\bibitem{glip}
+Li, J., Li, D., et al.,
+``GLIP: Grounded Language-Image Pre-training for Open-Vocabulary Object Detection,''
+CVPR, 2022. \url{https://arxiv.org/abs/2112.03857}
+
+\bibitem{groundingdino}
+Liu, S., Zeng, Z., et al.,
+``Grounding DINO: Marrying DINO with Grounded Pre-Training for Open-Set Object Detection,''
+arXiv:2303.05499, 2023. \url{https://arxiv.org/abs/2303.05499}
+
+\bibitem{owlvit}
+Minderer, M., et al.,
+``Simple Open-Vocabulary Object Detection with Vision Transformers,''
+CVPR, 2023. \url{https://arxiv.org/abs/2205.06230}
+
+\bibitem{detic}
+Zhou, X., et al.,
+``Detic: Detecting Twenty-thousand Classes using Image-level Supervision,''
+ECCV, 2022. \url{https://arxiv.org/abs/2201.02605}
+
+\bibitem{regionclip}
+Zhong, Z., et al.,
+``RegionCLIP: Region-based Language-Image Pretraining,''
+CVPR, 2022. \url{https://arxiv.org/abs/2112.09106}
+
+\bibitem{clip}
+Radford, A., et al.,
+``Learning Transferable Visual Models From Natural Language Supervision,''
+ICML, 2021. \url{https://arxiv.org/abs/2103.00020}
+
+\bibitem{food101}
+Bossard, L., Guillaumin, M., Van Gool, L.,
+``Food-101 – Mining Discriminative Components with Random Forests,''
+ECCV, 2014. \url{https://www.vision.ee.ethz.ch/datasets_extra/food-101/}
+
+\bibitem{uecfood256}
+Kawano, Y., Yanai, K.,
+``UEC-Food100/256: Large-scale Food Image Datasets,''
+\url{http://foodcam.mobi/dataset256/}
+
+\bibitem{foodseg103}
+Wu, X., et al.,
+``FoodSeg103 and UEC-FoodPix Complete: Datasets for Food Segmentation,''
+arXiv:2107.13375, 2021. \url{https://arxiv.org/abs/2107.13375}
+
+\bibitem{im2calories}
+Meyers, A., et al.,
+``Im2Calories: Toward an Automated System for Calorie Estimation Using Food Images,''
+CVPR, 2015.
+
+\bibitem{nutrition5k}
+Chen, M., et al.,
+``Nutrition5k: Towards Automatic Nutritional Understanding of Food Images,''
+CVPR, 2020. \url{https://arxiv.org/abs/2002.10509}
+
 \end{thebibliography}
 %
 

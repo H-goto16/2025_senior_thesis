@@ -3,111 +3,147 @@
 \providecommand\hyper@newdestlabel[2]{}
 \providecommand*\HyPL@Entry[1]{}
 \HyPL@Entry{0<</S/r>>}
-\HyPL@Entry{5<</S/D>>}
+\HyPL@Entry{6<</S/D>>}
 \@writefile{toc}{\contentsline {chapter}{\numberline {1}はじめに}{1}{chapter.1}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \citation{yoloworld}
+\citation{glip}
 \@writefile{toc}{\contentsline {chapter}{\numberline {2}関連研究}{3}{chapter.2}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \@writefile{toc}{\contentsline {section}{\numberline {2.1}物体検出モデル}{3}{section.2.1}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.1.1}YOLO-World}{3}{subsection.2.1.1}\protected@file@percent }
+\citation{groundingdino}
+\citation{owlvit}
+\citation{detic}
+\citation{regionclip}
+\citation{clip}
+\citation{food101}
+\citation{uecfood256}
+\citation{foodseg103}
+\citation{im2calories}
+\citation{nutrition5k}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1.2}GLIP}{4}{subsection.2.1.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1.3}Grounding DINO}{4}{subsection.2.1.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1.4}OWL-ViT}{4}{subsection.2.1.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1.5}Detic}{4}{subsection.2.1.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1.6}RegionCLIP}{4}{subsection.2.1.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1.7}CLIP と開放語彙の基盤}{4}{subsection.2.1.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {2.2}食事画像データセット}{4}{section.2.2}\protected@file@percent }
 \citation{yoloworld}
 \@writefile{toc}{\contentsline {chapter}{\numberline {3}提案手法}{5}{chapter.3}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \@writefile{toc}{\contentsline {section}{\numberline {3.1}設計方針と構成}{5}{section.3.1}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {3.2}YOLO-Worldの運用}{5}{section.3.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {3.3}データ収集・ラベリング・学習}{5}{section.3.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {3.4}UIフロー（スマホ中心）と操作例}{5}{section.3.4}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {3.1}{\ignorespaces 提案UIの反復ループ（1/4）：撮影→初回検出→語彙確認/追加}}{6}{figure.3.1}\protected@file@percent }
-\newlabel{fig:flow_page1}{{3.1}{6}{提案UIの反復ループ（1/4）：撮影→初回検出→語彙確認/追加}{figure.3.1}{}}
-\@writefile{lof}{\contentsline {subfigure}{\numberline{(a)}{\ignorespaces {撮影/選択（Detection）}}}{6}{figure.3.1}\protected@file@percent }
-\@writefile{lof}{\contentsline {subfigure}{\numberline{(b)}{\ignorespaces {初回検出（未学習）}}}{6}{figure.3.1}\protected@file@percent }
-\@writefile{lof}{\contentsline {subfigure}{\numberline{(c)}{\ignorespaces {クラス追加後の検出（既存クラス）}}}{6}{figure.3.1}\protected@file@percent }
-\@writefile{lof}{\contentsline {subfigure}{\numberline{(d)}{\ignorespaces {スマートフォンクラスの追加（Models）}}}{6}{figure.3.1}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {3.2}{\ignorespaces 提案UIの反復ループ（2/4）：再検出→ラベリング→学習起動}}{7}{figure.3.2}\protected@file@percent }
-\newlabel{fig:flow_page2}{{3.2}{7}{提案UIの反復ループ（2/4）：再検出→ラベリング→学習起動}{figure.3.2}{}}
-\@writefile{lof}{\contentsline {subfigure}{\numberline{(a)}{\ignorespaces {smartphoneクラスで検出成功}}}{7}{figure.3.2}\protected@file@percent }
-\@writefile{lof}{\contentsline {subfigure}{\numberline{(b)}{\ignorespaces {マニュアルラベリング}}}{7}{figure.3.2}\protected@file@percent }
-\@writefile{lof}{\contentsline {subfigure}{\numberline{(c)}{\ignorespaces {ファインチューニング開始}}}{7}{figure.3.2}\protected@file@percent }
-\@writefile{lof}{\contentsline {subfigure}{\numberline{(d)}{\ignorespaces {学習の起動（Training）}}}{7}{figure.3.2}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {3.3}{\ignorespaces 提案UIの反復ループ（3/4）：語彙・履歴・モデル管理}}{8}{figure.3.3}\protected@file@percent }
-\newlabel{fig:flow_page3}{{3.3}{8}{提案UIの反復ループ（3/4）：語彙・履歴・モデル管理}{figure.3.3}{}}
-\@writefile{lof}{\contentsline {subfigure}{\numberline{(a)}{\ignorespaces {語彙・クラス一覧（Models）}}}{8}{figure.3.3}\protected@file@percent }
-\@writefile{lof}{\contentsline {subfigure}{\numberline{(b)}{\ignorespaces {学習履歴・指標の確認（Analytics）}}}{8}{figure.3.3}\protected@file@percent }
-\@writefile{lof}{\contentsline {subfigure}{\numberline{(c)}{\ignorespaces {モデルの切替・管理}}}{8}{figure.3.3}\protected@file@percent }
-\@writefile{lof}{\contentsline {subfigure}{\numberline{(d)}{\ignorespaces {モデル概要の確認}}}{8}{figure.3.3}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {3.4}{\ignorespaces 提案UIの反復ループ（4/4）：データ・性能の確認と再反復}}{9}{figure.3.4}\protected@file@percent }
-\newlabel{fig:flow_page4}{{3.4}{9}{提案UIの反復ループ（4/4）：データ・性能の確認と再反復}{figure.3.4}{}}
-\@writefile{lof}{\contentsline {subfigure}{\numberline{(a)}{\ignorespaces {データセット確認}}}{9}{figure.3.4}\protected@file@percent }
-\@writefile{lof}{\contentsline {subfigure}{\numberline{(b)}{\ignorespaces {性能比較・推移の確認}}}{9}{figure.3.4}\protected@file@percent }
-\@writefile{lof}{\contentsline {subfigure}{\numberline{(c)}{\ignorespaces {}}}{9}{figure.3.4}\protected@file@percent }
-\@writefile{lof}{\contentsline {subfigure}{\numberline{(d)}{\ignorespaces {}}}{9}{figure.3.4}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {3.5}スマホ最適化と制約}{10}{section.3.5}\protected@file@percent }
-\@writefile{toc}{\contentsline {chapter}{\numberline {4}語彙登録のみでの検出成立性の検証}{11}{chapter.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.1}APIエンドポイントの概要}{6}{subsection.3.2.1}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {3.1}{\ignorespaces 主要APIエンドポイントの主用途}}{6}{table.3.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {3.3}データ収集・ラベリング・学習}{6}{section.3.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {3.4}UIフロー（スマホ中心）と操作例}{6}{section.3.4}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {3.1}{\ignorespaces 提案UIの反復ループ（1/4）：撮影→初回検出→語彙確認/追加}}{7}{figure.3.1}\protected@file@percent }
+\newlabel{fig:flow_page1}{{3.1}{7}{提案UIの反復ループ（1/4）：撮影→初回検出→語彙確認/追加}{figure.3.1}{}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(a)}{\ignorespaces {撮影/選択（Detection）}}}{7}{figure.3.1}\protected@file@percent }
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(b)}{\ignorespaces {初回検出（未学習）}}}{7}{figure.3.1}\protected@file@percent }
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(c)}{\ignorespaces {クラス追加後の検出（既存クラス）}}}{7}{figure.3.1}\protected@file@percent }
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(d)}{\ignorespaces {スマートフォンクラスの追加（Models）}}}{7}{figure.3.1}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {3.2}{\ignorespaces 提案UIの反復ループ（2/4）：再検出→ラベリング→学習起動}}{8}{figure.3.2}\protected@file@percent }
+\newlabel{fig:flow_page2}{{3.2}{8}{提案UIの反復ループ（2/4）：再検出→ラベリング→学習起動}{figure.3.2}{}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(a)}{\ignorespaces {smartphoneクラスで検出成功}}}{8}{figure.3.2}\protected@file@percent }
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(b)}{\ignorespaces {マニュアルラベリング}}}{8}{figure.3.2}\protected@file@percent }
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(c)}{\ignorespaces {ファインチューニング開始}}}{8}{figure.3.2}\protected@file@percent }
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(d)}{\ignorespaces {学習の起動（Training）}}}{8}{figure.3.2}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {3.3}{\ignorespaces 提案UIの反復ループ（3/4）：語彙・履歴・モデル管理}}{9}{figure.3.3}\protected@file@percent }
+\newlabel{fig:flow_page3}{{3.3}{9}{提案UIの反復ループ（3/4）：語彙・履歴・モデル管理}{figure.3.3}{}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(a)}{\ignorespaces {語彙・クラス一覧（Models）}}}{9}{figure.3.3}\protected@file@percent }
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(b)}{\ignorespaces {学習履歴・指標の確認（Analytics）}}}{9}{figure.3.3}\protected@file@percent }
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(c)}{\ignorespaces {モデルの切替・管理}}}{9}{figure.3.3}\protected@file@percent }
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(d)}{\ignorespaces {モデル概要の確認}}}{9}{figure.3.3}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {3.4}{\ignorespaces 提案UIの反復ループ（4/4）：データ・性能の確認と再反復}}{10}{figure.3.4}\protected@file@percent }
+\newlabel{fig:flow_page4}{{3.4}{10}{提案UIの反復ループ（4/4）：データ・性能の確認と再反復}{figure.3.4}{}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(a)}{\ignorespaces {データセット確認}}}{10}{figure.3.4}\protected@file@percent }
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(b)}{\ignorespaces {性能比較・推移の確認}}}{10}{figure.3.4}\protected@file@percent }
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(c)}{\ignorespaces {}}}{10}{figure.3.4}\protected@file@percent }
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(d)}{\ignorespaces {}}}{10}{figure.3.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {3.5}スマホ最適化と制約}{11}{section.3.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {4}語彙登録のみでの検出成立性の検証}{12}{chapter.4}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\@writefile{toc}{\contentsline {section}{\numberline {4.1}目的}{11}{section.4.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {4.2}操作フローと条件}{11}{section.4.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {4.3}評価項目}{11}{section.4.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {4.4}ケーススタディ（\texttt  {smartphone}）}{11}{section.4.4}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {4.5}実験結果（\texttt  {smartphone}10枚）}{12}{section.4.5}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {4.1}{\ignorespaces 語彙登録の有無による\texttt  {smartphone}検出成立（10枚）}}{12}{table.4.1}\protected@file@percent }
-\newlabel{tab:ch4_vocab_only_smartphone}{{4.1}{12}{語彙登録の有無による\texttt {smartphone}検出成立（10枚）}{table.4.1}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4.1}{\ignorespaces 語彙\texttt  {smartphone}の有無による比較（1/5）：左=WITHOUT, 右=WITH}}{13}{figure.4.1}\protected@file@percent }
-\newlabel{fig:ch4_smartphone_results_cmp_1}{{4.1}{13}{語彙\texttt {smartphone}の有無による比較（1/5）：左=WITHOUT, 右=WITH}{figure.4.1}{}}
-\@writefile{lof}{\contentsline {subfigure}{\numberline{(a)}{\ignorespaces {1: without}}}{13}{figure.4.1}\protected@file@percent }
-\@writefile{lof}{\contentsline {subfigure}{\numberline{(b)}{\ignorespaces {1: with}}}{13}{figure.4.1}\protected@file@percent }
-\@writefile{lof}{\contentsline {subfigure}{\numberline{(c)}{\ignorespaces {2: without}}}{13}{figure.4.1}\protected@file@percent }
-\@writefile{lof}{\contentsline {subfigure}{\numberline{(d)}{\ignorespaces {2: with}}}{13}{figure.4.1}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {4.2}{\ignorespaces 語彙\texttt  {smartphone}の有無による比較（2/5）：左=WITHOUT, 右=WITH}}{14}{figure.4.2}\protected@file@percent }
-\newlabel{fig:ch4_smartphone_results_cmp_2}{{4.2}{14}{語彙\texttt {smartphone}の有無による比較（2/5）：左=WITHOUT, 右=WITH}{figure.4.2}{}}
-\@writefile{lof}{\contentsline {subfigure}{\numberline{(a)}{\ignorespaces {3: without}}}{14}{figure.4.2}\protected@file@percent }
-\@writefile{lof}{\contentsline {subfigure}{\numberline{(b)}{\ignorespaces {3: with}}}{14}{figure.4.2}\protected@file@percent }
-\@writefile{lof}{\contentsline {subfigure}{\numberline{(c)}{\ignorespaces {4: without}}}{14}{figure.4.2}\protected@file@percent }
-\@writefile{lof}{\contentsline {subfigure}{\numberline{(d)}{\ignorespaces {4: with}}}{14}{figure.4.2}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {4.3}{\ignorespaces 語彙\texttt  {smartphone}の有無による比較（3/5）：左=WITHOUT, 右=WITH}}{15}{figure.4.3}\protected@file@percent }
-\newlabel{fig:ch4_smartphone_results_cmp_3}{{4.3}{15}{語彙\texttt {smartphone}の有無による比較（3/5）：左=WITHOUT, 右=WITH}{figure.4.3}{}}
-\@writefile{lof}{\contentsline {subfigure}{\numberline{(a)}{\ignorespaces {5: without}}}{15}{figure.4.3}\protected@file@percent }
-\@writefile{lof}{\contentsline {subfigure}{\numberline{(b)}{\ignorespaces {5: with}}}{15}{figure.4.3}\protected@file@percent }
-\@writefile{lof}{\contentsline {subfigure}{\numberline{(c)}{\ignorespaces {6: without}}}{15}{figure.4.3}\protected@file@percent }
-\@writefile{lof}{\contentsline {subfigure}{\numberline{(d)}{\ignorespaces {6: with}}}{15}{figure.4.3}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {4.4}{\ignorespaces 語彙\texttt  {smartphone}の有無による比較（4/5）：左=WITHOUT, 右=WITH}}{16}{figure.4.4}\protected@file@percent }
-\newlabel{fig:ch4_smartphone_results_cmp_4}{{4.4}{16}{語彙\texttt {smartphone}の有無による比較（4/5）：左=WITHOUT, 右=WITH}{figure.4.4}{}}
-\@writefile{lof}{\contentsline {subfigure}{\numberline{(a)}{\ignorespaces {7: without}}}{16}{figure.4.4}\protected@file@percent }
-\@writefile{lof}{\contentsline {subfigure}{\numberline{(b)}{\ignorespaces {7: with}}}{16}{figure.4.4}\protected@file@percent }
-\@writefile{lof}{\contentsline {subfigure}{\numberline{(c)}{\ignorespaces {8: without}}}{16}{figure.4.4}\protected@file@percent }
-\@writefile{lof}{\contentsline {subfigure}{\numberline{(d)}{\ignorespaces {8: with}}}{16}{figure.4.4}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {4.5}{\ignorespaces 語彙\texttt  {smartphone}の有無による比較（5/5）：左=WITHOUT, 右=WITH}}{17}{figure.4.5}\protected@file@percent }
-\newlabel{fig:ch4_smartphone_results_cmp_5}{{4.5}{17}{語彙\texttt {smartphone}の有無による比較（5/5）：左=WITHOUT, 右=WITH}{figure.4.5}{}}
-\@writefile{lof}{\contentsline {subfigure}{\numberline{(a)}{\ignorespaces {9: without}}}{17}{figure.4.5}\protected@file@percent }
-\@writefile{lof}{\contentsline {subfigure}{\numberline{(b)}{\ignorespaces {9: with}}}{17}{figure.4.5}\protected@file@percent }
-\@writefile{lof}{\contentsline {subfigure}{\numberline{(c)}{\ignorespaces {10: without}}}{17}{figure.4.5}\protected@file@percent }
-\@writefile{lof}{\contentsline {subfigure}{\numberline{(d)}{\ignorespaces {10: with}}}{17}{figure.4.5}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {4.6}考察と制約}{18}{section.4.6}\protected@file@percent }
-\@writefile{toc}{\contentsline {chapter}{\numberline {5}手動ラベリングとファインチューニングによる検出成立性の検証}{19}{chapter.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4.1}目的}{12}{section.4.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4.2}操作フローと条件}{12}{section.4.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4.3}評価設定}{12}{section.4.3}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {4.1}{\ignorespaces ゼロショット検証の評価設定}}{12}{table.4.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4.4}評価項目}{13}{section.4.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4.5}ケーススタディ（\texttt  {smartphone}）}{13}{section.4.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4.6}実験結果（\texttt  {smartphone}10枚）}{13}{section.4.6}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {4.2}{\ignorespaces 語彙登録の有無による\texttt  {smartphone}検出成立（10枚）}}{13}{table.4.2}\protected@file@percent }
+\newlabel{tab:ch4_vocab_only_smartphone}{{4.2}{13}{語彙登録の有無による\texttt {smartphone}検出成立（10枚）}{table.4.2}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4.1}{\ignorespaces 語彙\texttt  {smartphone}の有無による比較（1/5）。(a)(c) 語彙未登録（WITHOUT）：対象周辺に矩形状パターンがあるがスコアが閾値未満で検出不成立。(b)(d) 語彙登録後（WITH）：エッジとテクスチャが語彙埋め込みと整合し検出成立。反射が強い場合はスコアの揺らぎが残るが，confidenceを0.4以上に設定すると一部の誤検出（例：キーボード）は低減した。}}{14}{figure.4.1}\protected@file@percent }
+\newlabel{fig:ch4_smartphone_results_cmp_1}{{4.1}{14}{語彙\texttt {smartphone}の有無による比較（1/5）。(a)(c) 語彙未登録（WITHOUT）：対象周辺に矩形状パターンがあるがスコアが閾値未満で検出不成立。(b)(d) 語彙登録後（WITH）：エッジとテクスチャが語彙埋め込みと整合し検出成立。反射が強い場合はスコアの揺らぎが残るが，confidenceを0.4以上に設定すると一部の誤検出（例：キーボード）は低減した。}{figure.4.1}{}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(a)}{\ignorespaces {1: without}}}{14}{figure.4.1}\protected@file@percent }
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(b)}{\ignorespaces {1: with}}}{14}{figure.4.1}\protected@file@percent }
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(c)}{\ignorespaces {2: without}}}{14}{figure.4.1}\protected@file@percent }
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(d)}{\ignorespaces {2: with}}}{14}{figure.4.1}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {4.2}{\ignorespaces 語彙\texttt  {smartphone}の有無による比較（2/5）。(a)(c) 未登録では反射・陰影により境界が曖昧で不成立。(b)(d) 登録後は一貫して成立。低照度ではスコア低下がみられ，conf=0.4で安定化。}}{15}{figure.4.2}\protected@file@percent }
+\newlabel{fig:ch4_smartphone_results_cmp_2}{{4.2}{15}{語彙\texttt {smartphone}の有無による比較（2/5）。(a)(c) 未登録では反射・陰影により境界が曖昧で不成立。(b)(d) 登録後は一貫して成立。低照度ではスコア低下がみられ，conf=0.4で安定化。}{figure.4.2}{}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(a)}{\ignorespaces {3: without}}}{15}{figure.4.2}\protected@file@percent }
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(b)}{\ignorespaces {3: with}}}{15}{figure.4.2}\protected@file@percent }
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(c)}{\ignorespaces {4: without}}}{15}{figure.4.2}\protected@file@percent }
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(d)}{\ignorespaces {4: with}}}{15}{figure.4.2}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {4.3}{\ignorespaces 語彙\texttt  {smartphone}の有無による比較（3/5）。(a)(c) スケール変化と部分遮蔽で候補が閾値未満。(b)(d) 登録後は小物体でも成立するが，極小スケールでは見逃しが残る。}}{16}{figure.4.3}\protected@file@percent }
+\newlabel{fig:ch4_smartphone_results_cmp_3}{{4.3}{16}{語彙\texttt {smartphone}の有無による比較（3/5）。(a)(c) スケール変化と部分遮蔽で候補が閾値未満。(b)(d) 登録後は小物体でも成立するが，極小スケールでは見逃しが残る。}{figure.4.3}{}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(a)}{\ignorespaces {5: without}}}{16}{figure.4.3}\protected@file@percent }
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(b)}{\ignorespaces {5: with}}}{16}{figure.4.3}\protected@file@percent }
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(c)}{\ignorespaces {6: without}}}{16}{figure.4.3}\protected@file@percent }
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(d)}{\ignorespaces {6: with}}}{16}{figure.4.3}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {4.4}{\ignorespaces 語彙\texttt  {smartphone}の有無による比較（4/5）。(a)(c) 背景の矩形パターンが類似外観として干渉。(b)(d) 登録後は成立するが，背景依存の誤検出が散見される。}}{17}{figure.4.4}\protected@file@percent }
+\newlabel{fig:ch4_smartphone_results_cmp_4}{{4.4}{17}{語彙\texttt {smartphone}の有無による比較（4/5）。(a)(c) 背景の矩形パターンが類似外観として干渉。(b)(d) 登録後は成立するが，背景依存の誤検出が散見される。}{figure.4.4}{}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(a)}{\ignorespaces {7: without}}}{17}{figure.4.4}\protected@file@percent }
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(b)}{\ignorespaces {7: with}}}{17}{figure.4.4}\protected@file@percent }
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(c)}{\ignorespaces {8: without}}}{17}{figure.4.4}\protected@file@percent }
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(d)}{\ignorespaces {8: with}}}{17}{figure.4.4}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {4.5}{\ignorespaces 語彙\texttt  {smartphone}の有無による比較（5/5）。(a)(c) 視点変化が大きい場合は特徴の一致が弱く不成立。(b)(d) 登録後は視点変化に一定の頑健性を示す。}}{18}{figure.4.5}\protected@file@percent }
+\newlabel{fig:ch4_smartphone_results_cmp_5}{{4.5}{18}{語彙\texttt {smartphone}の有無による比較（5/5）。(a)(c) 視点変化が大きい場合は特徴の一致が弱く不成立。(b)(d) 登録後は視点変化に一定の頑健性を示す。}{figure.4.5}{}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(a)}{\ignorespaces {9: without}}}{18}{figure.4.5}\protected@file@percent }
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(b)}{\ignorespaces {9: with}}}{18}{figure.4.5}\protected@file@percent }
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(c)}{\ignorespaces {10: without}}}{18}{figure.4.5}\protected@file@percent }
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(d)}{\ignorespaces {10: with}}}{18}{figure.4.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4.7}アブレーション：confidence閾値の影響}{19}{section.4.7}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {4.3}{\ignorespaces confidence閾値の影響（観察ベース）}}{19}{table.4.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4.8}考察と制約}{19}{section.4.8}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {5}手動ラベリングとファインチューニングによる検出成立性の検証}{20}{chapter.5}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\@writefile{toc}{\contentsline {section}{\numberline {5.1}目的}{19}{section.5.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {5.2}前提と環境}{19}{section.5.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {5.3}手順}{19}{section.5.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {5.4}評価設計}{19}{section.5.4}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {5.5}実装上の要点}{20}{section.5.5}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {5.6}実験結果}{20}{section.5.6}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.6.1}実験設定}{20}{subsection.5.6.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.6.2}実験手順}{20}{subsection.5.6.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.6.3}学習結果}{20}{subsection.5.6.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.6.4}検出結果}{21}{subsection.5.6.4}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {5.1}{\ignorespaces ファインチューニング後の検出結果（テスト画像13枚、50枚学習、38エポック）}}{21}{table.5.1}\protected@file@percent }
-\newlabel{tab:detection_results}{{5.1}{21}{ファインチューニング後の検出結果（テスト画像13枚、50枚学習、38エポック）}{table.5.1}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.6.5}考察}{21}{subsection.5.6.5}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {5.7}期待と限界}{22}{section.5.7}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {5.8}今後の改善}{22}{section.5.8}\protected@file@percent }
-\@writefile{toc}{\contentsline {chapter}{\numberline {6}まとめ}{23}{chapter.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {5.1}目的}{20}{section.5.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {5.2}前提と環境}{20}{section.5.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {5.3}手順}{20}{section.5.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {5.4}評価設計}{20}{section.5.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {5.5}実装上の要点}{21}{section.5.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {5.6}実験結果}{21}{section.5.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.6.1}実験設定}{21}{subsection.5.6.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.6.2}実験手順}{21}{subsection.5.6.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.6.3}学習結果}{21}{subsection.5.6.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.6.4}検出結果}{22}{subsection.5.6.4}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {5.1}{\ignorespaces ファインチューニング後の検出結果（テスト画像13枚、50枚学習、38エポック）}}{22}{table.5.1}\protected@file@percent }
+\newlabel{tab:detection_results}{{5.1}{22}{ファインチューニング後の検出結果（テスト画像13枚、50枚学習、38エポック）}{table.5.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.6.5}考察}{22}{subsection.5.6.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {5.7}期待と限界}{23}{section.5.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {5.8}今後の改善}{23}{section.5.8}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {6}まとめ}{24}{chapter.6}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
+\@writefile{toc}{\contentsline {section}{\numberline {.1}実験端末の詳細}{24}{section.Alph0.1}\protected@file@percent }
 \bibcite{yoloworld}{{1}{}{{}}{{}}}
+\bibcite{glip}{{2}{}{{}}{{}}}
+\bibcite{groundingdino}{{3}{}{{}}{{}}}
+\bibcite{owlvit}{{4}{}{{}}{{}}}
+\bibcite{detic}{{5}{}{{}}{{}}}
+\bibcite{regionclip}{{6}{}{{}}{{}}}
+\bibcite{clip}{{7}{}{{}}{{}}}
+\bibcite{food101}{{8}{}{{}}{{}}}
+\bibcite{uecfood256}{{9}{}{{}}{{}}}
+\bibcite{foodseg103}{{10}{}{{}}{{}}}
+\bibcite{im2calories}{{11}{}{{}}{{}}}
+\bibcite{nutrition5k}{{12}{}{{}}{{}}}
 \providecommand\NAT@force@numbers{}\NAT@force@numbers
-\gdef \@abspage@last{30}
+\gdef \@abspage@last{32}
