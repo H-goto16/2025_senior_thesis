@@ -1,4 +1,4 @@
-This is e-upTeX, Version 3.141592653-p4.1.2-u2.00-250202-2.6 (utf8.uptex) (TeX Live 2025) (preloaded format=uplatex 2025.10.2)  1 DEC 2025 14:15
+This is e-upTeX, Version 3.141592653-p4.1.2-u2.00-250202-2.6 (utf8.uptex) (TeX Live 2025) (preloaded format=uplatex 2025.10.2)  1 DEC 2025 14:19
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -686,23 +686,23 @@ LaTeX Font Info:    Font shape `JY2/gt/m/n' will be
 [4]
  3.
 LaTeX Font Info:    Font shape `JT2/mc/m/n' will be
-(Font)              scaled to size 9.6222pt on input line 159.
+(Font)              scaled to size 9.6222pt on input line 158.
 LaTeX Font Info:    Font shape `JY2/mc/m/n' will be
-(Font)              scaled to size 9.6222pt on input line 159.
+(Font)              scaled to size 9.6222pt on input line 158.
 
-Underfull \hbox (badness 10000) in paragraph at lines 166--166
+Underfull \hbox (badness 10000) in paragraph at lines 165--165
 []|\OT1/cmr/m/n/10 /detect/with-
  []
 
 LaTeX Font Info:    Trying to load font information for OMS+cmr on input line 1
-72.
+71.
 (/usr/local/texlive/2025/texmf-dist/tex/latex/base/omscmr.fd
 File: omscmr.fd 2024/11/19 v2.5n Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 172.
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 171.
 
-Overfull \hbox (39.28905pt too wide) in paragraph at lines 172--172
+Overfull \hbox (39.28905pt too wide) in paragraph at lines 171--171
 []|\OT1/cmr/m/n/10 /training/metrics/\OMS/cmsy/m/n/10 f\OT1/cmr/m/n/10 run[]nam
 e\OMS/cmsy/m/n/10 g| 
  []
@@ -713,16 +713,16 @@ e\OMS/cmsy/m/n/10 g|
 
 ]
 LaTeX Font Info:    Trying to load font information for OMS+cmtt on input line 
-180.
-LaTeX Font Info:    No file OMScmtt.fd. on input line 180.
+179.
+LaTeX Font Info:    No file OMScmtt.fd. on input line 179.
 
 
 LaTeX Font Warning: Font shape `OMS/cmtt/m/n' undefined
 (Font)              using `OMS/cmsy/m/n' instead
-(Font)              for symbol `textbraceleft' on input line 180.
+(Font)              for symbol `textbraceleft' on input line 179.
 
 
-Overfull \hbox (54.94643pt too wide) in paragraph at lines 180--181
+Overfull \hbox (54.94643pt too wide) in paragraph at lines 179--180
 \JY2/mc/m/n/10.95 モデル一覧 ・ 切替 ・ バ ックア ップ ・ 検
 証が可能で 、 \OT1/cmtt/m/n/10.95 /training/history \JY2/mc/m/n/10.95 と
 \OT1/cmtt/m/n/10.95 /training/metrics/\OMS/cmtt/m/n/10.95 f\OT1/cmtt/m/n/10.95 
@@ -732,9 +732,9 @@ run[]name\OMS/cmtt/m/n/10.95 g
 File: Image_Goto/01_take_photo.png Graphic file (type bmp)
 <Image_Goto/01_take_photo.png>
 LaTeX Font Info:    Font shape `JT2/mc/m/n' will be
-(Font)              scaled to size 8.65997pt on input line 188.
+(Font)              scaled to size 8.65997pt on input line 187.
 LaTeX Font Info:    Font shape `JY2/mc/m/n' will be
-(Font)              scaled to size 8.65997pt on input line 188.
+(Font)              scaled to size 8.65997pt on input line 187.
 File: Image_Goto/02_0_no_detect.png Graphic file (type bmp)
 <Image_Goto/02_0_no_detect.png>
 File: Image_Goto/02_1_detect.png Graphic file (type bmp)
@@ -750,7 +750,7 @@ File: Image_Goto/02_5_fine_tuning.png Graphic file (type bmp)
 File: Image_Goto/03_fine-tuning.png Graphic file (type bmp)
 <Image_Goto/03_fine-tuning.png>
 
-LaTeX Warning: Float too large for page by 30.10324pt on input line 207.
+LaTeX Warning: Float too large for page by 30.10324pt on input line 206.
 
 File: Image_Goto/04_classes.png Graphic file (type bmp)
 <Image_Goto/04_classes.png>
@@ -761,7 +761,7 @@ File: Image_Goto/06_model.png Graphic file (type bmp)
 File: Image_Goto/07_model_overview.png Graphic file (type bmp)
 <Image_Goto/07_model_overview.png>
 
-LaTeX Warning: Float too large for page by 72.10854pt on input line 219.
+LaTeX Warning: Float too large for page by 72.10854pt on input line 218.
 
 File: Image_Goto/08_model_dataset.png Graphic file (type bmp)
 <Image_Goto/08_model_dataset.png>
@@ -772,7 +772,7 @@ File: Image_Goto/02_1_detect.png Graphic file (type bmp)
 File: Image_Goto/02_4_manual.png Graphic file (type bmp)
 <Image_Goto/02_4_manual.png>
 
-LaTeX Warning: Float too large for page by 29.59679pt on input line 231.
+LaTeX Warning: Float too large for page by 29.59679pt on input line 230.
 
 
 
@@ -791,14 +791,14 @@ LaTeX Warning: Float too large for page by 29.59679pt on input line 231.
 ]
  4.
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10.95> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 267.
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 266.
 
 
 [12
 
 ]
 LaTeX Font Info:    Font shape `OT1/cmtt/bx/n' in size <12> not available
-(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 281.
+(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 280.
 File: Image_Goto/ch4_smartphone_wo_01.jpg Graphic file (type bmp)
 <Image_Goto/ch4_smartphone_wo_01.jpg>
 File: Image_Goto/ch4_smartphone_01.jpg Graphic file (type bmp)
@@ -858,7 +858,7 @@ File: Image_Goto/ch4_smartphone_10.jpg Graphic file (type bmp)
 ]
  5.
 
-Overfull \hbox (33.46349pt too wide) in paragraph at lines 404--405
+Overfull \hbox (33.46349pt too wide) in paragraph at lines 403--404
 \JY2/mc/m/n/10.95 が 、 環境設定により \OT1/cmr/m/n/10.95 GPU \JY2/mc/
 m/n/10.95 へ切替可能 。 収集した画像と \OT1/cmr/m/n/10.95 YOLO \JY
 2/mc/m/n/10.95 形式ラベルは \OT1/cmtt/m/n/10.95 training[]data/images \JY
@@ -870,7 +870,7 @@ m/n/10.95 へ切替可能 。 収集した画像と \OT1/cmr/m/n/10.95 YOLO \JY
 [20
 
 ]
-Overfull \hbox (48.97246pt too wide) in paragraph at lines 437--438
+Overfull \hbox (48.97246pt too wide) in paragraph at lines 436--437
 []\OT1/cmr/m/n/10.95 50 \JY2/mc/m/n/10.95 枚の画像に対して手動ラベ
 リングを実施し 、 \OT1/cmtt/m/n/10.95 training[]data/images \JY2/mc/m/n
 /10.95 と \OT1/cmtt/m/n/10.95 training[]data/labels
@@ -893,12 +893,6 @@ Overfull \hbox (48.97246pt too wide) in paragraph at lines 437--438
 [25]
 
 [26]
-Underfull \hbox (badness 10000) in paragraph at lines 595--598
-\OT1/cmtt/m/n/10.95 content _ cvpr _ 2015 / html / Meyers _ Im2Calories _ Towar
-d _ an _ 2015 _ CVPR _ paper .
- []
-
-
 
 [27
 
@@ -916,12 +910,12 @@ Package rerunfilecheck Info: File `Goto.out' has not changed.
 (rerunfilecheck)             Checksum: 501D61D8DEC703E63E6194BBFBBFE09C;4971.
  ) 
 Here is how much of TeX's memory you used:
- 14020 strings out of 469857
- 218287 string characters out of 5478696
- 635081 words of memory out of 5000000
- 42344 multiletter control sequences out of 15000+600000
+ 14017 strings out of 469857
+ 218233 string characters out of 5478696
+ 635065 words of memory out of 5000000
+ 42341 multiletter control sequences out of 15000+600000
  696270 words of font info for 112 fonts, out of 8000000 for 9000
  36 hyphenation exceptions out of 8191
  72i,11n,79p,1295b,651s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on Goto.dvi (33 pages, 121860 bytes).
+Output written on Goto.dvi (33 pages, 120864 bytes).
